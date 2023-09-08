@@ -9,13 +9,13 @@ antora:
     root_component_name: 'kafka'
 site:
   title: Spring Kafka
-  url: https://docs.spring.io/spring-kafka/reference
+  url: https://rwinch.github.io/spring-kafka
   robots: allow
 git:
   ensure_git_suffix: false
 content:
   sources:
-  - url: https://github.com/spring-projects/spring-kafka
+  - url: https://github.com/rwinch/spring-kafka
     # Refname matching:
     # https://docs.antora.org/antora/latest/playbook/content-refname-matching/
     branches: [ main,'({3..9}).+({0..9}).x', '!(3.0.x)' ]
