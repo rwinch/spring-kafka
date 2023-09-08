@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Handling Exceptions :: Spring Kafka</title>
+    <link rel="prev" href="tombstones.html">
+    <link rel="next" href="kerberos.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.2">
+    <script>
+!function (theme, navWidth) {
+  if (theme === 'dark') document.documentElement.classList.add('dark-theme')
+  if (navWidth) document.documentElement.style.setProperty('--nav-width', `${navWidth}px`)
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'),
+  localStorage && localStorage.getItem('nav-width'))
+    </script>
+    <link rel="stylesheet" href="../_/css/site.css">
+    <link rel="stylesheet" href="../_/css/vendor/search.css">
+    <link rel="stylesheet" href="../_/css/vendor/asciidoctor-tabs.css">
+
+    <meta name="version" content="3.1.0">
+    <meta name="component" content="kafka">
+    <link rel="icon" href="../_/img/favicon.ico" type="image/vnd.microsoft.icon">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://spring.io">
+        <img
+          id="springlogo"
+          class="block"
+          src="../_/img/spring-logo.svg"
+          alt="Spring"
+        />
+      </a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Why Spring</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/why-spring"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/microservices"
+            >Microservices</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/reactive"
+            >Reactive</a>
+            <a class="navbar-item" href="https://spring.io/event-driven">Event
+              Driven</a>
+            <a class="navbar-item" href="https://spring.io/cloud">Cloud</a>
+            <a class="navbar-item" href="https://spring.io/web-applications">Web
+              Applications</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/serverless"
+            >Serverless</a>
+            <a class="navbar-item" href="https://spring.io/batch">Batch</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Learn</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://spring.io/learn">Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/quickstart"
+            >Quickstart</a>
+            <a class="navbar-item" href="https://spring.io/guides">Guides</a>
+            <a class="navbar-item" href="https://spring.io/blog">Blog</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Projects</a>
+          <div class="navbar-dropdown" style="min-width: 280px">
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-boot"
+            >Spring Boot</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-framework"
+            >Spring Framework</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud"
+            >Spring Cloud</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud-dataflow"
+            >Spring Cloud Data Flow</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-data"
+            >Spring Data</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-integration"
+            >Spring Integration</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-batch"
+            >Spring Batch</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-security"
+            >Spring Security</a>
+            <a
+              class="navbar-item navbar-item-special"
+              href="https://spring.io/projects"
+            >View all projects</a>
+            <a class="navbar-item" href="https://spring.io/tools">Spring Tools 4</a>
+            <a
+              class="navbar-item navbar-item-special-2"
+              href="https://start.spring.io"
+            >Spring Initializr
+              <svg
+                class="external-link-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+              ><polyline
+                  points="15 10.94 15 15 1 15 1 1 5.06 1"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><polyline
+                  points="8.93 1 15 1 15 7.07"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><line
+                  x1="15"
+                  y1="1"
+                  x2="8"
+                  y2="8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></line></svg></a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Academy</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.academy/courses"
+            >Courses</a>
+            <a
+              class="navbar-item"
+              href="https://spring.academy/learning-path"
+            >Get Certified</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Solutions</a>
+          <div class="navbar-dropdown lg">
+            <a class="navbar-item" href="https://spring.io/solutions">Overview</a>
+            <a class="navbar-item" href="https://spring.io/runtime">Spring Runtime</a>
+            <a class="navbar-item" href="https://spring.io/consulting">Spring Consulting</a>
+            <a class="navbar-item" href="https://spring.academy/teams">Spring Academy For Teams</a>
+            <a class="navbar-item" href="https://spring.io/security">Security Advisories</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable is-community">
+          <a class="navbar-link" href="#">Community</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/community"
+            >Overview</a>
+            <a class="navbar-item" href="https://spring.io/events">Events</a>
+            <a class="navbar-item" href="https://spring.io/team">Team</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <label class="theme-toggler">
+      <input
+        type="checkbox"
+        type="checkbox"
+        id="switch-theme-checkbox"
+        name="switch-theme-checkbox"
+      />
+      <span class="icon"><svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="moon"
+          class="svg-inline--fa fa-moon moon"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 384 512"
+        ><path
+            fill="currentColor"
+            d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
+          ></path>
+        </svg>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="sun"
+          class="svg-inline--fa fa-sun sun"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        ><path
+            fill="currentColor"
+            d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"
+          ></path>
+        </svg></span>
+      <span class="text">light</span>
+    </label>
+  </nav>
+</header>
+<script>
+!function (theme) {
+  if (theme === 'dark') {
+    document.getElementById('switch-theme-checkbox').parentElement.classList.add('active')
+  }
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'))
+</script><div class="body">
+<div class="nav-container" data-component="kafka" data-version="3.1.0">
+  <aside class="nav">
+    <div class="panels">
+      <div class="nav-panel-menu is-active" data-panel="menu">
+        <nav class="nav-menu">
+<div class="context">
+  <span class="title">Spring Kafka</span>
+  <span class="version">3.1.0-SNAPSHOT</span>
+  <button class="browse-version" id="browse-version">
+    <svg
+      height="24px"
+      id="Layer_1"
+      style="enable-background:new 0 0 512 512;"
+      version="1.1"
+      viewBox="0 0 512 512"
+      width="24px"
+      xml:space="preserve"
+    ><g><path
+          d="M256,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S273.7,224,256,224L256,224z"
+        ></path><path
+          d="M128.4,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S146,224,128.4,224L128.4,224z"
+        ></path><path
+          d="M384,224c-17.7,0-32,14.3-32,32s14.3,32,32,32s32-14.3,32-32S401.7,224,384,224L384,224z"
+        ></path></g></svg>
+  </button>
+</div><div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../whats-new.html">What&#8217;s new?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../introduction.html">Introduction</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../quick-tour.html">Quick Tour</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference.html">Reference</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../kafka.html">Using Spring for Apache Kafka</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="connecting.html">Connecting to Kafka</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="configuring-topics.html">Configuring Topics</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sending-messages.html">Sending Messages</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="receiving-messages.html">Receiving Messages</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/message-listeners.html">Message Listeners</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/message-listener-container.html">Message Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/ooo-commits.html">Manually Committing Offsets</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/listener-annotation.html"><code>@KafkaListener</code> Annotation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/listener-group-id.html">Obtaining the Consumer <code>group.id</code></a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/container-thread-naming.html">Container Thread Naming</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/listener-meta.html"><code>@KafkaListener</code> as a Meta Annotation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/class-level-kafkalistener.html"><code>@KafkaListener</code> on a Class</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/kafkalistener-attrs.html"><code>@KafkaListener</code> Attribute Modification</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/kafkalistener-lifecycle.html"><code>@KafkaListener</code> Lifecycle Management</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/validation.html"><code>@KafkaListener</code> <code>@Payload</code> Validation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/rebalance-listeners.html">Rebalancing Listeners</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/annotation-send-to.html">Forwarding Listener Results using <code>@SendTo</code></a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/filtering.html">Filtering Messages</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/retrying-deliveries.html">Retrying Deliveries</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/sequencing.html">Starting <code>@KafkaListener</code> s in Sequence</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/template-receive.html">Using <code>KafkaTemplate</code> to Receive</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="container-props.html">Listener Container Properties</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="dynamic-containers.html">Dynamically Creating Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="events.html">Application Events</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="topic/partition-initial-offset.html">Topic/Partition Initial Offset</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="seek.html">Seeking to a Specific Offset</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="container-factory.html">Container factory</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="thread-safety.html">Thread Safety</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="micrometer.html">Monitoring</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="exactly-once.html">Exactly Once Semantics</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="interceptors.html">Wiring Spring Beans into Producer/Consumer Interceptors</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="producer-interceptor-managed-in-spring.html">Producer Interceptor Managed in Spring</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="pause-resume.html">Pausing and Resuming Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="pause-resume-partitions.html">Pausing and Resuming Partitions on Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="serdes.html">Serialization, Deserialization, and Message Conversion</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="headers.html">Message Headers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="tombstones.html">Null Payloads and Log Compaction of 'Tombstone' Records</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="annotation-error-handling.html">Handling Exceptions</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kerberos.html">JAAS and Kerberos</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../retrytopic.html">Non-Blocking Retries</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/how-the-pattern-works.html">How The Pattern Works</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/back-off-delay-precision.html">Back Off Delay Precision</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/retry-config.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/programmatic-construction.html">Programmatic Construction</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/retry-topic-combine-blocking.html">Combining Blocking and Non-Blocking Retries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/accessing-delivery-attempts.html">Accessing Delivery Attempts</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/topic-naming.html">Topic Naming</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/multi-retry.html">Multiple Listeners, Same Topic(s)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/dlt-strategies.html">Dlt Strategies</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/retry-topic-lcf.html">Specifying a ListenerContainerFactory</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/access-topic-info-runtime.html">Accessing Topics' Information at Runtime</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/change-kboe-logging-level.html">Changing KafkaBackOffException Logging Level</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../streams.html">Apache Kafka Streams Support</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../testing.html">Testing Applications</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../tips.html">Tips, Tricks and Examples</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../other-resources.html">Other Resources</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/override-boot-dependencies.html">Override Spring Boot Dependencies</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/micrometer.html">Micrometer Observation Documentation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/native-images.html">Native Images</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/change-history.html">Change History</a>
+  </li>
+</ul>
+  </li>
+</ul>
+          <div class="toggle-sm">
+            <button id="nav-toggle-2" class="nav-toggle"></button>
+          </div>
+        </nav>
+      </div>
+      <div class="nav-collapse">
+        <button id="nav-collapse-toggle"><span></span></button>        
+      </div>
+    </div>
+    <div class="nav-resize"></div>
+  </aside>
+</div>
+<script>
+!function (sidebar) {
+  if (sidebar) {
+    document.body.classList.add('nav-sm')
+  }
+}(localStorage && localStorage.getItem('sidebar') === 'close')
+</script><main class="article">
+<div class="toolbar" role="navigation">
+  <button id="nav-toggle-1" class="nav-toggle"></button>
+<div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+</div>
+  <div class="content">
+<aside class="sidebar">
+  <div class="content">
+    <div
+      class="toc"
+      data-title="Handling Exceptions"
+      data-levels="2"
+    >
+      <div class="toc-menu"></div>
+    </div>
+    <div class="sidebar-links">
+        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/kafka/annotation-error-handling.adoc">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+          ><path
+              d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z"
+            ></path></svg>
+          Edit this Page
+        </a>
+              <a href="https://github.com/rwinch/spring-kafka" title="Github">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="512px"
+            id="Layer_1"
+            version="1.1"
+            viewBox="0 0 512 512"
+            width="512px"
+          ><style type="text/css"><![CDATA[
+              .st0{fill-rule:evenodd;clip-rule:evenodd;} ]]></style><g><path
+                class="st0"
+                d="M256,32C132.3,32,32,134.8,32,261.7c0,101.5,64.2,187.5,153.2,217.9c11.2,2.1,15.3-5,15.3-11.1   c0-5.5-0.2-19.9-0.3-39.1c-62.3,13.9-75.5-30.8-75.5-30.8c-10.2-26.5-24.9-33.6-24.9-33.6c-20.3-14.3,1.5-14,1.5-14   c22.5,1.6,34.3,23.7,34.3,23.7c20,35.1,52.4,25,65.2,19.1c2-14.8,7.8-25,14.2-30.7c-49.7-5.8-102-25.5-102-113.5   c0-25.1,8.7-45.6,23-61.6c-2.3-5.8-10-29.2,2.2-60.8c0,0,18.8-6.2,61.6,23.5c17.9-5.1,37-7.6,56.1-7.7c19,0.1,38.2,2.6,56.1,7.7   c42.8-29.7,61.5-23.5,61.5-23.5c12.2,31.6,4.5,55,2.2,60.8c14.3,16.1,23,36.6,23,61.6c0,88.2-52.4,107.6-102.3,113.3   c8,7.1,15.2,21.1,15.2,42.5c0,30.7-0.3,55.5-0.3,63c0,6.1,4,13.3,15.4,11C415.9,449.1,480,363.1,480,261.7   C480,134.8,379.7,32,256,32z"
+              ></path></g></svg>
+          Github Project
+        </a>
+        <a href="https://stackoverflow.com/tags/spring-kafka">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path
+              d="M290.7 311L95 269.7 86.8 309l195.7 41zm51-87L188.2 95.7l-25.5 30.8 153.5 128.3zm-31.2 39.7L129.2 179l-16.7 36.5L293.7 300zM262 32l-32 24 119.3 160.3 32-24zm20.5 328h-200v39.7h200zm39.7 80H42.7V320h-40v160h359.5V320h-40z"
+            ></path></svg>
+          Stack Overflow
+        </a>
+    </div>
+  </div>
+</aside><div class="doc">
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Spring Kafka</a></li>
+    <li><a href="../reference.html">Reference</a></li>
+    <li><a href="../kafka.html">Using Spring for Apache Kafka</a></li>
+    <li><a href="annotation-error-handling.html">Handling Exceptions</a></li>
+  </ul>
+</nav>
+<article>
+<h1 id="page-title" class="page">Handling Exceptions</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to handle various exceptions that may arise when you use Spring for Apache Kafka.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="listener-error-handlers"><a class="anchor" href="#listener-error-handlers"></a>Listener Error Handlers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Starting with version 2.0, the <code>@KafkaListener</code> annotation has a new attribute: <code>errorHandler</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can use the <code>errorHandler</code> to provide the bean name of a <code>KafkaListenerErrorHandler</code> implementation.
+This functional interface has one method, as the following listing shows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@FunctionalInterface
+public interface KafkaListenerErrorHandler {
+
+    Object handleError(Message&lt;?&gt; message, ListenerExecutionFailedException exception) throws Exception;
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You have access to the spring-messaging <code>Message&lt;?&gt;</code> object produced by the message converter and the exception that was thrown by the listener, which is wrapped in a <code>ListenerExecutionFailedException</code>.
+The error handler can throw the original or a new exception, which is thrown to the container.
+Anything returned by the error handler is ignored.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.7, you can set the <code>rawRecordHeader</code> property on the <code>MessagingMessageConverter</code> and <code>BatchMessagingMessageConverter</code> which causes the raw <code>ConsumerRecord</code> to be added to the converted <code>Message&lt;?&gt;</code> in the <code>KafkaHeaders.RAW_DATA</code> header.
+This is useful, for example, if you wish to use a <code>DeadLetterPublishingRecoverer</code> in a listener error handler.
+It might be used in a request/reply scenario where you wish to send a failure result to the sender, after some number of retries, after capturing the failed record in a dead letter topic.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+KafkaListenerErrorHandler eh(DeadLetterPublishingRecoverer recoverer) {
+    return (msg, ex) -&gt; {
+        if (msg.getHeaders().get(KafkaHeaders.DELIVERY_ATTEMPT, Integer.class) &gt; 9) {
+            recoverer.accept(msg.getHeaders().get(KafkaHeaders.RAW_DATA, ConsumerRecord.class), ex);
+            return "FAILED";
+        }
+        throw ex;
+    };
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It has a sub-interface (<code>ConsumerAwareListenerErrorHandler</code>) that has access to the consumer object, through the following method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Object handleError(Message&lt;?&gt; message, ListenerExecutionFailedException exception, Consumer&lt;?, ?&gt; consumer);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Another sub-interface (<code>ManualAckListenerErrorHandler</code>) provides access to the <code>Acknowledgment</code> object when using manual <code>AckMode</code> s.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Object handleError(Message&lt;?&gt; message, ListenerExecutionFailedException exception,
+			Consumer&lt;?, ?&gt; consumer, @Nullable Acknowledgment ack);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In either case, you should NOT perform any seeks on the consumer because the container would be unaware of them.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="error-handlers"><a class="anchor" href="#error-handlers"></a>Container Error Handlers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Starting with version 2.8, the legacy <code>ErrorHandler</code> and <code>BatchErrorHandler</code> interfaces have been superseded by a new <code>CommonErrorHandler</code>.
+These error handlers can handle errors for both record and batch listeners, allowing a single listener container factory to create containers for both types of listener.
+<code>CommonErrorHandler</code> implementations to replace most legacy framework error handler implementations are provided and the legacy error handlers deprecated.
+The legacy interfaces are still supported by listener containers and listener container factories; they will be deprecated in a future release.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="#migrating-legacy-eh">Migrating Custom Legacy Error Handler Implementations to <code>CommonErrorHandler</code></a> for information to migrate custom error handlers to <code>CommonErrorHandler</code>.</p>
+</div>
+<div class="paragraph">
+<p>When transactions are being used, no error handlers are configured, by default, so that the exception will roll back the transaction.
+Error handling for transactional containers are handled by the <a href="#after-rollback"><code>AfterRollbackProcessor</code></a>.
+If you provide a custom error handler when using transactions, it must throw an exception if you want the transaction rolled back.</p>
+</div>
+<div class="paragraph">
+<p>This interface has a default method <code>isAckAfterHandle()</code> which is called by the container to determine whether the offset(s) should be committed if the error handler returns without throwing an exception; it returns true by default.</p>
+</div>
+<div class="paragraph">
+<p>Typically, the error handlers provided by the framework will throw an exception when the error is not "handled" (e.g. after performing a seek operation).
+By default, such exceptions are logged by the container at <code>ERROR</code> level.
+All of the framework error handlers extend <code>KafkaExceptionLogLevelAware</code> which allows you to control the level at which these exceptions are logged.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
+ * Set the level at which the exception thrown by this handler is logged.
+ * @param logLevel the level (default ERROR).
+ */
+public void setLogLevel(KafkaException.Level logLevel) {
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can specify a global error handler to be used for all listeners in the container factory.
+The following example shows how to do so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public KafkaListenerContainerFactory&lt;ConcurrentMessageListenerContainer&lt;Integer, String&gt;&gt;
+        kafkaListenerContainerFactory() {
+    ConcurrentKafkaListenerContainerFactory&lt;Integer, String&gt; factory =
+            new ConcurrentKafkaListenerContainerFactory&lt;&gt;();
+    ...
+    factory.setCommonErrorHandler(myErrorHandler);
+    ...
+    return factory;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, if an annotated listener method throws an exception, it is thrown to the container, and the message is handled according to the container configuration.</p>
+</div>
+<div class="paragraph">
+<p>The container commits any pending offset commits before calling the error handler.</p>
+</div>
+<div class="paragraph">
+<p>If you are using Spring Boot, you simply need to add the error handler as a <code>@Bean</code> and Boot will add it to the auto-configured factory.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="backoff-handlers"><a class="anchor" href="#backoff-handlers"></a>Back Off Handlers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Error handlers such as the <a href="#default-eh">DefaultErrorHandler</a> use a <code>BackOff</code> to determine how long to wait before retrying a delivery.
+Starting with version 2.9, you can configure a custom <code>BackOffHandler</code>.
+The default handler simply suspends the thread until the back off time passes (or the container is stopped).
+The framework also provides the <code>ContainerPausingBackOffHandler</code> which pauses the listener container until the back off time passes and then resumes the container.
+This is useful when the delays are longer than the <code>max.poll.interval.ms</code> consumer property.
+Note that the resolution of the actual back off time will be affected by the <code>pollTimeout</code> container property.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="default-eh"><a class="anchor" href="#default-eh"></a>DefaultErrorHandler</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This new error handler replaces the <code>SeekToCurrentErrorHandler</code> and <code>RecoveringBatchErrorHandler</code>, which have been the default error handlers for several releases now.
+One difference is that the fallback behavior for batch listeners (when an exception other than a <code>BatchListenerFailedException</code> is thrown) is the equivalent of the <a href="#retrying-batch-eh">Retrying Complete Batches</a>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Starting with version 2.9, the <code>DefaultErrorHandler</code> can be configured to provide the same semantics as seeking the unprocessed record offsets as discussed below, but without actually seeking.
+Instead, the records are retained by the listener container and resubmitted to the listener after the error handler exits (and after performing a single paused <code>poll()</code>, to keep the consumer alive; if <a href="../retrytopic.html" class="xref page">Non-Blocking Retries</a> or a <code>ContainerPausingBackOffHandler</code> are being used, the pause may extend over multiple polls).
+The error handler returns a result to the container that indicates whether the current failing record can be resubmitted, or if it was recovered and then it will not be sent to the listener again.
+To enable this mode, set the property <code>seekAfterError</code> to <code>false</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The error handler can recover (skip) a record that keeps failing.
+By default, after ten failures, the failed record is logged (at the <code>ERROR</code> level).
+You can configure the handler with a custom recoverer (<code>BiConsumer</code>) and a <code>BackOff</code> that controls the delivery attempts and delays between each.
+Using a <code>FixedBackOff</code> with <code>FixedBackOff.UNLIMITED_ATTEMPTS</code> causes (effectively) infinite retries.
+The following example configures recovery after three tries:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">DefaultErrorHandler errorHandler =
+    new DefaultErrorHandler((record, exception) -&gt; {
+        // recover after 3 failures, with no back off - e.g. send to a dead-letter topic
+    }, new FixedBackOff(0L, 2L));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To configure the listener container with a customized instance of this handler, add it to the container factory.</p>
+</div>
+<div class="paragraph">
+<p>For example, with the <code>@KafkaListener</code> container factory, you can add <code>DefaultErrorHandler</code> as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public ConcurrentKafkaListenerContainerFactory&lt;String, String&gt; kafkaListenerContainerFactory() {
+    ConcurrentKafkaListenerContainerFactory&lt;String, String&gt; factory = new ConcurrentKafkaListenerContainerFactory();
+    factory.setConsumerFactory(consumerFactory());
+    factory.getContainerProperties().setAckMode(AckMode.RECORD);
+    factory.setCommonErrorHandler(new DefaultErrorHandler(new FixedBackOff(1000L, 2L)));
+    return factory;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a record listener, this will retry a delivery up to 2 times (3 delivery attempts) with a back off of 1 second, instead of the default configuration (<code>FixedBackOff(0L, 9)</code>).
+Failures are simply logged after retries are exhausted.</p>
+</div>
+<div class="paragraph">
+<p>As an example; if the <code>poll</code> returns six records (two from each partition 0, 1, 2) and the listener throws an exception on the fourth record, the container acknowledges the first three messages by committing their offsets.
+The <code>DefaultErrorHandler</code> seeks to offset 1 for partition 1 and offset 0 for partition 2.
+The next <code>poll()</code> returns the three unprocessed records.</p>
+</div>
+<div class="paragraph">
+<p>If the <code>AckMode</code> was <code>BATCH</code>, the container commits the offsets for the first two partitions before calling the error handler.</p>
+</div>
+<div class="paragraph">
+<p>For a batch listener, the listener must throw a <code>BatchListenerFailedException</code> indicating which records in the batch failed.</p>
+</div>
+<div class="paragraph">
+<p>The sequence of events is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Commit the offsets of the records before the index.</p>
+</li>
+<li>
+<p>If retries are not exhausted, perform seeks so that all the remaining records (including the failed record) will be redelivered.</p>
+</li>
+<li>
+<p>If retries are exhausted, attempt recovery of the failed record (default log only) and perform seeks so that the remaining records (excluding the failed record) will be redelivered.
+The recovered record&#8217;s offset is committed</p>
+</li>
+<li>
+<p>If retries are exhausted and recovery fails, seeks are performed as if retries are not exhausted.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Starting with version 2.9, the <code>DefaultErrorHandler</code> can be configured to provide the same semantics as seeking the unprocessed record offsets as discussed above, but without actually seeking.
+Instead, error handler creates a new <code>ConsumerRecords&lt;?, ?&gt;</code> containing just the unprocessed records which will then be submitted to the listener (after performing a single paused <code>poll()</code>, to keep the consumer alive).
+To enable this mode, set the property <code>seekAfterError</code> to <code>false</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The default recoverer logs the failed record after retries are exhausted.
+You can use a custom recoverer, or one provided by the framework such as the <a href="#dead-letters"><code>DeadLetterPublishingRecoverer</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>When using a POJO batch listener (e.g. <code>List&lt;Thing&gt;</code>), and you don&#8217;t have the full consumer record to add to the exception, you can just add the index of the record that failed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@KafkaListener(id = "recovering", topics = "someTopic")
+public void listen(List&lt;Thing&gt; things) {
+    for (int i = 0; i &lt; records.size(); i++) {
+        try {
+            process(things.get(i));
+        }
+        catch (Exception e) {
+            throw new BatchListenerFailedException("Failed to process", i);
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the container is configured with <code>AckMode.MANUAL_IMMEDIATE</code>, the error handler can be configured to commit the offset of recovered records; set the <code>commitRecovered</code> property to <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="#dead-letters">Publishing Dead-letter Records</a>.</p>
+</div>
+<div class="paragraph">
+<p>When using transactions, similar functionality is provided by the <code>DefaultAfterRollbackProcessor</code>.
+See <a href="#after-rollback">After-rollback Processor</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>DefaultErrorHandler</code> considers certain exceptions to be fatal, and retries are skipped for such exceptions; the recoverer is invoked on the first failure.
+The exceptions that are considered fatal, by default, are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DeserializationException</code></p>
+</li>
+<li>
+<p><code>MessageConversionException</code></p>
+</li>
+<li>
+<p><code>ConversionException</code></p>
+</li>
+<li>
+<p><code>MethodArgumentResolutionException</code></p>
+</li>
+<li>
+<p><code>NoSuchMethodException</code></p>
+</li>
+<li>
+<p><code>ClassCastException</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>since these exceptions are unlikely to be resolved on a retried delivery.</p>
+</div>
+<div class="paragraph">
+<p>You can add more exception types to the not-retryable category, or completely replace the map of classified exceptions.
+See the Javadocs for <code>DefaultErrorHandler.addNotRetryableException()</code> and <code>DefaultErrorHandler.setClassifications()</code> for more information, as well as those for the <code>spring-retry</code> <code>BinaryExceptionClassifier</code>.</p>
+</div>
+<div class="paragraph">
+<p>Here is an example that adds <code>IllegalArgumentException</code> to the not-retryable exceptions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public DefaultErrorHandler errorHandler(ConsumerRecordRecoverer recoverer) {
+    DefaultErrorHandler handler = new DefaultErrorHandler(recoverer);
+    handler.addNotRetryableExceptions(IllegalArgumentException.class);
+    return handler;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The error handler can be configured with one or more <code>RetryListener</code> s, receiving notifications of retry and recovery progress.
+Starting with version 2.8.10, methods for batch listeners were added.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@FunctionalInterface
+public interface RetryListener {
+
+    void failedDelivery(ConsumerRecord&lt;?, ?&gt; record, Exception ex, int deliveryAttempt);
+
+    default void recovered(ConsumerRecord&lt;?, ?&gt; record, Exception ex) {
+    }
+
+    default void recoveryFailed(ConsumerRecord&lt;?, ?&gt; record, Exception original, Exception failure) {
+    }
+
+	default void failedDelivery(ConsumerRecords&lt;?, ?&gt; records, Exception ex, int deliveryAttempt) {
+	}
+
+	default void recovered(ConsumerRecords&lt;?, ?&gt; records, Exception ex) {
+	}
+
+	default void recoveryFailed(ConsumerRecords&lt;?, ?&gt; records, Exception original, Exception failure) {
+	}
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See the javadocs for more information.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If the recoverer fails (throws an exception), the failed record will be included in the seeks.
+If the recoverer fails, the <code>BackOff</code> will be reset by default and redeliveries will again go through the back offs before recovery is attempted again.
+To skip retries after a recovery failure, set the error handler&#8217;s <code>resetStateOnRecoveryFailure</code> to <code>false</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You can provide the error handler with a <code>BiFunction&lt;ConsumerRecord&lt;?, ?&gt;, Exception, BackOff&gt;</code> to determine the <code>BackOff</code> to use, based on the failed record and/or the exception:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">handler.setBackOffFunction((record, ex) -&gt; { ... });</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the function returns <code>null</code>, the handler&#8217;s default <code>BackOff</code> will be used.</p>
+</div>
+<div class="paragraph">
+<p>Set <code>resetStateOnExceptionChange</code> to <code>true</code> and the retry sequence will be restarted (including the selection of a new <code>BackOff</code>, if so configured) if the exception type changes between failures.
+When <code>false</code> (the default before version 2.9), the exception type is not considered.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.9, this is now <code>true</code> by default.</p>
+</div>
+<div class="paragraph">
+<p>Also see <a href="#delivery-header">Delivery Attempts Header</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="batch-listener-conv-errors"><a class="anchor" href="#batch-listener-conv-errors"></a>Conversion Errors with Batch Error Handlers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Starting with version 2.8, batch listeners can now properly handle conversion errors, when using a <code>MessageConverter</code> with a <code>ByteArrayDeserializer</code>, a <code>BytesDeserializer</code> or a <code>StringDeserializer</code>, as well as a <code>DefaultErrorHandler</code>.
+When a conversion error occurs, the payload is set to null and a deserialization exception is added to the record headers, similar to the <code>ErrorHandlingDeserializer</code>.
+A list of <code>ConversionException</code> s is available in the listener so the listener can throw a <code>BatchListenerFailedException</code> indicating the first index at which a conversion exception occurred.</p>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@KafkaListener(id = "test", topics = "topic")
+void listen(List&lt;Thing&gt; in, @Header(KafkaHeaders.CONVERSION_FAILURES) List&lt;ConversionException&gt; exceptions) {
+    for (int i = 0; i &lt; in.size(); i++) {
+        Foo foo = in.get(i);
+        if (foo == null &amp;&amp; exceptions.get(i) != null) {
+            throw new BatchListenerFailedException("Conversion error", exceptions.get(i), i);
+        }
+        process(foo);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="retrying-batch-eh"><a class="anchor" href="#retrying-batch-eh"></a>Retrying Complete Batches</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This is now the fallback behavior of the <code>DefaultErrorHandler</code> for a batch listener where the listener throws an exception other than a <code>BatchListenerFailedException</code>.</p>
+</div>
+<div class="paragraph">
+<p>There is no guarantee that, when a batch is redelivered, the batch has the same number of records and/or the redelivered records are in the same order.
+It is impossible, therefore, to easily maintain retry state for a batch.
+The <code>FallbackBatchErrorHandler</code> takes a the following approach.
+If a batch listener throws an exception that is not a <code>BatchListenerFailedException</code>, the retries are performed from the in-memory batch of records.
+In order to avoid a rebalance during an extended retry sequence, the error handler pauses the consumer, polls it before sleeping for the back off, for each retry, and calls the listener again.
+If/when retries are exhausted, the <code>ConsumerRecordRecoverer</code> is called for each record in the batch.
+If the recoverer throws an exception, or the thread is interrupted during its sleep, the batch of records will be redelivered on the next poll.
+Before exiting, regardless of the outcome, the consumer is resumed.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This mechanism cannot be used with transactions.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>While waiting for a <code>BackOff</code> interval, the error handler will loop with a short sleep until the desired delay is reached, while checking to see if the container has been stopped, allowing the sleep to exit soon after the <code>stop()</code> rather than causing a delay.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="container-stopping-error-handlers"><a class="anchor" href="#container-stopping-error-handlers"></a>Container Stopping Error Handlers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>CommonContainerStoppingErrorHandler</code> stops the container if the listener throws an exception.
+For record listeners, when the <code>AckMode</code> is <code>RECORD</code>, offsets for already processed records are committed.
+For record listeners, when the <code>AckMode</code> is any manual value, offsets for already acknowledged records are committed.
+For record listeners, wWhen the <code>AckMode</code> is <code>BATCH</code>, or for batch listeners, the entire batch is replayed when the container is restarted.</p>
+</div>
+<div class="paragraph">
+<p>After the container stops, an exception that wraps the <code>ListenerExecutionFailedException</code> is thrown.
+This is to cause the transaction to roll back (if transactions are enabled).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cond-eh"><a class="anchor" href="#cond-eh"></a>Delegating Error Handler</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>CommonDelegatingErrorHandler</code> can delegate to different error handlers, depending on the exception type.
+For example, you may wish to invoke a <code>DefaultErrorHandler</code> for most exceptions, or a <code>CommonContainerStoppingErrorHandler</code> for others.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="log-eh"><a class="anchor" href="#log-eh"></a>Logging Error Handler</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>CommonLoggingErrorHandler</code> simply logs the exception; with a record listener, the remaining records from the previous poll are passed to the listener.
+For a batch listener, all the records in the batch are logged.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mixed-eh"><a class="anchor" href="#mixed-eh"></a>Using Different Common Error Handlers for Record and Batch Listeners</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you wish to use a different error handling strategy for record and batch listeners, the <code>CommonMixedErrorHandler</code> is provided allowing the configuration of a specific error handler for each listener type.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="eh-summary"><a class="anchor" href="#eh-summary"></a>Common Error Handler Summary</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><code>DefaultErrorHandler</code></p>
+</li>
+<li>
+<p><code>CommonContainerStoppingErrorHandler</code></p>
+</li>
+<li>
+<p><code>CommonDelegatingErrorHandler</code></p>
+</li>
+<li>
+<p><code>CommonLoggingErrorHandler</code></p>
+</li>
+<li>
+<p><code>CommonMixedErrorHandler</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="legacy-eh"><a class="anchor" href="#legacy-eh"></a>Legacy Error Handlers and Their Replacements</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Legacy Error Handler</th>
+<th class="tableblock halign-left valign-top">Replacement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LoggingErrorHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CommonLoggingErrorHandler</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BatchLoggingErrorHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CommonLoggingErrorHandler</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConditionalDelegatingErrorHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DelegatingErrorHandler</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConditionalDelegatingBatchErrorHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DelegatingErrorHandler</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ContainerStoppingErrorHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CommonContainerStoppingErrorHandler</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ContainerStoppingBatchErrorHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CommonContainerStoppingErrorHandler</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SeekToCurrentErrorHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DefaultErrorHandler</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SeekToCurrentBatchErrorHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No replacement, use <code>DefaultErrorHandler</code> with an infinite <code>BackOff</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RecoveringBatchErrorHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DefaultErrorHandler</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RetryingBatchErrorHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No replacements - use <code>DefaultErrorHandler</code> and throw an exception other than <code>BatchListenerFailedException</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="migrating-legacy-eh"><a class="anchor" href="#migrating-legacy-eh"></a>Migrating Custom Legacy Error Handler Implementations to <code>CommonErrorHandler</code></h3>
+<div class="paragraph">
+<p>Refer to the javadocs in <code>CommonErrorHandler</code>.</p>
+</div>
+<div class="paragraph">
+<p>To replace an <code>ErrorHandler</code> or <code>ConsumerAwareErrorHandler</code> implementation, you should implement <code>handleOne()</code> and leave <code>seeksAfterHandle()</code> to return <code>false</code> (default).
+You should also implement <code>handleOtherException()</code> - to handle exceptions that occur outside the scope of record processing (e.g. consumer errors).</p>
+</div>
+<div class="paragraph">
+<p>To replace a <code>RemainingRecordsErrorHandler</code> implementation, you should implement <code>handleRemaining()</code>  and override <code>seeksAfterHandle()</code> to return <code>true</code> (the error handler must perform the necessary seeks).
+You should also implement <code>handleOtherException()</code> - to handle exceptions that occur outside the scope of record processing (e.g. consumer errors).</p>
+</div>
+<div class="paragraph">
+<p>To replace any <code>BatchErrorHandler</code> implementation, you should implement <code>handleBatch()</code>
+You should also implement <code>handleOtherException()</code> - to handle exceptions that occur outside the scope of record processing (e.g. consumer errors).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="after-rollback"><a class="anchor" href="#after-rollback"></a>After-rollback Processor</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When using transactions, if the listener throws an exception (and an error handler, if present, throws an exception), the transaction is rolled back.
+By default, any unprocessed records (including the failed record) are re-fetched on the next poll.
+This is achieved by performing <code>seek</code> operations in the <code>DefaultAfterRollbackProcessor</code>.
+With a batch listener, the entire batch of records is reprocessed (the container has no knowledge of which record in the batch failed).
+To modify this behavior, you can configure the listener container with a custom <code>AfterRollbackProcessor</code>.
+For example, with a record-based listener, you might want to keep track of the failed record and give up after some number of attempts, perhaps by publishing it to a dead-letter topic.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.2, the <code>DefaultAfterRollbackProcessor</code> can now recover (skip) a record that keeps failing.
+By default, after ten failures, the failed record is logged (at the <code>ERROR</code> level).
+You can configure the processor with a custom recoverer (<code>BiConsumer</code>) and maximum failures.
+Setting the <code>maxFailures</code> property to a negative number causes infinite retries.
+The following example configures recovery after three tries:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">AfterRollbackProcessor&lt;String, String&gt; processor =
+    new DefaultAfterRollbackProcessor((record, exception) -&gt; {
+        // recover after 3 failures, with no back off - e.g. send to a dead-letter topic
+    }, new FixedBackOff(0L, 2L));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you do not use transactions, you can achieve similar functionality by configuring a <code>DefaultErrorHandler</code>.
+See <a href="#error-handlers">Container Error Handlers</a>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Recovery is not possible with a batch listener, since the framework has no knowledge about which record in the batch keeps failing.
+In such cases, the application listener must handle a record that keeps failing.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>See also <a href="#dead-letters">Publishing Dead-letter Records</a>.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.2.5, the <code>DefaultAfterRollbackProcessor</code> can be invoked in a new transaction (started after the failed transaction rolls back).
+Then, if you are using the <code>DeadLetterPublishingRecoverer</code> to publish a failed record, the processor will send the recovered record&#8217;s offset in the original topic/partition to the transaction.
+To enable this feature, set the <code>commitRecovered</code> and <code>kafkaTemplate</code> properties on the <code>DefaultAfterRollbackProcessor</code>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If the recoverer fails (throws an exception), the failed record will be included in the seeks.
+Starting with version 2.5.5, if the recoverer fails, the <code>BackOff</code> will be reset by default and redeliveries will again go through the back offs before recovery is attempted again.
+With earlier versions, the <code>BackOff</code> was not reset and recovery was re-attempted on the next failure.
+To revert to the previous behavior, set the processor&#8217;s <code>resetStateOnRecoveryFailure</code> property to <code>false</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.6, you can now provide the processor with a <code>BiFunction&lt;ConsumerRecord&lt;?, ?&gt;, Exception, BackOff&gt;</code> to determine the <code>BackOff</code> to use, based on the failed record and/or the exception:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">handler.setBackOffFunction((record, ex) -&gt; { ... });</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the function returns <code>null</code>, the processor&#8217;s default <code>BackOff</code> will be used.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.6.3, set <code>resetStateOnExceptionChange</code> to <code>true</code> and the retry sequence will be restarted (including the selection of a new <code>BackOff</code>, if so configured) if the exception type changes between failures.
+By default, the exception type is not considered.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.3.1, similar to the <code>DefaultErrorHandler</code>, the <code>DefaultAfterRollbackProcessor</code> considers certain exceptions to be fatal, and retries are skipped for such exceptions; the recoverer is invoked on the first failure.
+The exceptions that are considered fatal, by default, are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DeserializationException</code></p>
+</li>
+<li>
+<p><code>MessageConversionException</code></p>
+</li>
+<li>
+<p><code>ConversionException</code></p>
+</li>
+<li>
+<p><code>MethodArgumentResolutionException</code></p>
+</li>
+<li>
+<p><code>NoSuchMethodException</code></p>
+</li>
+<li>
+<p><code>ClassCastException</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>since these exceptions are unlikely to be resolved on a retried delivery.</p>
+</div>
+<div class="paragraph">
+<p>You can add more exception types to the not-retryable category, or completely replace the map of classified exceptions.
+See the Javadocs for <code>DefaultAfterRollbackProcessor.setClassifications()</code> for more information, as well as those for the <code>spring-retry</code> <code>BinaryExceptionClassifier</code>.</p>
+</div>
+<div class="paragraph">
+<p>Here is an example that adds <code>IllegalArgumentException</code> to the not-retryable exceptions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public DefaultAfterRollbackProcessor errorHandler(BiConsumer&lt;ConsumerRecord&lt;?, ?&gt;, Exception&gt; recoverer) {
+    DefaultAfterRollbackProcessor processor = new DefaultAfterRollbackProcessor(recoverer);
+    processor.addNotRetryableException(IllegalArgumentException.class);
+    return processor;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also see <a href="#delivery-header">Delivery Attempts Header</a>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+With current <code>kafka-clients</code>, the container cannot detect whether a <code>ProducerFencedException</code> is caused by a rebalance or if the producer&#8217;s <code>transactional.id</code> has been revoked due to a timeout or expiry.
+Because, in most cases, it is caused by a rebalance, the container does not call the <code>AfterRollbackProcessor</code> (because it&#8217;s not appropriate to seek the partitions because we no longer are assigned them).
+If you ensure the timeout is large enough to process each transaction and periodically perform an "empty" transaction (e.g. via a <code>ListenerContainerIdleEvent</code>) you can avoid fencing due to timeout and expiry.
+Or, you can set the <code>stopContainerWhenFenced</code> container property to <code>true</code> and the container will stop, avoiding the loss of records.
+You can consume a <code>ConsumerStoppedEvent</code> and check the <code>Reason</code> property for <code>FENCED</code> to detect this condition.
+Since the event also has a reference to the container, you can restart the container using this event.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.7, while waiting for a <code>BackOff</code> interval, the error handler will loop with a short sleep until the desired delay is reached, while checking to see if the container has been stopped, allowing the sleep to exit soon after the <code>stop()</code> rather than causing a delay.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.7, the processor can be configured with one or more <code>RetryListener</code> s, receiving notifications of retry and recovery progress.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@FunctionalInterface
+public interface RetryListener {
+
+    void failedDelivery(ConsumerRecord&lt;?, ?&gt; record, Exception ex, int deliveryAttempt);
+
+    default void recovered(ConsumerRecord&lt;?, ?&gt; record, Exception ex) {
+    }
+
+    default void recoveryFailed(ConsumerRecord&lt;?, ?&gt; record, Exception original, Exception failure) {
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See the javadocs for more information.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="delivery-header"><a class="anchor" href="#delivery-header"></a>Delivery Attempts Header</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following applies to record listeners only, not batch listeners.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.5, when using an <code>ErrorHandler</code> or <code>AfterRollbackProcessor</code> that implements <code>DeliveryAttemptAware</code>, it is possible to enable the addition of the <code>KafkaHeaders.DELIVERY_ATTEMPT</code> header (<code>kafka_deliveryAttempt</code>) to the record.
+The value of this header is an incrementing integer starting at 1.
+When receiving a raw <code>ConsumerRecord&lt;?, ?&gt;</code> the integer is in a <code>byte[4]</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">int delivery = ByteBuffer.wrap(record.headers()
+    .lastHeader(KafkaHeaders.DELIVERY_ATTEMPT).value())
+    .getInt()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When using <code>@KafkaListener</code> with the <code>DefaultKafkaHeaderMapper</code> or <code>SimpleKafkaHeaderMapper</code>, it can be obtained by adding <code>@Header(KafkaHeaders.DELIVERY_ATTEMPT) int delivery</code> as a parameter to the listener method.</p>
+</div>
+<div class="paragraph">
+<p>To enable population of this header, set the container property <code>deliveryAttemptHeader</code> to <code>true</code>.
+It is disabled by default to avoid the (small) overhead of looking up the state for each record and adding the header.</p>
+</div>
+<div class="paragraph">
+<p>The <code>DefaultErrorHandler</code> and <code>DefaultAfterRollbackProcessor</code> support this feature.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="li-header"><a class="anchor" href="#li-header"></a>Listener Info Header</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In some cases, it is useful to be able to know which container a listener is running in.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.8.4, you can now set the <code>listenerInfo</code> property on the listener container, or set the <code>info</code> attribute on the <code>@KafkaListener</code> annotation.
+Then, the container will add this in the <code>KafkaListener.LISTENER_INFO</code> header to all incoming messages; it can then be used in record interceptors, filters, etc., or in the listener itself.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@KafkaListener(id = "something", topic = "topic", filter = "someFilter",
+        info = "this is the something listener")
+public void listen2(@Payload Thing thing,
+        @Header(KafkaHeaders.LISTENER_INFO) String listenerInfo) {
+...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When used in a <code>RecordInterceptor</code> or <code>RecordFilterStrategy</code> implementation, the header is in the consumer record as a byte array, converted using the <code>KafkaListenerAnnotationBeanPostProcessor</code> 's <code>charSet</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The header mappers also convert to <code>String</code> when creating <code>MessageHeaders</code> from the consumer record and never map this header on an outbound record.</p>
+</div>
+<div class="paragraph">
+<p>For POJO batch listeners, starting with version 2.8.6, the header is copied into each member of the batch and is also available as a single <code>String</code> parameter after conversion.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@KafkaListener(id = "list2", topics = "someTopic", containerFactory = "batchFactory",
+        info = "info for batch")
+public void listen(List&lt;Thing&gt; list,
+        @Header(KafkaHeaders.RECEIVED_KEY) List&lt;Integer&gt; keys,
+        @Header(KafkaHeaders.RECEIVED_PARTITION) List&lt;Integer&gt; partitions,
+        @Header(KafkaHeaders.RECEIVED_TOPIC) List&lt;String&gt; topics,
+        @Header(KafkaHeaders.OFFSET) List&lt;Long&gt; offsets,
+        @Header(KafkaHeaders.LISTENER_INFO) String info) {
+            ...
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If the batch listener has a filter and the filter results in an empty batch, you will need to add <code>required = false</code> to the <code>@Header</code> parameter because the info is not available for an empty batch.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If you receive <code>List&lt;Message&lt;Thing&gt;&gt;</code> the info is in the <code>KafkaHeaders.LISTENER_INFO</code> header of each <code>Message&lt;?&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="#batch-listeners">[batch-listeners]</a> for more information about consuming batches.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="dead-letters"><a class="anchor" href="#dead-letters"></a>Publishing Dead-letter Records</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can configure the <code>DefaultErrorHandler</code> and <code>DefaultAfterRollbackProcessor</code> with a record recoverer when the maximum number of failures is reached for a record.
+The framework provides the <code>DeadLetterPublishingRecoverer</code>, which publishes the failed message to another topic.
+The recoverer requires a <code>KafkaTemplate&lt;Object, Object&gt;</code>, which is used to send the record.
+You can also, optionally, configure it with a <code>BiFunction&lt;ConsumerRecord&lt;?, ?&gt;, Exception, TopicPartition&gt;</code>, which is called to resolve the destination topic and partition.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+By default, the dead-letter record is sent to a topic named <code>&lt;originalTopic&gt;.DLT</code> (the original topic name suffixed with <code>.DLT</code>) and to the same partition as the original record.
+Therefore, when you use the default resolver, the dead-letter topic <strong>must have at least as many partitions as the original topic.</strong>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If the returned <code>TopicPartition</code> has a negative partition, the partition is not set in the <code>ProducerRecord</code>, so the partition is selected by Kafka.
+Starting with version 2.2.4, any <code>ListenerExecutionFailedException</code> (thrown, for example, when an exception is detected in a <code>@KafkaListener</code> method) is enhanced with the <code>groupId</code> property.
+This allows the destination resolver to use this, in addition to the information in the <code>ConsumerRecord</code> to select the dead letter topic.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows how to wire a custom destination resolver:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template,
+        (r, e) -&gt; {
+            if (e instanceof FooException) {
+                return new TopicPartition(r.topic() + ".Foo.failures", r.partition());
+            }
+            else {
+                return new TopicPartition(r.topic() + ".other.failures", r.partition());
+            }
+        });
+CommonErrorHandler errorHandler = new DefaultErrorHandler(recoverer, new FixedBackOff(0L, 2L));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The record sent to the dead-letter topic is enhanced with the following headers:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>KafkaHeaders.DLT_EXCEPTION_FQCN</code>: The Exception class name (generally a <code>ListenerExecutionFailedException</code>, but can be others).</p>
+</li>
+<li>
+<p><code>KafkaHeaders.DLT_EXCEPTION_CAUSE_FQCN</code>: The Exception cause class name, if present (since version 2.8).</p>
+</li>
+<li>
+<p><code>KafkaHeaders.DLT_EXCEPTION_STACKTRACE</code>: The Exception stack trace.</p>
+</li>
+<li>
+<p><code>KafkaHeaders.DLT_EXCEPTION_MESSAGE</code>: The  Exception message.</p>
+</li>
+<li>
+<p><code>KafkaHeaders.DLT_KEY_EXCEPTION_FQCN</code>: The Exception class name (key deserialization errors only).</p>
+</li>
+<li>
+<p><code>KafkaHeaders.DLT_KEY_EXCEPTION_STACKTRACE</code>: The Exception stack trace (key deserialization errors only).</p>
+</li>
+<li>
+<p><code>KafkaHeaders.DLT_KEY_EXCEPTION_MESSAGE</code>: The  Exception message (key deserialization errors only).</p>
+</li>
+<li>
+<p><code>KafkaHeaders.DLT_ORIGINAL_TOPIC</code>: The original topic.</p>
+</li>
+<li>
+<p><code>KafkaHeaders.DLT_ORIGINAL_PARTITION</code>: The original partition.</p>
+</li>
+<li>
+<p><code>KafkaHeaders.DLT_ORIGINAL_OFFSET</code>: The original offset.</p>
+</li>
+<li>
+<p><code>KafkaHeaders.DLT_ORIGINAL_TIMESTAMP</code>: The original timestamp.</p>
+</li>
+<li>
+<p><code>KafkaHeaders.DLT_ORIGINAL_TIMESTAMP_TYPE</code>: The original timestamp type.</p>
+</li>
+<li>
+<p><code>KafkaHeaders.DLT_ORIGINAL_CONSUMER_GROUP</code>: The original consumer group that failed to process the record (since version 2.8).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Key exceptions are only caused by <code>DeserializationException</code> s so there is no <code>DLT_KEY_EXCEPTION_CAUSE_FQCN</code>.</p>
+</div>
+<div class="paragraph">
+<p>There are two mechanisms to add more headers.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Subclass the recoverer and override <code>createProducerRecord()</code> - call <code>super.createProducerRecord()</code> and add more headers.</p>
+</li>
+<li>
+<p>Provide a <code>BiFunction</code> to receive the consumer record and exception, returning a <code>Headers</code> object; headers from there will be copied to the final producer record; also see <a href="#dlpr-headers">Managing Dead Letter Record Headers</a>.
+Use <code>setHeadersFunction()</code> to set the <code>BiFunction</code>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The second is simpler to implement but the first has more information available, including the already assembled standard headers.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.3, when used in conjunction with an <code>ErrorHandlingDeserializer</code>, the publisher will restore the record <code>value()</code>, in the dead-letter producer record, to the original value that failed to be deserialized.
+Previously, the <code>value()</code> was null and user code had to decode the <code>DeserializationException</code> from the message headers.
+In addition, you can provide multiple <code>KafkaTemplate</code> s to the publisher; this might be needed, for example, if you want to publish the <code>byte[]</code> from a <code>DeserializationException</code>, as well as values using a different serializer from records that were deserialized successfully.
+Here is an example of configuring the publisher with <code>KafkaTemplate</code> s that use a <code>String</code> and <code>byte[]</code> serializer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public DeadLetterPublishingRecoverer publisher(KafkaTemplate&lt;?, ?&gt; stringTemplate,
+        KafkaTemplate&lt;?, ?&gt; bytesTemplate) {
+
+    Map&lt;Class&lt;?&gt;, KafkaTemplate&lt;?, ?&gt;&gt; templates = new LinkedHashMap&lt;&gt;();
+    templates.put(String.class, stringTemplate);
+    templates.put(byte[].class, bytesTemplate);
+    return new DeadLetterPublishingRecoverer(templates);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The publisher uses the map keys to locate a template that is suitable for the <code>value()</code> about to be published.
+A <code>LinkedHashMap</code> is recommended so that the keys are examined in order.</p>
+</div>
+<div class="paragraph">
+<p>When publishing <code>null</code> values, when there are multiple templates, the recoverer will look for a template for the <code>Void</code> class; if none is present, the first template from the <code>values().iterator()</code> will be used.</p>
+</div>
+<div class="paragraph">
+<p>Since 2.7 you can use the <code>setFailIfSendResultIsError</code> method so that an exception is thrown when message publishing fails.
+You can also set a timeout for the verification of the sender success with <code>setWaitForSendResultTimeout</code>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If the recoverer fails (throws an exception), the failed record will be included in the seeks.
+Starting with version 2.5.5, if the recoverer fails, the <code>BackOff</code> will be reset by default and redeliveries will again go through the back offs before recovery is attempted again.
+With earlier versions, the <code>BackOff</code> was not reset and recovery was re-attempted on the next failure.
+To revert to the previous behavior, set the error handler&#8217;s <code>resetStateOnRecoveryFailure</code> property to <code>false</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.6.3, set <code>resetStateOnExceptionChange</code> to <code>true</code> and the retry sequence will be restarted (including the selection of a new <code>BackOff</code>, if so configured) if the exception type changes between failures.
+By default, the exception type is not considered.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.3, the recoverer can also be used with Kafka Streams - see <a href="../streams.html#streams-deser-recovery" class="xref page">Recovery from Deserialization Exceptions</a> for more information.</p>
+</div>
+<div class="paragraph">
+<p>The <code>ErrorHandlingDeserializer</code> adds the deserialization exception(s) in headers <code>ErrorHandlingDeserializer.VALUE_DESERIALIZER_EXCEPTION_HEADER</code> and <code>ErrorHandlingDeserializer.KEY_DESERIALIZER_EXCEPTION_HEADER</code> (using java serialization).
+By default, these headers are not retained in the message published to the dead letter topic.
+Starting with version 2.7, if both the key and value fail deserialization, the original values of both are populated in the record sent to the DLT.</p>
+</div>
+<div class="paragraph">
+<p>If incoming records are dependent on each other, but may arrive out of order, it may be useful to republish a failed record to the tail of the original topic (for some number of times), instead of sending it directly to the dead letter topic.
+See <a href="https://stackoverflow.com/questions/64646996">this Stack Overflow Question</a> for an example.</p>
+</div>
+<div class="paragraph">
+<p>The following error handler configuration will do exactly that:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public ErrorHandler eh(KafkaOperations&lt;String, String&gt; template) {
+    return new DefaultErrorHandler(new DeadLetterPublishingRecoverer(template,
+            (rec, ex) -&gt; {
+                org.apache.kafka.common.header.Header retries = rec.headers().lastHeader("retries");
+                if (retries == null) {
+                    retries = new RecordHeader("retries", new byte[] { 1 });
+                    rec.headers().add(retries);
+                }
+                else {
+                    retries.value()[0]++;
+                }
+                return retries.value()[0] &gt; 5
+                        ? new TopicPartition("topic.DLT", rec.partition())
+                        : new TopicPartition("topic", rec.partition());
+            }), new FixedBackOff(0L, 0L));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.7, the recoverer checks that the partition selected by the destination resolver actually exists.
+If the partition is not present, the partition in the <code>ProducerRecord</code> is set to <code>null</code>, allowing the <code>KafkaProducer</code> to select the partition.
+You can disable this check by setting the <code>verifyPartition</code> property to <code>false</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="dlpr-headers"><a class="anchor" href="#dlpr-headers"></a>Managing Dead Letter Record Headers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Referring to <a href="#dead-letters">Publishing Dead-letter Records</a> above, the <code>DeadLetterPublishingRecoverer</code> has two properties used to manage headers when those headers already exist (such as when reprocessing a dead letter record that failed, including when using <a href="../retrytopic.html" class="xref page">Non-Blocking Retries</a>).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>appendOriginalHeaders</code> (default <code>true</code>)</p>
+</li>
+<li>
+<p><code>stripPreviousExceptionHeaders</code> (default <code>true</code> since version 2.8)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Apache Kafka supports multiple headers with the same name; to obtain the "latest" value, you can use <code>headers.lastHeader(headerName)</code>; to get an iterator over multiple headers, use <code>headers.headers(headerName).iterator()</code>.</p>
+</div>
+<div class="paragraph">
+<p>When repeatedly republishing a failed record, these headers can grow (and eventually cause publication to fail due to a <code>RecordTooLargeException</code>); this is especially true for the exception headers and particularly for the stack trace headers.</p>
+</div>
+<div class="paragraph">
+<p>The reason for the two properties is because, while you might want to retain only the last exception information, you might want to retain the history of which topic(s) the record passed through for each failure.</p>
+</div>
+<div class="paragraph">
+<p><code>appendOriginalHeaders</code> is applied to all headers named <code><strong>ORIGINAL</strong></code> while <code>stripPreviousExceptionHeaders</code> is applied to all headers named <code><strong>EXCEPTION</strong></code>.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.8.4, you now can control which of the standard headers will be added to the output record.
+See the <code>enum HeadersToAdd</code> for the generic names of the (currently) 10 standard headers that are added by default (these are not the actual header names, just an abstraction; the actual header names are set up by the <code>getHeaderNames()</code> method which subclasses can override.</p>
+</div>
+<div class="paragraph">
+<p>To exclude headers, use the <code>excludeHeaders()</code> method; for example, to suppress adding the exception stack trace in a header, use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template);
+recoverer.excludeHeaders(HeaderNames.HeadersToAdd.EX_STACKTRACE);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In addition, you can completely customize the addition of exception headers by adding an <code>ExceptionHeadersCreator</code>; this also disables all standard exception headers.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template);
+recoverer.setExceptionHeadersCreator((kafkaHeaders, exception, isKey, headerNames) -&gt; {
+    kafkaHeaders.add(new RecordHeader(..., ...));
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also starting with version 2.8.4, you can now provide multiple headers functions, via the <code>addHeadersFunction</code> method.
+This allows additional functions to apply, even if another function  has already been registered, for example, when using <a href="../retrytopic.html" class="xref page">Non-Blocking Retries</a>.</p>
+</div>
+<div class="paragraph">
+<p>Also see <a href="../retrytopic/features.html#retry-headers" class="xref page">Failure Header Management</a> with <a href="../retrytopic.html" class="xref page">Non-Blocking Retries</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="exp-backoff"><a class="anchor" href="#exp-backoff"></a><code>ExponentialBackOffWithMaxRetries</code> Implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Spring Framework provides a number of <code>BackOff</code> implementations.
+By default, the <code>ExponentialBackOff</code> will retry indefinitely; to give up after some number of retry attempts requires calculating the <code>maxElapsedTime</code>.
+Since version 2.7.3, Spring for Apache Kafka provides the <code>ExponentialBackOffWithMaxRetries</code> which is a subclass that receives the <code>maxRetries</code> property and automatically calculates the <code>maxElapsedTime</code>, which is a little more convenient.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+DefaultErrorHandler handler() {
+    ExponentialBackOffWithMaxRetries bo = new ExponentialBackOffWithMaxRetries(6);
+    bo.setInitialInterval(1_000L);
+    bo.setMultiplier(2.0);
+    bo.setMaxInterval(10_000L);
+    return new DefaultErrorHandler(myRecoverer, bo);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will retry after <code>1, 2, 4, 8, 10, 10</code> seconds, before calling the recoverer.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="tombstones.html">Null Payloads and Log Compaction of 'Tombstone' Records</a></span>
+  <span class="next"><a href="kerberos.html">JAAS and Kerberos</a></span>
+</nav>
+</article>
+</div>  </div>
+</main>
+<div class="modal micromodal-slide" id="modal-versions" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true">
+            <main class="modal__content" id="modal-versions-content">
+              <button data-micromodal-close class="modal-versions-close">
+                <svg width="28px" height="28px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><style>.cls-1h{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1h" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1h" x1="7" x2="25" y1="25" y2="7"/></g></svg>
+              </button>
+              <div class="colset">
+                <div class="col-left">
+                  <ul class="nav-versions">
+                    <li class="component is-current">
+                      <a class="title" href="../index.html">Spring Kafka</a>
+                      <ul class="versions">
+                        <li class="version is-current is-latest">
+                          <a href="../index.html">
+                            3.1.0-SNAPSHOT<span class="current">current</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-right">
+                  <ul>
+                    <li>
+                      Related Spring Documentation
+                      <ul>
+                        <li><a href="https://docs.spring.io/spring-framework/reference/">Spring Framework</a></li>
+                        <li>
+                          Spring Data
+                          <ul>
+                            <li><a href="https://docs.spring.io/spring-data-commons/reference/">Spring Data Commons</a></li>
+                            <li><a href="https://docs.spring.io/spring-data-jpa/reference/">Spring Data JPA</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="https://docs.spring.io/spring-integration/reference/">Spring Integration</a></li>
+                        <li><a href="https://docs.spring.io/spring-batch/reference/">Spring Batch</a></li>
+                        <li>
+                          <a href="https://docs.spring.io/spring-security/reference/">Spring Security</a>
+                          <ul>
+                            <li><a href="https://docs.spring.io/spring-ldap/reference/">Spring LDAP</a></li>
+                            <li><a href="https://docs.spring.io/spring-session/reference/">Spring Session</a></li>
+                            <li><a href="https://docs.spring.io/spring-authorization-server/reference/">Spring Authorization Server</a></li>
+                            <li><a href="https://docs.spring.io/spring-vault/reference/">Spring Vault</a></li>
+                            <li><a href="https://docs.spring.io/spring-security-kerberos/reference/">Spring Security Kerberos</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="https://docs.spring.io/spring-ai/reference/">Spring AI</a></li>
+                        <li><a href="https://docs.spring.io/spring-cli/reference/">Spring CLI</a></li>
+                        <li><a href="https://docs.spring.io/spring-graphql/reference/">Spring GraphQL</a></li>
+                        <li><a href="https://docs.spring.io/spring-shell/reference/">Spring Shell</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+</div>
+<footer class="footer flex">
+    <div id="spring-links flex">
+        <img id="springlogo" src="../_/img/spring-logo.svg" alt="Spring">
+        <p class="smallest antialiased">© <script>var d = new Date();
+        document.write(d.getFullYear());</script> <a href="https://www.vmware.com/">VMware</a>, Inc. or its affiliates. <a href="https://www.vmware.com/help/legal.html">Terms of Use</a> • <a href="https://www.vmware.com/help/privacy.html" rel="noopener noreferrer">Privacy</a> • <a href="https://spring.io/trademarks">Trademark Guidelines</a> <span id="thank-you-mobile">• <a href="https://spring.io/thank-you">Thank you</a></span> • <a href="https://www.vmware.com/help/privacy/california-privacy-rights.html">Your California Privacy Rights</a> • <a class="ot-sdk-show-settings">Cookie Settings</a> <span id="teconsent"></span></p>
+        <p class="smallest antialiased has-gray-text">Apache®, Apache Tomcat®, Apache Kafka®, Apache Cassandra&trade;, and Apache Geode&trade; are trademarks or registered trademarks of the Apache Software Foundation in the United States and/or other countries. Java&trade;, Java&trade; SE, Java&trade; EE, and OpenJDK&trade; are trademarks of Oracle and/or its affiliates. Kubernetes® is a registered trademark of the Linux Foundation in the United States and other countries. Linux® is the registered trademark of Linus Torvalds in the United States and other countries. Windows® and Microsoft® Azure are registered trademarks of Microsoft Corporation. “AWS” and “Amazon Web Services” are trademarks or registered trademarks of Amazon.com Inc. or its affiliates. All other trademarks and copyrights are property of their respective owners and are only mentioned for informative purposes. Other names may be trademarks of their respective owners.</p>
+    </div>
+    <div id="social-icons" class="flex jc-between">
+        <a href="https://www.youtube.com/user/SpringSourceDev" title="Youtube"><svg id="youtube-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle class="cls-1" cx="20" cy="20" r="20"/><path class="cls-2" d="M30.91,14.53a2.89,2.89,0,0,0-2-2C27.12,12,20,12,20,12s-7.12,0-8.9.47a2.9,2.9,0,0,0-2,2A30.56,30.56,0,0,0,8.63,20a30.44,30.44,0,0,0,.46,5.47,2.89,2.89,0,0,0,2,2C12.9,28,20,28,20,28s7.12,0,8.9-.47a2.87,2.87,0,0,0,2-2A30.56,30.56,0,0,0,31.37,20,28.88,28.88,0,0,0,30.91,14.53ZM17.73,23.41V16.59L23.65,20Z"/></svg></a>
+        <a href="https://github.com/spring-projects" title="Github"><svg id="github-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><path class="cls-1" d="M38,0a38,38,0,1,0,38,38A38,38,0,0,0,38,0Z"/></g><path class="cls-2" d="M38,15.59A22.95,22.95,0,0,0,30.71,60.3c1.15.21,1.57-.5,1.57-1.11s0-2,0-3.9c-6.38,1.39-7.73-3.07-7.73-3.07A6.09,6.09,0,0,0,22,48.86c-2.09-1.42.15-1.39.15-1.39a4.81,4.81,0,0,1,3.52,2.36c2,3.5,5.37,2.49,6.67,1.91a4.87,4.87,0,0,1,1.46-3.07c-5.09-.58-10.45-2.55-10.45-11.34a8.84,8.84,0,0,1,2.36-6.15,8.29,8.29,0,0,1,.23-6.07s1.92-.62,6.3,2.35a21.82,21.82,0,0,1,11.49,0c4.38-3,6.3-2.35,6.3-2.35a8.29,8.29,0,0,1,.23,6.07,8.84,8.84,0,0,1,2.36,6.15c0,8.81-5.37,10.75-10.48,11.32a5.46,5.46,0,0,1,1.56,4.25c0,3.07,0,5.54,0,6.29s.42,1.33,1.58,1.1A22.94,22.94,0,0,0,38,15.59Z"/></svg></a>
+        <a href="https://twitter.com/springcentral" title="Twitter"><svg id="twitter-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><circle class="cls-1" cx="37.97" cy="37.97" r="37.97"/><path id="Twitter-2" data-name="Twitter" class="cls-2" d="M55.2,22.73a15.43,15.43,0,0,1-4.88,1.91,7.56,7.56,0,0,0-5.61-2.49A7.78,7.78,0,0,0,37,30a7.56,7.56,0,0,0,.2,1.79,21.63,21.63,0,0,1-15.84-8.23,8,8,0,0,0,2.37,10.52,7.66,7.66,0,0,1-3.48-1v.09A7.84,7.84,0,0,0,26.45,41a7.54,7.54,0,0,1-2,.28A7.64,7.64,0,0,1,23,41.09a7.71,7.71,0,0,0,7.18,5.47,15.21,15.21,0,0,1-9.55,3.37,15.78,15.78,0,0,1-1.83-.11,21.41,21.41,0,0,0,11.78,3.54c14.13,0,21.86-12,21.86-22.42,0-.34,0-.68,0-1a15.67,15.67,0,0,0,3.83-4.08,14.9,14.9,0,0,1-4.41,1.24A7.8,7.8,0,0,0,55.2,22.73Z"/></svg></a>
+    </div>
+</footer>
+<script src="../_/js/vendor/import.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+<script async src="../_/js/vendor/asciidoctor-tabs.js" data-sync-storage-key="docs:preferred-tab"></script>
+
+<div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+            <main class="modal__content" id="modal-1-content">
+                <div id="searchbox"></div>
+                <div id="counter"></div>
+                <div class="search-by">
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.algolia.com/" aria-label="Search by Algolia">
+                        <img class="light" width="140" src="../_/img/algolia-light.svg" />
+                        <img class="dark" width="140" src="../_/img/algolia-dark.svg" />
+                    </a>
+                </div>
+                <div id="hits"></div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.17.0/dist/algoliasearch-lite.umd.js" integrity="sha256-Lf9DrpGmcRip6OQzbcL6lnvNmoZNSKpyQX5pMlwatWE=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.54.1/dist/instantsearch.production.min.js" integrity="sha256-xYsZPDeNjYNTBWLvqD2Lxe98hOxcDgOHyMPfz4tVAbk=" crossorigin="anonymous"></script>
+<script async id="search-script" src="../_/js/vendor/search.js" data-app-id="WB1FQYI187" data-api-key="9d489079e5ec46dbb238909fee5c9c29" data-index-name="springkafka" data-stylesheet="../_/css/vendor/search.css" data-page-version="3.1.0"></script>
+
+  </body>
+</html>

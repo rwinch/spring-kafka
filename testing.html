@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Testing Applications :: Spring Kafka</title>
+    <link rel="prev" href="streams.html">
+    <link rel="next" href="tips.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.2">
+    <script>
+!function (theme, navWidth) {
+  if (theme === 'dark') document.documentElement.classList.add('dark-theme')
+  if (navWidth) document.documentElement.style.setProperty('--nav-width', `${navWidth}px`)
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'),
+  localStorage && localStorage.getItem('nav-width'))
+    </script>
+    <link rel="stylesheet" href="./_/css/site.css">
+    <link rel="stylesheet" href="./_/css/vendor/search.css">
+    <link rel="stylesheet" href="./_/css/vendor/asciidoctor-tabs.css">
+
+    <meta name="version" content="3.1.0">
+    <meta name="component" content="kafka">
+    <link rel="icon" href="./_/img/favicon.ico" type="image/vnd.microsoft.icon">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://spring.io">
+        <img
+          id="springlogo"
+          class="block"
+          src="./_/img/spring-logo.svg"
+          alt="Spring"
+        />
+      </a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Why Spring</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/why-spring"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/microservices"
+            >Microservices</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/reactive"
+            >Reactive</a>
+            <a class="navbar-item" href="https://spring.io/event-driven">Event
+              Driven</a>
+            <a class="navbar-item" href="https://spring.io/cloud">Cloud</a>
+            <a class="navbar-item" href="https://spring.io/web-applications">Web
+              Applications</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/serverless"
+            >Serverless</a>
+            <a class="navbar-item" href="https://spring.io/batch">Batch</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Learn</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://spring.io/learn">Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/quickstart"
+            >Quickstart</a>
+            <a class="navbar-item" href="https://spring.io/guides">Guides</a>
+            <a class="navbar-item" href="https://spring.io/blog">Blog</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Projects</a>
+          <div class="navbar-dropdown" style="min-width: 280px">
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-boot"
+            >Spring Boot</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-framework"
+            >Spring Framework</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud"
+            >Spring Cloud</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud-dataflow"
+            >Spring Cloud Data Flow</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-data"
+            >Spring Data</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-integration"
+            >Spring Integration</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-batch"
+            >Spring Batch</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-security"
+            >Spring Security</a>
+            <a
+              class="navbar-item navbar-item-special"
+              href="https://spring.io/projects"
+            >View all projects</a>
+            <a class="navbar-item" href="https://spring.io/tools">Spring Tools 4</a>
+            <a
+              class="navbar-item navbar-item-special-2"
+              href="https://start.spring.io"
+            >Spring Initializr
+              <svg
+                class="external-link-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+              ><polyline
+                  points="15 10.94 15 15 1 15 1 1 5.06 1"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><polyline
+                  points="8.93 1 15 1 15 7.07"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><line
+                  x1="15"
+                  y1="1"
+                  x2="8"
+                  y2="8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></line></svg></a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Academy</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.academy/courses"
+            >Courses</a>
+            <a
+              class="navbar-item"
+              href="https://spring.academy/learning-path"
+            >Get Certified</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Solutions</a>
+          <div class="navbar-dropdown lg">
+            <a class="navbar-item" href="https://spring.io/solutions">Overview</a>
+            <a class="navbar-item" href="https://spring.io/runtime">Spring Runtime</a>
+            <a class="navbar-item" href="https://spring.io/consulting">Spring Consulting</a>
+            <a class="navbar-item" href="https://spring.academy/teams">Spring Academy For Teams</a>
+            <a class="navbar-item" href="https://spring.io/security">Security Advisories</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable is-community">
+          <a class="navbar-link" href="#">Community</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/community"
+            >Overview</a>
+            <a class="navbar-item" href="https://spring.io/events">Events</a>
+            <a class="navbar-item" href="https://spring.io/team">Team</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <label class="theme-toggler">
+      <input
+        type="checkbox"
+        type="checkbox"
+        id="switch-theme-checkbox"
+        name="switch-theme-checkbox"
+      />
+      <span class="icon"><svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="moon"
+          class="svg-inline--fa fa-moon moon"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 384 512"
+        ><path
+            fill="currentColor"
+            d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
+          ></path>
+        </svg>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="sun"
+          class="svg-inline--fa fa-sun sun"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        ><path
+            fill="currentColor"
+            d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"
+          ></path>
+        </svg></span>
+      <span class="text">light</span>
+    </label>
+  </nav>
+</header>
+<script>
+!function (theme) {
+  if (theme === 'dark') {
+    document.getElementById('switch-theme-checkbox').parentElement.classList.add('active')
+  }
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'))
+</script><div class="body">
+<div class="nav-container" data-component="kafka" data-version="3.1.0">
+  <aside class="nav">
+    <div class="panels">
+      <div class="nav-panel-menu is-active" data-panel="menu">
+        <nav class="nav-menu">
+<div class="context">
+  <span class="title">Spring Kafka</span>
+  <span class="version">3.1.0-SNAPSHOT</span>
+  <button class="browse-version" id="browse-version">
+    <svg
+      height="24px"
+      id="Layer_1"
+      style="enable-background:new 0 0 512 512;"
+      version="1.1"
+      viewBox="0 0 512 512"
+      width="24px"
+      xml:space="preserve"
+    ><g><path
+          d="M256,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S273.7,224,256,224L256,224z"
+        ></path><path
+          d="M128.4,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S146,224,128.4,224L128.4,224z"
+        ></path><path
+          d="M384,224c-17.7,0-32,14.3-32,32s14.3,32,32,32s32-14.3,32-32S401.7,224,384,224L384,224z"
+        ></path></g></svg>
+  </button>
+</div><div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="whats-new.html">What&#8217;s new?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="introduction.html">Introduction</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="quick-tour.html">Quick Tour</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="reference.html">Reference</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="kafka.html">Using Spring for Apache Kafka</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/connecting.html">Connecting to Kafka</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/configuring-topics.html">Configuring Topics</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/sending-messages.html">Sending Messages</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="kafka/receiving-messages.html">Receiving Messages</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/message-listeners.html">Message Listeners</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/message-listener-container.html">Message Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/ooo-commits.html">Manually Committing Offsets</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/listener-annotation.html"><code>@KafkaListener</code> Annotation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/listener-group-id.html">Obtaining the Consumer <code>group.id</code></a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/container-thread-naming.html">Container Thread Naming</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/listener-meta.html"><code>@KafkaListener</code> as a Meta Annotation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/class-level-kafkalistener.html"><code>@KafkaListener</code> on a Class</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/kafkalistener-attrs.html"><code>@KafkaListener</code> Attribute Modification</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/kafkalistener-lifecycle.html"><code>@KafkaListener</code> Lifecycle Management</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/validation.html"><code>@KafkaListener</code> <code>@Payload</code> Validation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/rebalance-listeners.html">Rebalancing Listeners</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/annotation-send-to.html">Forwarding Listener Results using <code>@SendTo</code></a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/filtering.html">Filtering Messages</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/retrying-deliveries.html">Retrying Deliveries</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/sequencing.html">Starting <code>@KafkaListener</code> s in Sequence</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafka/receiving-messages/template-receive.html">Using <code>KafkaTemplate</code> to Receive</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/container-props.html">Listener Container Properties</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/dynamic-containers.html">Dynamically Creating Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/events.html">Application Events</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/topic/partition-initial-offset.html">Topic/Partition Initial Offset</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/seek.html">Seeking to a Specific Offset</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/container-factory.html">Container factory</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/thread-safety.html">Thread Safety</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/micrometer.html">Monitoring</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/exactly-once.html">Exactly Once Semantics</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/interceptors.html">Wiring Spring Beans into Producer/Consumer Interceptors</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/producer-interceptor-managed-in-spring.html">Producer Interceptor Managed in Spring</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/pause-resume.html">Pausing and Resuming Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/pause-resume-partitions.html">Pausing and Resuming Partitions on Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/serdes.html">Serialization, Deserialization, and Message Conversion</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/headers.html">Message Headers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/tombstones.html">Null Payloads and Log Compaction of 'Tombstone' Records</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/annotation-error-handling.html">Handling Exceptions</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kafka/kerberos.html">JAAS and Kerberos</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="retrytopic.html">Non-Blocking Retries</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="retrytopic/how-the-pattern-works.html">How The Pattern Works</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="retrytopic/back-off-delay-precision.html">Back Off Delay Precision</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="retrytopic/retry-config.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="retrytopic/programmatic-construction.html">Programmatic Construction</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="retrytopic/features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="retrytopic/retry-topic-combine-blocking.html">Combining Blocking and Non-Blocking Retries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="retrytopic/accessing-delivery-attempts.html">Accessing Delivery Attempts</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="retrytopic/topic-naming.html">Topic Naming</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="retrytopic/multi-retry.html">Multiple Listeners, Same Topic(s)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="retrytopic/dlt-strategies.html">Dlt Strategies</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="retrytopic/retry-topic-lcf.html">Specifying a ListenerContainerFactory</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="retrytopic/access-topic-info-runtime.html">Accessing Topics' Information at Runtime</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="retrytopic/change-kboe-logging-level.html">Changing KafkaBackOffException Logging Level</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="streams.html">Apache Kafka Streams Support</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="testing.html">Testing Applications</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="tips.html">Tips, Tricks and Examples</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="other-resources.html">Other Resources</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="appendix/override-boot-dependencies.html">Override Spring Boot Dependencies</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="appendix/micrometer.html">Micrometer Observation Documentation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="appendix/native-images.html">Native Images</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="appendix/change-history.html">Change History</a>
+  </li>
+</ul>
+  </li>
+</ul>
+          <div class="toggle-sm">
+            <button id="nav-toggle-2" class="nav-toggle"></button>
+          </div>
+        </nav>
+      </div>
+      <div class="nav-collapse">
+        <button id="nav-collapse-toggle"><span></span></button>        
+      </div>
+    </div>
+    <div class="nav-resize"></div>
+  </aside>
+</div>
+<script>
+!function (sidebar) {
+  if (sidebar) {
+    document.body.classList.add('nav-sm')
+  }
+}(localStorage && localStorage.getItem('sidebar') === 'close')
+</script><main class="article">
+<div class="toolbar" role="navigation">
+  <button id="nav-toggle-1" class="nav-toggle"></button>
+<div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+</div>
+  <div class="content">
+<aside class="sidebar">
+  <div class="content">
+    <div
+      class="toc"
+      data-title="Testing Applications"
+      data-levels="2"
+    >
+      <div class="toc-menu"></div>
+    </div>
+    <div class="sidebar-links">
+        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/testing.adoc">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+          ><path
+              d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z"
+            ></path></svg>
+          Edit this Page
+        </a>
+              <a href="https://github.com/rwinch/spring-kafka" title="Github">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="512px"
+            id="Layer_1"
+            version="1.1"
+            viewBox="0 0 512 512"
+            width="512px"
+          ><style type="text/css"><![CDATA[
+              .st0{fill-rule:evenodd;clip-rule:evenodd;} ]]></style><g><path
+                class="st0"
+                d="M256,32C132.3,32,32,134.8,32,261.7c0,101.5,64.2,187.5,153.2,217.9c11.2,2.1,15.3-5,15.3-11.1   c0-5.5-0.2-19.9-0.3-39.1c-62.3,13.9-75.5-30.8-75.5-30.8c-10.2-26.5-24.9-33.6-24.9-33.6c-20.3-14.3,1.5-14,1.5-14   c22.5,1.6,34.3,23.7,34.3,23.7c20,35.1,52.4,25,65.2,19.1c2-14.8,7.8-25,14.2-30.7c-49.7-5.8-102-25.5-102-113.5   c0-25.1,8.7-45.6,23-61.6c-2.3-5.8-10-29.2,2.2-60.8c0,0,18.8-6.2,61.6,23.5c17.9-5.1,37-7.6,56.1-7.7c19,0.1,38.2,2.6,56.1,7.7   c42.8-29.7,61.5-23.5,61.5-23.5c12.2,31.6,4.5,55,2.2,60.8c14.3,16.1,23,36.6,23,61.6c0,88.2-52.4,107.6-102.3,113.3   c8,7.1,15.2,21.1,15.2,42.5c0,30.7-0.3,55.5-0.3,63c0,6.1,4,13.3,15.4,11C415.9,449.1,480,363.1,480,261.7   C480,134.8,379.7,32,256,32z"
+              ></path></g></svg>
+          Github Project
+        </a>
+        <a href="https://stackoverflow.com/tags/spring-kafka">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path
+              d="M290.7 311L95 269.7 86.8 309l195.7 41zm51-87L188.2 95.7l-25.5 30.8 153.5 128.3zm-31.2 39.7L129.2 179l-16.7 36.5L293.7 300zM262 32l-32 24 119.3 160.3 32-24zm20.5 328h-200v39.7h200zm39.7 80H42.7V320h-40v160h359.5V320h-40z"
+            ></path></svg>
+          Stack Overflow
+        </a>
+    </div>
+  </div>
+</aside><div class="doc">
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Spring Kafka</a></li>
+    <li><a href="reference.html">Reference</a></li>
+    <li><a href="testing.html">Testing Applications</a></li>
+  </ul>
+</nav>
+<article>
+<h1 id="page-title" class="page">Testing Applications</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>spring-kafka-test</code> jar contains some useful utilities to assist with testing your applications.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ktu"><a class="anchor" href="#ktu"></a>KafkaTestUtils</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>o.s.kafka.test.utils.KafkaTestUtils</code> provides a number of static helper methods to consume records, retrieve various record offsets, and others.
+Refer to its <a href="https://docs.spring.io/spring-kafka/docs/current/api/org/springframework/kafka/test/utils/KafkaTestUtils.html">Javadocs</a> for complete details.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="junit"><a class="anchor" href="#junit"></a>JUnit</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>o.s.kafka.test.utils.KafkaTestUtils</code> also provides some static methods to set up producer and consumer properties.
+The following listing shows those method signatures:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
+ * Set up test properties for an {@code &lt;Integer, String&gt;} consumer.
+ * @param group the group id.
+ * @param autoCommit the auto commit.
+ * @param embeddedKafka a {@link EmbeddedKafkaBroker} instance.
+ * @return the properties.
+ */
+public static Map&lt;String, Object&gt; consumerProps(String group, String autoCommit,
+                                       EmbeddedKafkaBroker embeddedKafka) { ... }
+
+/**
+ * Set up test properties for an {@code &lt;Integer, String&gt;} producer.
+ * @param embeddedKafka a {@link EmbeddedKafkaBroker} instance.
+ * @return the properties.
+ */
+public static Map&lt;String, Object&gt; producerProps(EmbeddedKafkaBroker embeddedKafka) { ... }</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Starting with version 2.5, the <code>consumerProps</code> method sets the <code>ConsumerConfig.AUTO_OFFSET_RESET_CONFIG</code> to <code>earliest</code>.
+This is because, in most cases, you want the consumer to consume any messages sent in a test case.
+The <code>ConsumerConfig</code> default is <code>latest</code> which means that messages already sent by a test, before the consumer starts, will not receive those records.
+To revert to the previous behavior, set the property to <code>latest</code> after calling the method.</p>
+</div>
+<div class="paragraph">
+<p>When using the embedded broker, it is generally best practice using a different topic for each test, to prevent cross-talk.
+If this is not possible for some reason, note that the <code>consumeFromEmbeddedTopics</code> method&#8217;s default behavior is to seek the assigned partitions to the beginning after assignment.
+Since it does not have access to the consumer properties, you must use the overloaded method that takes a <code>seekToEnd</code> boolean parameter to seek to the end instead of the beginning.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A JUnit 4 <code>@Rule</code> wrapper for the <code>EmbeddedKafkaBroker</code> is provided to create an embedded Kafka and an embedded Zookeeper server.
+(See <a href="#embedded-kafka-annotation">@EmbeddedKafka Annotation</a> for information about using <code>@EmbeddedKafka</code> with JUnit 5).
+The following listing shows the signatures of those methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
+ * Create embedded Kafka brokers.
+ * @param count the number of brokers.
+ * @param controlledShutdown passed into TestUtils.createBrokerConfig.
+ * @param topics the topics to create (2 partitions per).
+ */
+public EmbeddedKafkaRule(int count, boolean controlledShutdown, String... topics) { ... }
+
+/**
+ *
+ * Create embedded Kafka brokers.
+ * @param count the number of brokers.
+ * @param controlledShutdown passed into TestUtils.createBrokerConfig.
+ * @param partitions partitions per topic.
+ * @param topics the topics to create.
+ */
+public EmbeddedKafkaRule(int count, boolean controlledShutdown, int partitions, String... topics) { ... }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>EmbeddedKafkaBroker</code> class has a utility method that lets you consume for all the topics it created.
+The following example shows how to use it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Map&lt;String, Object&gt; consumerProps = KafkaTestUtils.consumerProps("testT", "false", embeddedKafka);
+DefaultKafkaConsumerFactory&lt;Integer, String&gt; cf = new DefaultKafkaConsumerFactory&lt;Integer, String&gt;(
+        consumerProps);
+Consumer&lt;Integer, String&gt; consumer = cf.createConsumer();
+embeddedKafka.consumeFromAllEmbeddedTopics(consumer);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>KafkaTestUtils</code> has some utility methods to fetch results from the consumer.
+The following listing shows those method signatures:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
+ * Poll the consumer, expecting a single record for the specified topic.
+ * @param consumer the consumer.
+ * @param topic the topic.
+ * @return the record.
+ * @throws org.junit.ComparisonFailure if exactly one record is not received.
+ */
+public static &lt;K, V&gt; ConsumerRecord&lt;K, V&gt; getSingleRecord(Consumer&lt;K, V&gt; consumer, String topic) { ... }
+
+/**
+ * Poll the consumer for records.
+ * @param consumer the consumer.
+ * @return the records.
+ */
+public static &lt;K, V&gt; ConsumerRecords&lt;K, V&gt; getRecords(Consumer&lt;K, V&gt; consumer) { ... }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example shows how to use <code>KafkaTestUtils</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">...
+template.sendDefault(0, 2, "bar");
+ConsumerRecord&lt;Integer, String&gt; received = KafkaTestUtils.getSingleRecord(consumer, "topic");
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the embedded Kafka and embedded Zookeeper server are started by the <code>EmbeddedKafkaBroker</code>, a system property named <code>spring.embedded.kafka.brokers</code> is set to the address of the Kafka brokers and a system property named <code>spring.embedded.zookeeper.connect</code> is set to the address of Zookeeper.
+Convenient constants (<code>EmbeddedKafkaBroker.SPRING_EMBEDDED_KAFKA_BROKERS</code> and <code>EmbeddedKafkaBroker.SPRING_EMBEDDED_ZOOKEEPER_CONNECT</code>) are provided for this property.</p>
+</div>
+<div class="paragraph">
+<p>Instead of default <code>spring.embedded.kafka.brokers</code> system property, the address of the Kafka brokers can be exposed to any arbitrary and convenient property.
+For this purpose a <code>spring.embedded.kafka.brokers.property</code> (<code>EmbeddedKafkaBroker.BROKER_LIST_PROPERTY</code>) system property can be set before starting an embedded Kafka.
+For example, with Spring Boot a <code>spring.kafka.bootstrap-servers</code> configuration property is expected to be set for auto-configuring Kafka client, respectively.
+So, before running tests with an embedded Kafka on random ports, we can set <code>spring.embedded.kafka.brokers.property=spring.kafka.bootstrap-servers</code> as a system property - and the <code>EmbeddedKafkaBroker</code>  will use it to expose its broker addresses.
+This is now the default value for this property (starting with version 3.0.10).</p>
+</div>
+<div class="paragraph">
+<p>With the <code>EmbeddedKafkaBroker.brokerProperties(Map&lt;String, String&gt;)</code>, you can provide additional properties for the Kafka servers.
+See <a href="https://kafka.apache.org/documentation/#brokerconfigs">Kafka Config</a> for more information about possible broker properties.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-topics"><a class="anchor" href="#configuring-topics"></a>Configuring Topics</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following example configuration creates topics called <code>cat</code> and <code>hat</code> with five partitions, a topic called <code>thing1</code> with 10 partitions, and a topic called <code>thing2</code> with 15 partitions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class MyTests {
+
+    @ClassRule
+    private static EmbeddedKafkaRule embeddedKafka = new EmbeddedKafkaRule(1, false, 5, "cat", "hat");
+
+    @Test
+    public void test() {
+        embeddedKafkaRule.getEmbeddedKafka()
+              .addTopics(new NewTopic("thing1", 10, (short) 1), new NewTopic("thing2", 15, (short) 1));
+        ...
+      }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, <code>addTopics</code> will throw an exception when problems arise (such as adding a topic that already exists).
+Version 2.6 added a new version of that method that returns a <code>Map&lt;String, Exception&gt;</code>; the key is the topic name and the value is <code>null</code> for success, or an <code>Exception</code> for a failure.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="same-broker-multiple-tests"><a class="anchor" href="#same-broker-multiple-tests"></a>Using the Same Broker(s) for Multiple Test Classes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can use the same broker for multiple test classes with something similar to the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public final class EmbeddedKafkaHolder {
+
+    private static EmbeddedKafkaBroker embeddedKafka = new EmbeddedKafkaBroker(1, false)
+            .brokerListProperty("spring.kafka.bootstrap-servers");
+
+    private static boolean started;
+
+    public static EmbeddedKafkaBroker getEmbeddedKafka() {
+        if (!started) {
+            try {
+                embeddedKafka.afterPropertiesSet();
+            }
+            catch (Exception e) {
+                throw new KafkaException("Embedded broker failed to start", e);
+            }
+            started = true;
+        }
+        return embeddedKafka;
+    }
+
+    private EmbeddedKafkaHolder() {
+        super();
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This assumes a Spring Boot environment and the embedded broker replaces the bootstrap servers property.</p>
+</div>
+<div class="paragraph">
+<p>Then, in each test class, you can use something similar to the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">static {
+    EmbeddedKafkaHolder.getEmbeddedKafka().addTopics("topic1", "topic2");
+}
+
+private static final EmbeddedKafkaBroker broker = EmbeddedKafkaHolder.getEmbeddedKafka();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you are not using Spring Boot, you can obtain the bootstrap servers using <code>broker.getBrokersAsString()</code>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The preceding example provides no mechanism for shutting down the broker(s) when all tests are complete.
+This could be a problem if, say, you run your tests in a Gradle daemon.
+You should not use this technique in such a situation, or you should use something to call <code>destroy()</code> on the <code>EmbeddedKafkaBroker</code> when your tests are complete.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Starting with version 3.0, the framework exposes a <code>GlobalEmbeddedKafkaTestExecutionListener</code> for the JUnit Platform; it is disabled by default.
+This requires JUnit Platform 1.8 or greater.
+The purpose of this listener is to start one global <code>EmbeddedKafkaBroker</code> for the whole test plan and stop it at the end of the plan.
+To enable this listener, and therefore have a single global embedded Kafka cluster for all the tests in the project, the <code>spring.kafka.global.embedded.enabled</code> property must be set to <code>true</code> via system properties or JUnit Platform configuration.
+In addition, these properties can be provided:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>spring.kafka.embedded.count</code> - the number of Kafka brokers to manage;</p>
+</li>
+<li>
+<p><code>spring.kafka.embedded.ports</code> - ports (comma-separated value) for every Kafka broker to start, <code>0</code> if random port is a preferred; the number of values must be equal to the <code>count</code> mentioned above;</p>
+</li>
+<li>
+<p><code>spring.kafka.embedded.topics</code> - topics (comma-separated value) to create in the started Kafka cluster;</p>
+</li>
+<li>
+<p><code>spring.kafka.embedded.partitions</code> - number of partitions to provision for the created topics;</p>
+</li>
+<li>
+<p><code>spring.kafka.embedded.broker.properties.location</code> - the location of the file for additional Kafka broker configuration properties; the value of this property must follow the Spring resource abstraction pattern.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Essentially these properties mimic some of the <code>@EmbeddedKafka</code> attributes.</p>
+</div>
+<div class="paragraph">
+<p>See more information about configuration properties and how to provide them in the <a href="https://junit.org/junit5/docs/current/user-guide/#running-tests-config-params">JUnit 5 User Guide</a>.
+For example, a <code>spring.embedded.kafka.brokers.property=my.bootstrap-servers</code> entry can be added into a <code>junit-platform.properties</code> file in the testing classpath.
+Starting with version 3.0.10, the broker automatically sets this to <code>spring.kafka.bootstrap-servers</code>, by default, for testing with Spring Boot applications.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+It is recommended to not combine a global embedded Kafka and per-test class in a single test suite.
+Both of them share the same system properties, so it is very likely going to lead to unexpected behavior.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>spring-kafka-test</code> has transitive dependencies on <code>junit-jupiter-api</code> and <code>junit-platform-launcher</code> (the latter to support the global embedded broker).
+If you wish to use the embedded broker and are NOT using JUnit, you may wish to exclude these dependencies.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="embedded-kafka-annotation"><a class="anchor" href="#embedded-kafka-annotation"></a>@EmbeddedKafka Annotation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We generally recommend that you use the rule as a <code>@ClassRule</code> to avoid starting and stopping the broker between tests (and use a different topic for each test).
+Starting with version 2.0, if you use Spring&#8217;s test application context caching, you can also declare a <code>EmbeddedKafkaBroker</code> bean, so a single broker can be used across multiple test classes.
+For convenience, we provide a test class-level annotation called <code>@EmbeddedKafka</code> to register the <code>EmbeddedKafkaBroker</code> bean.
+The following example shows how to use it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@RunWith(SpringRunner.class)
+@DirtiesContext
+@EmbeddedKafka(partitions = 1,
+         topics = {
+                 KafkaStreamsTests.STREAMING_TOPIC1,
+                 KafkaStreamsTests.STREAMING_TOPIC2 })
+public class KafkaStreamsTests {
+
+    @Autowired
+    private EmbeddedKafkaBroker embeddedKafka;
+
+    @Test
+    public void someTest() {
+        Map&lt;String, Object&gt; consumerProps = KafkaTestUtils.consumerProps("testGroup", "true", this.embeddedKafka);
+        consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        ConsumerFactory&lt;Integer, String&gt; cf = new DefaultKafkaConsumerFactory&lt;&gt;(consumerProps);
+        Consumer&lt;Integer, String&gt; consumer = cf.createConsumer();
+        this.embeddedKafka.consumeFromAnEmbeddedTopic(consumer, KafkaStreamsTests.STREAMING_TOPIC2);
+        ConsumerRecords&lt;Integer, String&gt; replies = KafkaTestUtils.getRecords(consumer);
+        assertThat(replies.count()).isGreaterThanOrEqualTo(1);
+    }
+
+    @Configuration
+    @EnableKafkaStreams
+    public static class KafkaStreamsConfiguration {
+
+        @Value("${" + EmbeddedKafkaBroker.SPRING_EMBEDDED_KAFKA_BROKERS + "}")
+        private String brokerAddresses;
+
+        @Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)
+        public KafkaStreamsConfiguration kStreamsConfigs() {
+            Map&lt;String, Object&gt; props = new HashMap&lt;&gt;();
+            props.put(StreamsConfig.APPLICATION_ID_CONFIG, "testStreams");
+            props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, this.brokerAddresses);
+            return new KafkaStreamsConfiguration(props);
+        }
+
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.2.4, you can also use the <code>@EmbeddedKafka</code> annotation to specify the Kafka ports property.</p>
+</div>
+<div class="paragraph">
+<p>The following example sets the <code>topics</code>, <code>brokerProperties</code>, and <code>brokerPropertiesLocation</code> attributes of <code>@EmbeddedKafka</code> support property placeholder resolutions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@TestPropertySource(locations = "classpath:/test.properties")
+@EmbeddedKafka(topics = { "any-topic", "${kafka.topics.another-topic}" },
+        brokerProperties = { "log.dir=${kafka.broker.logs-dir}",
+                            "listeners=PLAINTEXT://localhost:${kafka.broker.port}",
+                            "auto.create.topics.enable=${kafka.broker.topics-enable:true}" },
+        brokerPropertiesLocation = "classpath:/broker.properties")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the preceding example, the property placeholders <code>${kafka.topics.another-topic}</code>, <code>${kafka.broker.logs-dir}</code>, and <code>${kafka.broker.port}</code> are resolved from the Spring <code>Environment</code>.
+In addition, the broker properties are loaded from the <code>broker.properties</code> classpath resource specified by the <code>brokerPropertiesLocation</code>.
+Property placeholders are resolved for the <code>brokerPropertiesLocation</code> URL and for any property placeholders found in the resource.
+Properties defined by <code>brokerProperties</code> override properties found in <code>brokerPropertiesLocation</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can use the <code>@EmbeddedKafka</code> annotation with JUnit 4 or JUnit 5.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="embedded-kafka-junit5"><a class="anchor" href="#embedded-kafka-junit5"></a>@EmbeddedKafka Annotation with JUnit5</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Starting with version 2.3, there are two ways to use the <code>@EmbeddedKafka</code> annotation with JUnit5.
+When used with the <code>@SpringJunitConfig</code> annotation, the embedded broker is added to the test application context.
+You can auto wire the broker into your test, at the class or method level, to get the broker address list.</p>
+</div>
+<div class="paragraph">
+<p>When <strong>not</strong> using the spring test context, the <code>EmbdeddedKafkaCondition</code> creates a broker; the condition includes a parameter resolver so you can access the broker in your test method&#8230;&#8203;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@EmbeddedKafka
+public class EmbeddedKafkaConditionTests {
+
+    @Test
+    public void test(EmbeddedKafkaBroker broker) {
+        String brokerList = broker.getBrokersAsString();
+        ...
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A stand-alone (not Spring test context) broker will be created if the class annotated with <code>@EmbeddedBroker</code> is not also annotated (or meta annotated) with <code>ExtendedWith(SpringExtension.class)</code>.
+<code>@SpringJunitConfig</code> and <code>@SpringBootTest</code> are so meta annotated and the context-based broker will be used when either of those annotations are also present.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+When there is a Spring test application context available, the topics and broker properties can contain property placeholders, which will be resolved as long as the property is defined somewhere.
+If there is no Spring context available, these placeholders won&#8217;t be resolved.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="embedded-broker-in-springboottest-annotations"><a class="anchor" href="#embedded-broker-in-springboottest-annotations"></a>Embedded Broker in <code>@SpringBootTest</code> Annotations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://start.spring.io/">Spring Initializr</a> now automatically adds the <code>spring-kafka-test</code> dependency in test scope to the project configuration.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If your application uses the Kafka binder in <code>spring-cloud-stream</code> and if you want to use an embedded broker for tests, you must remove the <code>spring-cloud-stream-test-support</code> dependency, because it replaces the real binder with a test binder for test cases.
+If you wish some tests to use the test binder and some to use the embedded broker, tests that use the real binder need to disable the test binder by excluding the binder auto configuration in the test class.
+The following example shows how to do so:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@RunWith(SpringRunner.class)
+@SpringBootTest(properties = "spring.autoconfigure.exclude="
+    + "org.springframework.cloud.stream.test.binder.TestSupportBinderAutoConfiguration")
+public class MyApplicationTests {
+    ...
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>There are several ways to use an embedded broker in a Spring Boot application test.</p>
+</div>
+<div class="paragraph">
+<p>They include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#kafka-testing-junit4-class-rule">JUnit4 Class Rule</a></p>
+</li>
+<li>
+<p><a href="#kafka-testing-embeddedkafka-annotation"><code>@EmbeddedKafka</code> Annotation or <code>EmbeddedKafkaBroker</code> Bean</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="kafka-testing-junit4-class-rule"><a class="anchor" href="#kafka-testing-junit4-class-rule"></a>JUnit4 Class Rule</h3>
+<div class="paragraph">
+<p>The following example shows how to use a JUnit4 class rule to create an embedded broker:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@RunWith(SpringRunner.class)
+@SpringBootTest
+public class MyApplicationTests {
+
+    @ClassRule
+    public static EmbeddedKafkaRule broker = new EmbeddedKafkaRule(1,
+        false, "someTopic")
+            .brokerListProperty("spring.kafka.bootstrap-servers");
+    }
+
+    @Autowired
+    private KafkaTemplate&lt;String, String&gt; template;
+
+    @Test
+    public void test() {
+        ...
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice that, since this is a Spring Boot application, we override the broker list property to set Boot&#8217;s property.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="kafka-testing-embeddedkafka-annotation"><a class="anchor" href="#kafka-testing-embeddedkafka-annotation"></a><code>@EmbeddedKafka</code> Annotation or <code>EmbeddedKafkaBroker</code> Bean</h3>
+<div class="paragraph">
+<p>The following example shows how to use an <code>@EmbeddedKafka</code> Annotation to create an embedded broker:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@RunWith(SpringRunner.class)
+@EmbeddedKafka(topics = "someTopic",
+        bootstrapServersProperty = "spring.kafka.bootstrap-servers") // this is now the default
+public class MyApplicationTests {
+
+    @Autowired
+    private KafkaTemplate&lt;String, String&gt; template;
+
+    @Test
+    public void test() {
+        ...
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>bootstrapServersProperty</code> is automatically set to <code>spring.kafka.bootstrap-servers</code>, by default, starting with version 3.0.10.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hamcrest-matchers"><a class="anchor" href="#hamcrest-matchers"></a>Hamcrest Matchers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>o.s.kafka.test.hamcrest.KafkaMatchers</code> provides the following matchers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
+ * @param key the key
+ * @param &lt;K&gt; the type.
+ * @return a Matcher that matches the key in a consumer record.
+ */
+public static &lt;K&gt; Matcher&lt;ConsumerRecord&lt;K, ?&gt;&gt; hasKey(K key) { ... }
+
+/**
+ * @param value the value.
+ * @param &lt;V&gt; the type.
+ * @return a Matcher that matches the value in a consumer record.
+ */
+public static &lt;V&gt; Matcher&lt;ConsumerRecord&lt;?, V&gt;&gt; hasValue(V value) { ... }
+
+/**
+ * @param partition the partition.
+ * @return a Matcher that matches the partition in a consumer record.
+ */
+public static Matcher&lt;ConsumerRecord&lt;?, ?&gt;&gt; hasPartition(int partition) { ... }
+
+/**
+ * Matcher testing the timestamp of a {@link ConsumerRecord} assuming the topic has been set with
+ * {@link org.apache.kafka.common.record.TimestampType#CREATE_TIME CreateTime}.
+ *
+ * @param ts timestamp of the consumer record.
+ * @return a Matcher that matches the timestamp in a consumer record.
+ */
+public static Matcher&lt;ConsumerRecord&lt;?, ?&gt;&gt; hasTimestamp(long ts) {
+  return hasTimestamp(TimestampType.CREATE_TIME, ts);
+}
+
+/**
+ * Matcher testing the timestamp of a {@link ConsumerRecord}
+ * @param type timestamp type of the record
+ * @param ts timestamp of the consumer record.
+ * @return a Matcher that matches the timestamp in a consumer record.
+ */
+public static Matcher&lt;ConsumerRecord&lt;?, ?&gt;&gt; hasTimestamp(TimestampType type, long ts) {
+  return new ConsumerRecordTimestampMatcher(type, ts);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="assertj-conditions"><a class="anchor" href="#assertj-conditions"></a>AssertJ Conditions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can use the following AssertJ conditions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
+ * @param key the key
+ * @param &lt;K&gt; the type.
+ * @return a Condition that matches the key in a consumer record.
+ */
+public static &lt;K&gt; Condition&lt;ConsumerRecord&lt;K, ?&gt;&gt; key(K key) { ... }
+
+/**
+ * @param value the value.
+ * @param &lt;V&gt; the type.
+ * @return a Condition that matches the value in a consumer record.
+ */
+public static &lt;V&gt; Condition&lt;ConsumerRecord&lt;?, V&gt;&gt; value(V value) { ... }
+
+/**
+ * @param key the key.
+ * @param value the value.
+ * @param &lt;K&gt; the key type.
+ * @param &lt;V&gt; the value type.
+ * @return a Condition that matches the key in a consumer record.
+ * @since 2.2.12
+ */
+public static &lt;K, V&gt; Condition&lt;ConsumerRecord&lt;K, V&gt;&gt; keyValue(K key, V value) { ... }
+
+/**
+ * @param partition the partition.
+ * @return a Condition that matches the partition in a consumer record.
+ */
+public static Condition&lt;ConsumerRecord&lt;?, ?&gt;&gt; partition(int partition) { ... }
+
+/**
+ * @param value the timestamp.
+ * @return a Condition that matches the timestamp value in a consumer record.
+ */
+public static Condition&lt;ConsumerRecord&lt;?, ?&gt;&gt; timestamp(long value) {
+  return new ConsumerRecordTimestampCondition(TimestampType.CREATE_TIME, value);
+}
+
+/**
+ * @param type the type of timestamp
+ * @param value the timestamp.
+ * @return a Condition that matches the timestamp value in a consumer record.
+ */
+public static Condition&lt;ConsumerRecord&lt;?, ?&gt;&gt; timestamp(TimestampType type, long value) {
+  return new ConsumerRecordTimestampCondition(type, value);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="example"><a class="anchor" href="#example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following example brings together most of the topics covered in this chapter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class KafkaTemplateTests {
+
+    private static final String TEMPLATE_TOPIC = "templateTopic";
+
+    @ClassRule
+    public static EmbeddedKafkaRule embeddedKafka = new EmbeddedKafkaRule(1, true, TEMPLATE_TOPIC);
+
+    @Test
+    public void testTemplate() throws Exception {
+        Map&lt;String, Object&gt; consumerProps = KafkaTestUtils.consumerProps("testT", "false",
+            embeddedKafka.getEmbeddedKafka());
+        DefaultKafkaConsumerFactory&lt;Integer, String&gt; cf =
+                            new DefaultKafkaConsumerFactory&lt;Integer, String&gt;(consumerProps);
+        ContainerProperties containerProperties = new ContainerProperties(TEMPLATE_TOPIC);
+        KafkaMessageListenerContainer&lt;Integer, String&gt; container =
+                            new KafkaMessageListenerContainer&lt;&gt;(cf, containerProperties);
+        final BlockingQueue&lt;ConsumerRecord&lt;Integer, String&gt;&gt; records = new LinkedBlockingQueue&lt;&gt;();
+        container.setupMessageListener(new MessageListener&lt;Integer, String&gt;() {
+
+            @Override
+            public void onMessage(ConsumerRecord&lt;Integer, String&gt; record) {
+                System.out.println(record);
+                records.add(record);
+            }
+
+        });
+        container.setBeanName("templateTests");
+        container.start();
+        ContainerTestUtils.waitForAssignment(container,
+                            embeddedKafka.getEmbeddedKafka().getPartitionsPerTopic());
+        Map&lt;String, Object&gt; producerProps =
+                            KafkaTestUtils.producerProps(embeddedKafka.getEmbeddedKafka());
+        ProducerFactory&lt;Integer, String&gt; pf =
+                            new DefaultKafkaProducerFactory&lt;Integer, String&gt;(producerProps);
+        KafkaTemplate&lt;Integer, String&gt; template = new KafkaTemplate&lt;&gt;(pf);
+        template.setDefaultTopic(TEMPLATE_TOPIC);
+        template.sendDefault("foo");
+        assertThat(records.poll(10, TimeUnit.SECONDS), hasValue("foo"));
+        template.sendDefault(0, 2, "bar");
+        ConsumerRecord&lt;Integer, String&gt; received = records.poll(10, TimeUnit.SECONDS);
+        assertThat(received, hasKey(2));
+        assertThat(received, hasPartition(0));
+        assertThat(received, hasValue("bar"));
+        template.send(TEMPLATE_TOPIC, 0, 2, "baz");
+        received = records.poll(10, TimeUnit.SECONDS);
+        assertThat(received, hasKey(2));
+        assertThat(received, hasPartition(0));
+        assertThat(received, hasValue("baz"));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The preceding example uses the Hamcrest matchers.
+With <code>AssertJ</code>, the final part looks like the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">assertThat(records.poll(10, TimeUnit.SECONDS)).has(value("foo"));
+template.sendDefault(0, 2, "bar");
+ConsumerRecord&lt;Integer, String&gt; received = records.poll(10, TimeUnit.SECONDS);
+// using individual assertions
+assertThat(received).has(key(2));
+assertThat(received).has(value("bar"));
+assertThat(received).has(partition(0));
+template.send(TEMPLATE_TOPIC, 0, 2, "baz");
+received = records.poll(10, TimeUnit.SECONDS);
+// using allOf()
+assertThat(received).has(allOf(keyValue(2, "baz"), partition(0)));</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mock-cons-prod"><a class="anchor" href="#mock-cons-prod"></a>Mock Consumer and Producer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>kafka-clients</code> library provides <code>MockConsumer</code> and <code>MockProducer</code> classes for testing purposes.</p>
+</div>
+<div class="paragraph">
+<p>If you wish to use these classes in some of your tests with listener containers or <code>KafkaTemplate</code> respectively, starting with version 3.0.7, the framework now provides <code>MockConsumerFactory</code> and <code>MockProducerFactory</code> implementations.</p>
+</div>
+<div class="paragraph">
+<p>These factories can be used in the listener container and template instead of the default factories, which require a running (or embedded) broker.</p>
+</div>
+<div class="paragraph">
+<p>Here is an example of a simple implementation returning a single consumer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+ConsumerFactory&lt;String, String&gt; consumerFactory() {
+    MockConsumer&lt;String, String&gt; consumer = new MockConsumer&lt;&gt;(OffsetResetStrategy.EARLIEST);
+    TopicPartition topicPartition0 = new TopicPartition("topic", 0);
+    List&lt;TopicPartition&gt; topicPartitions = Arrays.asList(topicPartition0);
+    Map&lt;TopicPartition, Long&gt; beginningOffsets = topicPartitions.stream().collect(Collectors
+            .toMap(Function.identity(), tp -&gt; 0L));
+    consumer.updateBeginningOffsets(beginningOffsets);
+    consumer.schedulePollTask(() -&gt; {
+        consumer.addRecord(
+                new ConsumerRecord&lt;&gt;("topic", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "test1",
+                        new RecordHeaders(), Optional.empty()));
+        consumer.addRecord(
+                new ConsumerRecord&lt;&gt;("topic", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "test2",
+                        new RecordHeaders(), Optional.empty()));
+    });
+    return new MockConsumerFactory(() -&gt; consumer);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you wish to test with concurrency, the <code>Supplier</code> lambda in the factory&#8217;s constructor would need create a new instance each time.</p>
+</div>
+<div class="paragraph">
+<p>With the <code>MockProducerFactory</code>, there are two constructors; one to create a simple factory, and one to create factory that supports transactions.</p>
+</div>
+<div class="paragraph">
+<p>Here are examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+ProducerFactory&lt;String, String&gt; nonTransFactory() {
+    return new MockProducerFactory&lt;&gt;(() -&gt;
+            new MockProducer&lt;&gt;(true, new StringSerializer(), new StringSerializer()));
+}
+
+@Bean
+ProducerFactory&lt;String, String&gt; transFactory() {
+    MockProducer&lt;String, String&gt; mockProducer =
+            new MockProducer&lt;&gt;(true, new StringSerializer(), new StringSerializer());
+    mockProducer.initTransactions();
+    return new MockProducerFactory&lt;String, String&gt;((tx, id) -&gt; mockProducer, "defaultTxId");
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice in the second case, the lambda is a <code>BiFunction&lt;Boolean, String&gt;</code> where the first parameter is true if the caller wants a transactional producer; the optional second parameter contains the transactional id.
+This can be the default (as provided in the constructor), or can be overridden by the <code>KafkaTransactionManager</code> (or <code>KafkaTemplate</code> for local transactions), if so configured.
+The transactional id is provided in case you wish to use a different <code>MockProducer</code> based on this value.</p>
+</div>
+<div class="paragraph">
+<p>If you are using producers in a multi-threaded environment, the <code>BiFunction</code> should return multiple producers (perhaps thread-bound using a <code>ThreadLocal</code>).</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Transactional <code>MockProducer</code> s must be initialized for transactions by calling <code>initTransaction()</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="streams.html">Apache Kafka Streams Support</a></span>
+  <span class="next"><a href="tips.html">Tips, Tricks and Examples</a></span>
+</nav>
+</article>
+</div>  </div>
+</main>
+<div class="modal micromodal-slide" id="modal-versions" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true">
+            <main class="modal__content" id="modal-versions-content">
+              <button data-micromodal-close class="modal-versions-close">
+                <svg width="28px" height="28px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><style>.cls-1h{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1h" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1h" x1="7" x2="25" y1="25" y2="7"/></g></svg>
+              </button>
+              <div class="colset">
+                <div class="col-left">
+                  <ul class="nav-versions">
+                    <li class="component is-current">
+                      <a class="title" href="index.html">Spring Kafka</a>
+                      <ul class="versions">
+                        <li class="version is-current is-latest">
+                          <a href="index.html">
+                            3.1.0-SNAPSHOT<span class="current">current</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-right">
+                  <ul>
+                    <li>
+                      Related Spring Documentation
+                      <ul>
+                        <li><a href="https://docs.spring.io/spring-framework/reference/">Spring Framework</a></li>
+                        <li>
+                          Spring Data
+                          <ul>
+                            <li><a href="https://docs.spring.io/spring-data-commons/reference/">Spring Data Commons</a></li>
+                            <li><a href="https://docs.spring.io/spring-data-jpa/reference/">Spring Data JPA</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="https://docs.spring.io/spring-integration/reference/">Spring Integration</a></li>
+                        <li><a href="https://docs.spring.io/spring-batch/reference/">Spring Batch</a></li>
+                        <li>
+                          <a href="https://docs.spring.io/spring-security/reference/">Spring Security</a>
+                          <ul>
+                            <li><a href="https://docs.spring.io/spring-ldap/reference/">Spring LDAP</a></li>
+                            <li><a href="https://docs.spring.io/spring-session/reference/">Spring Session</a></li>
+                            <li><a href="https://docs.spring.io/spring-authorization-server/reference/">Spring Authorization Server</a></li>
+                            <li><a href="https://docs.spring.io/spring-vault/reference/">Spring Vault</a></li>
+                            <li><a href="https://docs.spring.io/spring-security-kerberos/reference/">Spring Security Kerberos</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="https://docs.spring.io/spring-ai/reference/">Spring AI</a></li>
+                        <li><a href="https://docs.spring.io/spring-cli/reference/">Spring CLI</a></li>
+                        <li><a href="https://docs.spring.io/spring-graphql/reference/">Spring GraphQL</a></li>
+                        <li><a href="https://docs.spring.io/spring-shell/reference/">Spring Shell</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+</div>
+<footer class="footer flex">
+    <div id="spring-links flex">
+        <img id="springlogo" src="./_/img/spring-logo.svg" alt="Spring">
+        <p class="smallest antialiased">© <script>var d = new Date();
+        document.write(d.getFullYear());</script> <a href="https://www.vmware.com/">VMware</a>, Inc. or its affiliates. <a href="https://www.vmware.com/help/legal.html">Terms of Use</a> • <a href="https://www.vmware.com/help/privacy.html" rel="noopener noreferrer">Privacy</a> • <a href="https://spring.io/trademarks">Trademark Guidelines</a> <span id="thank-you-mobile">• <a href="https://spring.io/thank-you">Thank you</a></span> • <a href="https://www.vmware.com/help/privacy/california-privacy-rights.html">Your California Privacy Rights</a> • <a class="ot-sdk-show-settings">Cookie Settings</a> <span id="teconsent"></span></p>
+        <p class="smallest antialiased has-gray-text">Apache®, Apache Tomcat®, Apache Kafka®, Apache Cassandra&trade;, and Apache Geode&trade; are trademarks or registered trademarks of the Apache Software Foundation in the United States and/or other countries. Java&trade;, Java&trade; SE, Java&trade; EE, and OpenJDK&trade; are trademarks of Oracle and/or its affiliates. Kubernetes® is a registered trademark of the Linux Foundation in the United States and other countries. Linux® is the registered trademark of Linus Torvalds in the United States and other countries. Windows® and Microsoft® Azure are registered trademarks of Microsoft Corporation. “AWS” and “Amazon Web Services” are trademarks or registered trademarks of Amazon.com Inc. or its affiliates. All other trademarks and copyrights are property of their respective owners and are only mentioned for informative purposes. Other names may be trademarks of their respective owners.</p>
+    </div>
+    <div id="social-icons" class="flex jc-between">
+        <a href="https://www.youtube.com/user/SpringSourceDev" title="Youtube"><svg id="youtube-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle class="cls-1" cx="20" cy="20" r="20"/><path class="cls-2" d="M30.91,14.53a2.89,2.89,0,0,0-2-2C27.12,12,20,12,20,12s-7.12,0-8.9.47a2.9,2.9,0,0,0-2,2A30.56,30.56,0,0,0,8.63,20a30.44,30.44,0,0,0,.46,5.47,2.89,2.89,0,0,0,2,2C12.9,28,20,28,20,28s7.12,0,8.9-.47a2.87,2.87,0,0,0,2-2A30.56,30.56,0,0,0,31.37,20,28.88,28.88,0,0,0,30.91,14.53ZM17.73,23.41V16.59L23.65,20Z"/></svg></a>
+        <a href="https://github.com/spring-projects" title="Github"><svg id="github-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><path class="cls-1" d="M38,0a38,38,0,1,0,38,38A38,38,0,0,0,38,0Z"/></g><path class="cls-2" d="M38,15.59A22.95,22.95,0,0,0,30.71,60.3c1.15.21,1.57-.5,1.57-1.11s0-2,0-3.9c-6.38,1.39-7.73-3.07-7.73-3.07A6.09,6.09,0,0,0,22,48.86c-2.09-1.42.15-1.39.15-1.39a4.81,4.81,0,0,1,3.52,2.36c2,3.5,5.37,2.49,6.67,1.91a4.87,4.87,0,0,1,1.46-3.07c-5.09-.58-10.45-2.55-10.45-11.34a8.84,8.84,0,0,1,2.36-6.15,8.29,8.29,0,0,1,.23-6.07s1.92-.62,6.3,2.35a21.82,21.82,0,0,1,11.49,0c4.38-3,6.3-2.35,6.3-2.35a8.29,8.29,0,0,1,.23,6.07,8.84,8.84,0,0,1,2.36,6.15c0,8.81-5.37,10.75-10.48,11.32a5.46,5.46,0,0,1,1.56,4.25c0,3.07,0,5.54,0,6.29s.42,1.33,1.58,1.1A22.94,22.94,0,0,0,38,15.59Z"/></svg></a>
+        <a href="https://twitter.com/springcentral" title="Twitter"><svg id="twitter-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><circle class="cls-1" cx="37.97" cy="37.97" r="37.97"/><path id="Twitter-2" data-name="Twitter" class="cls-2" d="M55.2,22.73a15.43,15.43,0,0,1-4.88,1.91,7.56,7.56,0,0,0-5.61-2.49A7.78,7.78,0,0,0,37,30a7.56,7.56,0,0,0,.2,1.79,21.63,21.63,0,0,1-15.84-8.23,8,8,0,0,0,2.37,10.52,7.66,7.66,0,0,1-3.48-1v.09A7.84,7.84,0,0,0,26.45,41a7.54,7.54,0,0,1-2,.28A7.64,7.64,0,0,1,23,41.09a7.71,7.71,0,0,0,7.18,5.47,15.21,15.21,0,0,1-9.55,3.37,15.78,15.78,0,0,1-1.83-.11,21.41,21.41,0,0,0,11.78,3.54c14.13,0,21.86-12,21.86-22.42,0-.34,0-.68,0-1a15.67,15.67,0,0,0,3.83-4.08,14.9,14.9,0,0,1-4.41,1.24A7.8,7.8,0,0,0,55.2,22.73Z"/></svg></a>
+    </div>
+</footer>
+<script src="./_/js/vendor/import.js"></script>
+<script src="./_/js/site.js"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<script async src="./_/js/vendor/asciidoctor-tabs.js" data-sync-storage-key="docs:preferred-tab"></script>
+
+<div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+            <main class="modal__content" id="modal-1-content">
+                <div id="searchbox"></div>
+                <div id="counter"></div>
+                <div class="search-by">
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.algolia.com/" aria-label="Search by Algolia">
+                        <img class="light" width="140" src="./_/img/algolia-light.svg" />
+                        <img class="dark" width="140" src="./_/img/algolia-dark.svg" />
+                    </a>
+                </div>
+                <div id="hits"></div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.17.0/dist/algoliasearch-lite.umd.js" integrity="sha256-Lf9DrpGmcRip6OQzbcL6lnvNmoZNSKpyQX5pMlwatWE=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.54.1/dist/instantsearch.production.min.js" integrity="sha256-xYsZPDeNjYNTBWLvqD2Lxe98hOxcDgOHyMPfz4tVAbk=" crossorigin="anonymous"></script>
+<script async id="search-script" src="./_/js/vendor/search.js" data-app-id="WB1FQYI187" data-api-key="9d489079e5ec46dbb238909fee5c9c29" data-index-name="springkafka" data-stylesheet="./_/css/vendor/search.css" data-page-version="3.1.0"></script>
+
+  </body>
+</html>

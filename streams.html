@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Overview :: Spring Kafka</title>
-    <link rel="next" href="whats-new.html">
+    <title>Apache Kafka Streams Support :: Spring Kafka</title>
+    <link rel="prev" href="retrytopic/change-kboe-logging-level.html">
+    <link rel="next" href="testing.html">
     <meta name="generator" content="Antora 3.2.0-alpha.2">
     <script>
 !function (theme, navWidth) {
@@ -278,7 +279,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Overview</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -471,7 +472,7 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="streams.html">Apache Kafka Streams Support</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -536,13 +537,13 @@
   <div class="content">
     <div
       class="toc"
-      data-title="Overview"
+      data-title="Apache Kafka Streams Support"
       data-levels="2"
     >
       <div class="toc-menu"></div>
     </div>
     <div class="sidebar-links">
-        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/index.adoc">
+        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/streams.adoc">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24"
@@ -580,27 +581,493 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Spring Kafka</a></li>
-    <li><a href="index.html">Overview</a></li>
+    <li><a href="reference.html">Reference</a></li>
+    <li><a href="streams.html">Apache Kafka Streams Support</a></li>
   </ul>
 </nav>
 <article>
-<h1 id="page-title" class="page">Overview</h1>
+<h1 id="page-title" class="page">Apache Kafka Streams Support</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p><strong>3.1.0-SNAPSHOT</strong></p>
+<p>Starting with version 1.1.4, Spring for Apache Kafka provides first-class support for <a href="https://kafka.apache.org/documentation/streams">Kafka Streams</a>.
+To use it from a Spring application, the <code>kafka-streams</code> jar must be present on classpath.
+It is an optional dependency of the Spring for Apache Kafka project and is not downloaded transitively.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="basics"><a class="anchor" href="#basics"></a>Basics</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The reference Apache Kafka Streams documentation suggests the following way of using the API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Use the builders to define the actual processing topology, e.g. to specify
+// from which input topics to read, which stream operations (filter, map, etc.)
+// should be called, and so on.
+
+StreamsBuilder builder = ...;  // when using the Kafka Streams DSL
+
+// Use the configuration to tell your application where the Kafka cluster is,
+// which serializers/deserializers to use by default, to specify security settings,
+// and so on.
+StreamsConfig config = ...;
+
+KafkaStreams streams = new KafkaStreams(builder, config);
+
+// Start the Kafka Streams instance
+streams.start();
+
+// Stop the Kafka Streams instance
+streams.close();</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>The Spring for Apache Kafka project applies core Spring concepts to the development of Kafka-based messaging solutions.
-We provide a &#8220;template&#8221; as a high-level abstraction for sending messages.
-We also provide support for Message-driven POJOs.</p>
+<p>So, we have two main components:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>StreamsBuilder</code>: With an API to build <code>KStream</code> (or <code>KTable</code>) instances.</p>
+</li>
+<li>
+<p><code>KafkaStreams</code>: To manage the lifecycle of those instances.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+All <code>KStream</code> instances exposed to a <code>KafkaStreams</code> instance by a single <code>StreamsBuilder</code> are started and stopped at the same time, even if they have different logic.
+In other words, all streams defined by a <code>StreamsBuilder</code> are tied with a single lifecycle control.
+Once a <code>KafkaStreams</code> instance has been closed by <code>streams.close()</code>, it cannot be restarted.
+Instead, a new <code>KafkaStreams</code> instance to restart stream processing must be created.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="streams-spring"><a class="anchor" href="#streams-spring"></a>Spring Management</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To simplify using Kafka Streams from the Spring application context perspective and use the lifecycle management through a container, the Spring for Apache Kafka introduces <code>StreamsBuilderFactoryBean</code>.
+This is an <code>AbstractFactoryBean</code> implementation to expose a <code>StreamsBuilder</code> singleton instance as a bean.
+The following example creates such a bean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public FactoryBean&lt;StreamsBuilder&gt; myKStreamBuilder(KafkaStreamsConfiguration streamsConfig) {
+    return new StreamsBuilderFactoryBean(streamsConfig);
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Starting with version 2.2, the stream configuration is now provided as a <code>KafkaStreamsConfiguration</code> object rather than a <code>StreamsConfig</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>&#169; 2016 - 2023 VMware, Inc.</p>
+<p>The <code>StreamsBuilderFactoryBean</code> also implements <code>SmartLifecycle</code> to manage the lifecycle of an internal <code>KafkaStreams</code> instance.
+Similar to the Kafka Streams API, you must define the <code>KStream</code> instances before you start the <code>KafkaStreams</code>.
+That also applies for the Spring API for Kafka Streams.
+Therefore, when you use default <code>autoStartup = true</code> on the <code>StreamsBuilderFactoryBean</code>, you must declare <code>KStream</code> instances on the <code>StreamsBuilder</code> before the application context is refreshed.
+For example, <code>KStream</code> can be a regular bean definition, while the Kafka Streams API is used without any impacts.
+The following example shows how to do so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public KStream&lt;?, ?&gt; kStream(StreamsBuilder kStreamBuilder) {
+    KStream&lt;Integer, String&gt; stream = kStreamBuilder.stream(STREAMING_TOPIC1);
+    // Fluent KStream API
+    return stream;
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.</p>
+<p>If you would like to control the lifecycle manually (for example, stopping and starting by some condition), you can reference the <code>StreamsBuilderFactoryBean</code> bean directly by using the factory bean (<code>&amp;</code>) <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/html/beans.html#beans-factory-extension-factorybean">prefix</a>.
+Since <code>StreamsBuilderFactoryBean</code> use its internal <code>KafkaStreams</code> instance, it is safe to stop and restart it again.
+A new <code>KafkaStreams</code> is created on each <code>start()</code>.
+You might also consider using different <code>StreamsBuilderFactoryBean</code> instances, if you would like to control the lifecycles for <code>KStream</code> instances separately.</p>
+</div>
+<div class="paragraph">
+<p>You also can specify <code>KafkaStreams.StateListener</code>, <code>Thread.UncaughtExceptionHandler</code>, and <code>StateRestoreListener</code> options on the <code>StreamsBuilderFactoryBean</code>, which are delegated to the internal <code>KafkaStreams</code> instance.
+Also, apart from setting those options indirectly on <code>StreamsBuilderFactoryBean</code>, starting with <em>version 2.1.5</em>, you can use a <code>KafkaStreamsCustomizer</code> callback interface to configure an inner <code>KafkaStreams</code> instance.
+Note that <code>KafkaStreamsCustomizer</code> overrides the options provided by <code>StreamsBuilderFactoryBean</code>.
+If you need to perform some <code>KafkaStreams</code> operations directly, you can access that internal <code>KafkaStreams</code> instance by using <code>StreamsBuilderFactoryBean.getKafkaStreams()</code>.
+You can autowire <code>StreamsBuilderFactoryBean</code> bean by type, but you should be sure to use the full type in the bean definition, as the following example shows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public StreamsBuilderFactoryBean myKStreamBuilder(KafkaStreamsConfiguration streamsConfig) {
+    return new StreamsBuilderFactoryBean(streamsConfig);
+}
+...
+@Autowired
+private StreamsBuilderFactoryBean myKStreamBuilderFactoryBean;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can add <code>@Qualifier</code> for injection by name if you use interface bean definition.
+The following example shows how to do so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public FactoryBean&lt;StreamsBuilder&gt; myKStreamBuilder(KafkaStreamsConfiguration streamsConfig) {
+    return new StreamsBuilderFactoryBean(streamsConfig);
+}
+...
+@Autowired
+@Qualifier("&amp;myKStreamBuilder")
+private StreamsBuilderFactoryBean myKStreamBuilderFactoryBean;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.4.1, the factory bean has a new property <code>infrastructureCustomizer</code> with type <code>KafkaStreamsInfrastructureCustomizer</code>; this allows customization of the <code>StreamsBuilder</code> (e.g. to add a state store) and/or the <code>Topology</code> before the stream is created.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface KafkaStreamsInfrastructureCustomizer {
+
+	void configureBuilder(StreamsBuilder builder);
+
+	void configureTopology(Topology topology);
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Default no-op implementations are provided to avoid having to implement both methods if one is not required.</p>
+</div>
+<div class="paragraph">
+<p>A <code>CompositeKafkaStreamsInfrastructureCustomizer</code> is provided, for when you need to apply multiple customizers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="streams-micrometer"><a class="anchor" href="#streams-micrometer"></a>KafkaStreams Micrometer Support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Introduced in version 2.5.3, you can configure a <code>KafkaStreamsMicrometerListener</code> to automatically register micrometer meters for the <code>KafkaStreams</code> object managed by the factory bean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">streamsBuilderFactoryBean.addListener(new KafkaStreamsMicrometerListener(meterRegistry,
+        Collections.singletonList(new ImmutableTag("customTag", "customTagValue"))));</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="serde"><a class="anchor" href="#serde"></a>Streams JSON Serialization and Deserialization</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For serializing and deserializing data when reading or writing to topics or state stores in JSON format, Spring for Apache Kafka provides a <code>JsonSerde</code> implementation that uses JSON, delegating to the <code>JsonSerializer</code> and <code>JsonDeserializer</code> described in <a href="kafka/serdes.html" class="xref page">Serialization, Deserialization, and Message Conversion</a>.
+The <code>JsonSerde</code> implementation provides the same configuration options through its constructor (target type or <code>ObjectMapper</code>).
+In the following example, we use the <code>JsonSerde</code> to serialize and deserialize the <code>Cat</code> payload of a Kafka stream (the <code>JsonSerde</code> can be used in a similar fashion wherever an instance is required):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">stream.through(Serdes.Integer(), new JsonSerde&lt;&gt;(Cat.class), "cats");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When constructing the serializer/deserializer programmatically for use in the producer/consumer factory, since version 2.3, you can use the fluent API, which simplifies configuration.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">stream.through(new JsonSerde&lt;&gt;(MyKeyType.class)
+        .forKeys()
+        .noTypeInfo(),
+    new JsonSerde&lt;&gt;(MyValueType.class)
+        .noTypeInfo(),
+    "myTypes");</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-kafkastreambrancher"><a class="anchor" href="#using-kafkastreambrancher"></a>Using <code>KafkaStreamBrancher</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>KafkaStreamBrancher</code> class introduces a more convenient way to build conditional branches on top of <code>KStream</code>.</p>
+</div>
+<div class="paragraph">
+<p>Consider the following example that does not use <code>KafkaStreamBrancher</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">KStream&lt;String, String&gt;[] branches = builder.stream("source").branch(
+      (key, value) -&gt; value.contains("A"),
+      (key, value) -&gt; value.contains("B"),
+      (key, value) -&gt; true
+     );
+branches[0].to("A");
+branches[1].to("B");
+branches[2].to("C");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example uses <code>KafkaStreamBrancher</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">new KafkaStreamBrancher&lt;String, String&gt;()
+   .branch((key, value) -&gt; value.contains("A"), ks -&gt; ks.to("A"))
+   .branch((key, value) -&gt; value.contains("B"), ks -&gt; ks.to("B"))
+   //default branch should not necessarily be defined in the end of the chain!
+   .defaultBranch(ks -&gt; ks.to("C"))
+   .onTopOf(builder.stream("source"));
+   //onTopOf method returns the provided stream so we can continue with method chaining</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="streams-config"><a class="anchor" href="#streams-config"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To configure the Kafka Streams environment, the <code>StreamsBuilderFactoryBean</code> requires a <code>KafkaStreamsConfiguration</code> instance.
+See the Apache Kafka <a href="https://kafka.apache.org/0102/documentation/#streamsconfigs">documentation</a> for all possible options.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Starting with version 2.2, the stream configuration is now provided as a <code>KafkaStreamsConfiguration</code> object, rather than as a <code>StreamsConfig</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To avoid boilerplate code for most cases, especially when you develop microservices, Spring for Apache Kafka provides the <code>@EnableKafkaStreams</code> annotation, which you should place on a <code>@Configuration</code> class.
+All you need is to declare a <code>KafkaStreamsConfiguration</code> bean named <code>defaultKafkaStreamsConfig</code>.
+A <code>StreamsBuilderFactoryBean</code> bean, named <code>defaultKafkaStreamsBuilder</code>, is automatically declared in the application context.
+You can declare and use any additional <code>StreamsBuilderFactoryBean</code> beans as well.
+You can perform additional customization of that bean, by providing a bean that implements <code>StreamsBuilderFactoryBeanConfigurer</code>.
+If there are multiple such beans, they will be applied according to their <code>Ordered.order</code> property.</p>
+</div>
+<div class="paragraph">
+<p>By default, when the factory bean is stopped, the <code>KafkaStreams.cleanUp()</code> method is called.
+Starting with version 2.1.2, the factory bean has additional constructors, taking a <code>CleanupConfig</code> object that has properties to let you control whether the <code>cleanUp()</code> method is called during <code>start()</code> or <code>stop()</code> or neither.
+Starting with version 2.7, the default is to never clean up local state.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="streams-header-enricher"><a class="anchor" href="#streams-header-enricher"></a>Header Enricher</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Version 3.0 added the <code>HeaderEnricherProcessor</code> extension of <code>ContextualProcessor</code>; providing the same functionality as the deprecated <code>HeaderEnricher</code> which implemented the deprecated <code>Transformer</code> interface.
+This can be used to add headers within the stream processing; the header values are SpEL expressions; the root object of the expression evaluation has 3 properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>record</code> - the <code>org.apache.kafka.streams.processor.api.Record</code> (<code>key</code>, <code>value</code>, <code>timestamp</code>, <code>headers</code>)</p>
+</li>
+<li>
+<p><code>key</code> - the key of the current record</p>
+</li>
+<li>
+<p><code>value</code> - the value of the current record</p>
+</li>
+<li>
+<p><code>context</code> - the <code>ProcessorContext</code>, allowing access to the current record metadata</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The expressions must return a <code>byte[]</code> or a <code>String</code> (which will be converted to <code>byte[]</code> using <code>UTF-8</code>).</p>
+</div>
+<div class="paragraph">
+<p>To use the enricher within a stream:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">.process(() -&gt; new HeaderEnricherProcessor(expressions))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The processor does not change the <code>key</code> or <code>value</code>; it simply adds headers.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You need a new instance for each record.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">.process(() -&gt; new HeaderEnricherProcessor&lt;..., ...&gt;(expressionMap))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is a simple example, adding one literal header and one variable:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Map&lt;String, Expression&gt; headers = new HashMap&lt;&gt;();
+headers.put("header1", new LiteralExpression("value1"));
+SpelExpressionParser parser = new SpelExpressionParser();
+headers.put("header2", parser.parseExpression("record.timestamp() + ' @' + record.offset()"));
+ProcessorSupplier supplier = () -&gt; new HeaderEnricher&lt;String, String&gt; enricher = new HeaderEnricher&lt;&gt;(headers);
+KStream&lt;String, String&gt; stream = builder.stream(INPUT);
+stream
+        .process(() -&gt; supplier)
+        .to(OUTPUT);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="streams-messaging"><a class="anchor" href="#streams-messaging"></a><code>MessagingProcessor</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Version 3.0 added the <code>MessagingProcessor</code> extension of <code>ContextualProcessor</code>; providing the same functionality as the deprecated <code>MessagingTransformer</code> which implemented the deprecated <code>Transformer</code> interface.
+This allows a Kafka Streams topology to interact with a Spring Messaging component, such as a Spring Integration flow.
+The transformer requires an implementation of <code>MessagingFunction</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@FunctionalInterface
+public interface MessagingFunction {
+
+	Message&lt;?&gt; exchange(Message&lt;?&gt; message);
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Spring Integration automatically provides an implementation using its <code>GatewayProxyFactoryBean</code>.
+It also requires a <code>MessagingMessageConverter</code> to convert the key, value and metadata (including headers) to/from a Spring Messaging <code>Message&lt;?&gt;</code>.
+See <a href="https://docs.spring.io/spring-integration/docs/current/reference/html/kafka.html#streams-integration">[Calling a Spring Integration Flow from a <code>KStream</code></a>] for more information.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="streams-deser-recovery"><a class="anchor" href="#streams-deser-recovery"></a>Recovery from Deserialization Exceptions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Version 2.3 introduced the <code>RecoveringDeserializationExceptionHandler</code> which can take some action when a deserialization exception occurs.
+Refer to the Kafka documentation about <code>DeserializationExceptionHandler</code>, of which the <code>RecoveringDeserializationExceptionHandler</code> is an implementation.
+The <code>RecoveringDeserializationExceptionHandler</code> is configured with a <code>ConsumerRecordRecoverer</code> implementation.
+The framework provides the <code>DeadLetterPublishingRecoverer</code> which sends the failed record to a dead-letter topic.
+See <a href="kafka/annotation-error-handling.html#dead-letters" class="xref page">Publishing Dead-letter Records</a> for more information about this recoverer.</p>
+</div>
+<div class="paragraph">
+<p>To configure the recoverer, add the following properties to your streams configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)
+public KafkaStreamsConfiguration kStreamsConfigs() {
+    Map&lt;String, Object&gt; props = new HashMap&lt;&gt;();
+    ...
+    props.put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG,
+            RecoveringDeserializationExceptionHandler.class);
+    props.put(RecoveringDeserializationExceptionHandler.KSTREAM_DESERIALIZATION_RECOVERER, recoverer());
+    ...
+    return new KafkaStreamsConfiguration(props);
+}
+
+@Bean
+public DeadLetterPublishingRecoverer recoverer() {
+    return new DeadLetterPublishingRecoverer(kafkaTemplate(),
+            (record, ex) -&gt; new TopicPartition("recovererDLQ", -1));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Of course, the <code>recoverer()</code> bean can be your own implementation of <code>ConsumerRecordRecoverer</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="kafka-streams-example"><a class="anchor" href="#kafka-streams-example"></a>Kafka Streams Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following example combines all the topics we have covered in this chapter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Configuration
+@EnableKafka
+@EnableKafkaStreams
+public static class KafkaStreamsConfig {
+
+    @Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)
+    public KafkaStreamsConfiguration kStreamsConfigs() {
+        Map&lt;String, Object&gt; props = new HashMap&lt;&gt;();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "testStreams");
+        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.Integer().getClass().getName());
+        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        props.put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, WallclockTimestampExtractor.class.getName());
+        return new KafkaStreamsConfiguration(props);
+    }
+
+    @Bean
+    public StreamsBuilderFactoryBeanConfigurer configurer() {
+        return fb -&gt; fb.setStateListener((newState, oldState) -&gt; {
+            System.out.println("State transition from " + oldState + " to " + newState);
+        });
+    }
+
+    @Bean
+    public KStream&lt;Integer, String&gt; kStream(StreamsBuilder kStreamBuilder) {
+        KStream&lt;Integer, String&gt; stream = kStreamBuilder.stream("streamingTopic1");
+        stream
+                .mapValues((ValueMapper&lt;String, String&gt;) String::toUpperCase)
+                .groupByKey()
+                .windowedBy(TimeWindows.of(Duration.ofMillis(1000)))
+                .reduce((String value1, String value2) -&gt; value1 + value2,
+                		Named.as("windowStore"))
+                .toStream()
+                .map((windowedId, value) -&gt; new KeyValue&lt;&gt;(windowedId.key(), value))
+                .filter((i, s) -&gt; s.length() &gt; 40)
+                .to("streamingTopic2");
+
+        stream.print(Printed.toSysOut());
+
+        return stream;
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="whats-new.html">What&#8217;s new?</a></span>
+  <span class="prev"><a href="retrytopic/change-kboe-logging-level.html">Changing KafkaBackOffException Logging Level</a></span>
+  <span class="next"><a href="testing.html">Testing Applications</a></span>
 </nav>
 </article>
 </div>  </div>

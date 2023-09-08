@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Overview :: Spring Kafka</title>
-    <link rel="next" href="whats-new.html">
+    <title>Non-Blocking Retries :: Spring Kafka</title>
+    <link rel="prev" href="kafka/kerberos.html">
+    <link rel="next" href="retrytopic/how-the-pattern-works.html">
     <meta name="generator" content="Antora 3.2.0-alpha.2">
     <script>
 !function (theme, navWidth) {
@@ -278,7 +279,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Overview</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -426,7 +427,7 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="retrytopic.html">Non-Blocking Retries</a>
 <ul class="nav-list">
@@ -536,13 +537,13 @@
   <div class="content">
     <div
       class="toc"
-      data-title="Overview"
+      data-title="Non-Blocking Retries"
       data-levels="2"
     >
       <div class="toc-menu"></div>
     </div>
     <div class="sidebar-links">
-        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/index.adoc">
+        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/retrytopic.adoc">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24"
@@ -580,27 +581,78 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Spring Kafka</a></li>
-    <li><a href="index.html">Overview</a></li>
+    <li><a href="reference.html">Reference</a></li>
+    <li><a href="retrytopic.html">Non-Blocking Retries</a></li>
   </ul>
 </nav>
 <article>
-<h1 id="page-title" class="page">Overview</h1>
+<h1 id="page-title" class="page">Non-Blocking Retries</h1>
 <div class="paragraph">
-<p><strong>3.1.0-SNAPSHOT</strong></p>
+<p>Version 2.9 changed the mechanism to bootstrap infrastructure beans; see <a href="retrytopic/retry-config.html" class="xref page">Configuration</a> for the two mechanisms that are now required to bootstrap the feature.</p>
 </div>
 <div class="paragraph">
-<p>The Spring for Apache Kafka project applies core Spring concepts to the development of Kafka-based messaging solutions.
-We provide a &#8220;template&#8221; as a high-level abstraction for sending messages.
-We also provide support for Message-driven POJOs.</p>
+<p>Achieving non-blocking retry / dlt functionality with Kafka usually requires setting up extra topics and creating and configuring the corresponding listeners.
+Since 2.7 Spring for Apache Kafka offers support for that via the <code>@RetryableTopic</code> annotation and <code>RetryTopicConfiguration</code> class to simplify that bootstrapping.</p>
 </div>
-<div class="paragraph">
-<p>&#169; 2016 - 2023 VMware, Inc.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Non-blocking retries are not supported with <a href="#batch-listeners">[batch-listeners]</a>.
+</td>
+</tr>
+</table>
 </div>
-<div class="paragraph">
-<p>Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.</p>
+<div class="section-summary">
+<h2>Section Summary</h2>
+<ul class="nav-section-summary">
+  <li>
+    <a href="retrytopic/how-the-pattern-works.html">How The Pattern Works</a>
+  </li>
+  <li>
+    <a href="retrytopic/back-off-delay-precision.html">Back Off Delay Precision</a>
+  </li>
+  <li>
+    <a href="retrytopic/retry-config.html">Configuration</a>
+  </li>
+  <li>
+    <a href="retrytopic/programmatic-construction.html">Programmatic Construction</a>
+  </li>
+  <li>
+    <a href="retrytopic/features.html">Features</a>
+  </li>
+  <li>
+    <a href="retrytopic/retry-topic-combine-blocking.html">Combining Blocking and Non-Blocking Retries</a>
+  </li>
+  <li>
+    <a href="retrytopic/accessing-delivery-attempts.html">Accessing Delivery Attempts</a>
+  </li>
+  <li>
+    <a href="retrytopic/topic-naming.html">Topic Naming</a>
+  </li>
+  <li>
+    <a href="retrytopic/multi-retry.html">Multiple Listeners, Same Topic(s)</a>
+  </li>
+  <li>
+    <a href="retrytopic/dlt-strategies.html">Dlt Strategies</a>
+  </li>
+  <li>
+    <a href="retrytopic/retry-topic-lcf.html">Specifying a ListenerContainerFactory</a>
+  </li>
+  <li>
+    <a href="retrytopic/access-topic-info-runtime.html">Accessing Topics' Information at Runtime</a>
+  </li>
+  <li>
+    <a href="retrytopic/change-kboe-logging-level.html">Changing KafkaBackOffException Logging Level</a>
+  </li>
+</ul>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="whats-new.html">What&#8217;s new?</a></span>
+  <span class="prev"><a href="kafka/kerberos.html">JAAS and Kerberos</a></span>
+  <span class="next"><a href="retrytopic/how-the-pattern-works.html">How The Pattern Works</a></span>
 </nav>
 </article>
 </div>  </div>

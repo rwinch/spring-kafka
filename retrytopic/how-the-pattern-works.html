@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Overview :: Spring Kafka</title>
-    <link rel="next" href="whats-new.html">
+    <title>How The Pattern Works :: Spring Kafka</title>
+    <link rel="prev" href="../retrytopic.html">
+    <link rel="next" href="back-off-delay-precision.html">
     <meta name="generator" content="Antora 3.2.0-alpha.2">
     <script>
 !function (theme, navWidth) {
@@ -13,13 +14,13 @@
 }(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'),
   localStorage && localStorage.getItem('nav-width'))
     </script>
-    <link rel="stylesheet" href="./_/css/site.css">
-    <link rel="stylesheet" href="./_/css/vendor/search.css">
-    <link rel="stylesheet" href="./_/css/vendor/asciidoctor-tabs.css">
+    <link rel="stylesheet" href="../_/css/site.css">
+    <link rel="stylesheet" href="../_/css/vendor/search.css">
+    <link rel="stylesheet" href="../_/css/vendor/asciidoctor-tabs.css">
 
     <meta name="version" content="3.1.0">
     <meta name="component" content="kafka">
-    <link rel="icon" href="./_/img/favicon.ico" type="image/vnd.microsoft.icon">
+    <link rel="icon" href="../_/img/favicon.ico" type="image/vnd.microsoft.icon">
   </head>
   <body class="article">
 <header class="header">
@@ -29,7 +30,7 @@
         <img
           id="springlogo"
           class="block"
-          src="./_/img/spring-logo.svg"
+          src="../_/img/spring-logo.svg"
           alt="Spring"
         />
       </a>
@@ -278,224 +279,224 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="index.html">Overview</a>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Overview</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="whats-new.html">What&#8217;s new?</a>
+    <a class="nav-link" href="../whats-new.html">What&#8217;s new?</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="introduction.html">Introduction</a>
+    <a class="nav-link" href="../introduction.html">Introduction</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="quick-tour.html">Quick Tour</a>
+    <a class="nav-link" href="../quick-tour.html">Quick Tour</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="reference.html">Reference</a>
+    <a class="nav-link" href="../reference.html">Reference</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="kafka.html">Using Spring for Apache Kafka</a>
+    <a class="nav-link" href="../kafka.html">Using Spring for Apache Kafka</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/connecting.html">Connecting to Kafka</a>
+    <a class="nav-link" href="../kafka/connecting.html">Connecting to Kafka</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/configuring-topics.html">Configuring Topics</a>
+    <a class="nav-link" href="../kafka/configuring-topics.html">Configuring Topics</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/sending-messages.html">Sending Messages</a>
+    <a class="nav-link" href="../kafka/sending-messages.html">Sending Messages</a>
   </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="kafka/receiving-messages.html">Receiving Messages</a>
+    <a class="nav-link" href="../kafka/receiving-messages.html">Receiving Messages</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/message-listeners.html">Message Listeners</a>
+    <a class="nav-link" href="../kafka/receiving-messages/message-listeners.html">Message Listeners</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/message-listener-container.html">Message Listener Containers</a>
+    <a class="nav-link" href="../kafka/receiving-messages/message-listener-container.html">Message Listener Containers</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/ooo-commits.html">Manually Committing Offsets</a>
+    <a class="nav-link" href="../kafka/receiving-messages/ooo-commits.html">Manually Committing Offsets</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/listener-annotation.html"><code>@KafkaListener</code> Annotation</a>
+    <a class="nav-link" href="../kafka/receiving-messages/listener-annotation.html"><code>@KafkaListener</code> Annotation</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/listener-group-id.html">Obtaining the Consumer <code>group.id</code></a>
+    <a class="nav-link" href="../kafka/receiving-messages/listener-group-id.html">Obtaining the Consumer <code>group.id</code></a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/container-thread-naming.html">Container Thread Naming</a>
+    <a class="nav-link" href="../kafka/receiving-messages/container-thread-naming.html">Container Thread Naming</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/listener-meta.html"><code>@KafkaListener</code> as a Meta Annotation</a>
+    <a class="nav-link" href="../kafka/receiving-messages/listener-meta.html"><code>@KafkaListener</code> as a Meta Annotation</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/class-level-kafkalistener.html"><code>@KafkaListener</code> on a Class</a>
+    <a class="nav-link" href="../kafka/receiving-messages/class-level-kafkalistener.html"><code>@KafkaListener</code> on a Class</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/kafkalistener-attrs.html"><code>@KafkaListener</code> Attribute Modification</a>
+    <a class="nav-link" href="../kafka/receiving-messages/kafkalistener-attrs.html"><code>@KafkaListener</code> Attribute Modification</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/kafkalistener-lifecycle.html"><code>@KafkaListener</code> Lifecycle Management</a>
+    <a class="nav-link" href="../kafka/receiving-messages/kafkalistener-lifecycle.html"><code>@KafkaListener</code> Lifecycle Management</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/validation.html"><code>@KafkaListener</code> <code>@Payload</code> Validation</a>
+    <a class="nav-link" href="../kafka/receiving-messages/validation.html"><code>@KafkaListener</code> <code>@Payload</code> Validation</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/rebalance-listeners.html">Rebalancing Listeners</a>
+    <a class="nav-link" href="../kafka/receiving-messages/rebalance-listeners.html">Rebalancing Listeners</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/annotation-send-to.html">Forwarding Listener Results using <code>@SendTo</code></a>
+    <a class="nav-link" href="../kafka/receiving-messages/annotation-send-to.html">Forwarding Listener Results using <code>@SendTo</code></a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/filtering.html">Filtering Messages</a>
+    <a class="nav-link" href="../kafka/receiving-messages/filtering.html">Filtering Messages</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/retrying-deliveries.html">Retrying Deliveries</a>
+    <a class="nav-link" href="../kafka/receiving-messages/retrying-deliveries.html">Retrying Deliveries</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/sequencing.html">Starting <code>@KafkaListener</code> s in Sequence</a>
+    <a class="nav-link" href="../kafka/receiving-messages/sequencing.html">Starting <code>@KafkaListener</code> s in Sequence</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/template-receive.html">Using <code>KafkaTemplate</code> to Receive</a>
+    <a class="nav-link" href="../kafka/receiving-messages/template-receive.html">Using <code>KafkaTemplate</code> to Receive</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/container-props.html">Listener Container Properties</a>
+    <a class="nav-link" href="../kafka/container-props.html">Listener Container Properties</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/dynamic-containers.html">Dynamically Creating Containers</a>
+    <a class="nav-link" href="../kafka/dynamic-containers.html">Dynamically Creating Containers</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/events.html">Application Events</a>
+    <a class="nav-link" href="../kafka/events.html">Application Events</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/topic/partition-initial-offset.html">Topic/Partition Initial Offset</a>
+    <a class="nav-link" href="../kafka/topic/partition-initial-offset.html">Topic/Partition Initial Offset</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/seek.html">Seeking to a Specific Offset</a>
+    <a class="nav-link" href="../kafka/seek.html">Seeking to a Specific Offset</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/container-factory.html">Container factory</a>
+    <a class="nav-link" href="../kafka/container-factory.html">Container factory</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/thread-safety.html">Thread Safety</a>
+    <a class="nav-link" href="../kafka/thread-safety.html">Thread Safety</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/micrometer.html">Monitoring</a>
+    <a class="nav-link" href="../kafka/micrometer.html">Monitoring</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/transactions.html">Transactions</a>
+    <a class="nav-link" href="../kafka/transactions.html">Transactions</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/exactly-once.html">Exactly Once Semantics</a>
+    <a class="nav-link" href="../kafka/exactly-once.html">Exactly Once Semantics</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/interceptors.html">Wiring Spring Beans into Producer/Consumer Interceptors</a>
+    <a class="nav-link" href="../kafka/interceptors.html">Wiring Spring Beans into Producer/Consumer Interceptors</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/producer-interceptor-managed-in-spring.html">Producer Interceptor Managed in Spring</a>
+    <a class="nav-link" href="../kafka/producer-interceptor-managed-in-spring.html">Producer Interceptor Managed in Spring</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/pause-resume.html">Pausing and Resuming Listener Containers</a>
+    <a class="nav-link" href="../kafka/pause-resume.html">Pausing and Resuming Listener Containers</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/pause-resume-partitions.html">Pausing and Resuming Partitions on Listener Containers</a>
+    <a class="nav-link" href="../kafka/pause-resume-partitions.html">Pausing and Resuming Partitions on Listener Containers</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/serdes.html">Serialization, Deserialization, and Message Conversion</a>
+    <a class="nav-link" href="../kafka/serdes.html">Serialization, Deserialization, and Message Conversion</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/headers.html">Message Headers</a>
+    <a class="nav-link" href="../kafka/headers.html">Message Headers</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/tombstones.html">Null Payloads and Log Compaction of 'Tombstone' Records</a>
+    <a class="nav-link" href="../kafka/tombstones.html">Null Payloads and Log Compaction of 'Tombstone' Records</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/annotation-error-handling.html">Handling Exceptions</a>
+    <a class="nav-link" href="../kafka/annotation-error-handling.html">Handling Exceptions</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/kerberos.html">JAAS and Kerberos</a>
+    <a class="nav-link" href="../kafka/kerberos.html">JAAS and Kerberos</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="retrytopic.html">Non-Blocking Retries</a>
+    <a class="nav-link" href="../retrytopic.html">Non-Blocking Retries</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/how-the-pattern-works.html">How The Pattern Works</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="how-the-pattern-works.html">How The Pattern Works</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/back-off-delay-precision.html">Back Off Delay Precision</a>
+    <a class="nav-link" href="back-off-delay-precision.html">Back Off Delay Precision</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/retry-config.html">Configuration</a>
+    <a class="nav-link" href="retry-config.html">Configuration</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/programmatic-construction.html">Programmatic Construction</a>
+    <a class="nav-link" href="programmatic-construction.html">Programmatic Construction</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/features.html">Features</a>
+    <a class="nav-link" href="features.html">Features</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/retry-topic-combine-blocking.html">Combining Blocking and Non-Blocking Retries</a>
+    <a class="nav-link" href="retry-topic-combine-blocking.html">Combining Blocking and Non-Blocking Retries</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/accessing-delivery-attempts.html">Accessing Delivery Attempts</a>
+    <a class="nav-link" href="accessing-delivery-attempts.html">Accessing Delivery Attempts</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/topic-naming.html">Topic Naming</a>
+    <a class="nav-link" href="topic-naming.html">Topic Naming</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/multi-retry.html">Multiple Listeners, Same Topic(s)</a>
+    <a class="nav-link" href="multi-retry.html">Multiple Listeners, Same Topic(s)</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/dlt-strategies.html">Dlt Strategies</a>
+    <a class="nav-link" href="dlt-strategies.html">Dlt Strategies</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/retry-topic-lcf.html">Specifying a ListenerContainerFactory</a>
+    <a class="nav-link" href="retry-topic-lcf.html">Specifying a ListenerContainerFactory</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/access-topic-info-runtime.html">Accessing Topics' Information at Runtime</a>
+    <a class="nav-link" href="access-topic-info-runtime.html">Accessing Topics' Information at Runtime</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/change-kboe-logging-level.html">Changing KafkaBackOffException Logging Level</a>
+    <a class="nav-link" href="change-kboe-logging-level.html">Changing KafkaBackOffException Logging Level</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="streams.html">Apache Kafka Streams Support</a>
+    <a class="nav-link" href="../streams.html">Apache Kafka Streams Support</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="testing.html">Testing Applications</a>
+    <a class="nav-link" href="../testing.html">Testing Applications</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="tips.html">Tips, Tricks and Examples</a>
+    <a class="nav-link" href="../tips.html">Tips, Tricks and Examples</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="other-resources.html">Other Resources</a>
+    <a class="nav-link" href="../other-resources.html">Other Resources</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="appendix/override-boot-dependencies.html">Override Spring Boot Dependencies</a>
+    <a class="nav-link" href="../appendix/override-boot-dependencies.html">Override Spring Boot Dependencies</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="appendix/micrometer.html">Micrometer Observation Documentation</a>
+    <a class="nav-link" href="../appendix/micrometer.html">Micrometer Observation Documentation</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="appendix/native-images.html">Native Images</a>
+    <a class="nav-link" href="../appendix/native-images.html">Native Images</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="appendix/change-history.html">Change History</a>
+    <a class="nav-link" href="../appendix/change-history.html">Change History</a>
   </li>
 </ul>
   </li>
@@ -536,13 +537,13 @@
   <div class="content">
     <div
       class="toc"
-      data-title="Overview"
+      data-title="How The Pattern Works"
       data-levels="2"
     >
       <div class="toc-menu"></div>
     </div>
     <div class="sidebar-links">
-        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/index.adoc">
+        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/retrytopic/how-the-pattern-works.adoc">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24"
@@ -579,28 +580,79 @@
 </aside><div class="doc">
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="index.html">Spring Kafka</a></li>
-    <li><a href="index.html">Overview</a></li>
+    <li><a href="../index.html">Spring Kafka</a></li>
+    <li><a href="../reference.html">Reference</a></li>
+    <li><a href="../retrytopic.html">Non-Blocking Retries</a></li>
+    <li><a href="how-the-pattern-works.html">How The Pattern Works</a></li>
   </ul>
 </nav>
 <article>
-<h1 id="page-title" class="page">Overview</h1>
+<h1 id="page-title" class="page">How The Pattern Works</h1>
 <div class="paragraph">
-<p><strong>3.1.0-SNAPSHOT</strong></p>
+<p>If message processing fails, the message is forwarded to a retry topic with a back off timestamp.
+The retry topic consumer then checks the timestamp and if it&#8217;s not due it pauses the consumption for that topic&#8217;s partition.
+When it is due the partition consumption is resumed, and the message is consumed again.
+If the message processing fails again the message will be forwarded to the next retry topic, and the pattern is repeated until a successful processing occurs, or the attempts are exhausted, and the message is sent to the Dead Letter Topic (if configured).</p>
 </div>
 <div class="paragraph">
-<p>The Spring for Apache Kafka project applies core Spring concepts to the development of Kafka-based messaging solutions.
-We provide a &#8220;template&#8221; as a high-level abstraction for sending messages.
-We also provide support for Message-driven POJOs.</p>
+<p>To illustrate, if you have a "main-topic" topic, and want to setup non-blocking retry with an exponential backoff of 1000ms with a multiplier of 2 and 4 max attempts, it will create the main-topic-retry-1000, main-topic-retry-2000, main-topic-retry-4000 and main-topic-dlt topics and configure the respective consumers.
+The framework also takes care of creating the topics and setting up and configuring the listeners.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+By using this strategy you lose Kafka&#8217;s ordering guarantees for that topic.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You can set the <code>AckMode</code> mode you prefer, but <code>RECORD</code> is suggested.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+At this time this functionality doesn&#8217;t support class level <code>@KafkaListener</code> annotations
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>&#169; 2016 - 2023 VMware, Inc.</p>
+<p>When using a manual <code>AckMode</code> with <code>asyncAcks</code> set to true, the <code>DefaultErrorHandler</code> must be configured with <code>seekAfterError</code> set to <code>false</code>.
+Starting with versions 2.9.10, 3.0.8, this will be set to true unconditionally for such configurations.
+With earlier versions, it was necessary to override the <code>RetryConfigurationSupport.configureCustomizers()</code> method to set the property to <code>true</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Override
+protected void configureCustomizers(CustomizersConfigurer customizersConfigurer) {
+    customizersConfigurer.customizeErrorHandler(eh -&gt; eh.setSeekAfterError(false));
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.</p>
+<p>In addition, before those versions, using the default (logging) DLT handler was not compatible with any kind of manual <code>AckMode</code>, regardless of the <code>asyncAcks</code> property.</p>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="whats-new.html">What&#8217;s new?</a></span>
+  <span class="prev"><a href="../retrytopic.html">Non-Blocking Retries</a></span>
+  <span class="next"><a href="back-off-delay-precision.html">Back Off Delay Precision</a></span>
 </nav>
 </article>
 </div>  </div>
@@ -616,10 +668,10 @@ We also provide support for Message-driven POJOs.</p>
                 <div class="col-left">
                   <ul class="nav-versions">
                     <li class="component is-current">
-                      <a class="title" href="index.html">Spring Kafka</a>
+                      <a class="title" href="../index.html">Spring Kafka</a>
                       <ul class="versions">
                         <li class="version is-current is-latest">
-                          <a href="index.html">
+                          <a href="../index.html">
                             3.1.0-SNAPSHOT<span class="current">current</span>
                           </a>
                         </li>
@@ -669,7 +721,7 @@ We also provide support for Message-driven POJOs.</p>
 </div>
 <footer class="footer flex">
     <div id="spring-links flex">
-        <img id="springlogo" src="./_/img/spring-logo.svg" alt="Spring">
+        <img id="springlogo" src="../_/img/spring-logo.svg" alt="Spring">
         <p class="smallest antialiased">© <script>var d = new Date();
         document.write(d.getFullYear());</script> <a href="https://www.vmware.com/">VMware</a>, Inc. or its affiliates. <a href="https://www.vmware.com/help/legal.html">Terms of Use</a> • <a href="https://www.vmware.com/help/privacy.html" rel="noopener noreferrer">Privacy</a> • <a href="https://spring.io/trademarks">Trademark Guidelines</a> <span id="thank-you-mobile">• <a href="https://spring.io/thank-you">Thank you</a></span> • <a href="https://www.vmware.com/help/privacy/california-privacy-rights.html">Your California Privacy Rights</a> • <a class="ot-sdk-show-settings">Cookie Settings</a> <span id="teconsent"></span></p>
         <p class="smallest antialiased has-gray-text">Apache®, Apache Tomcat®, Apache Kafka®, Apache Cassandra&trade;, and Apache Geode&trade; are trademarks or registered trademarks of the Apache Software Foundation in the United States and/or other countries. Java&trade;, Java&trade; SE, Java&trade; EE, and OpenJDK&trade; are trademarks of Oracle and/or its affiliates. Kubernetes® is a registered trademark of the Linux Foundation in the United States and other countries. Linux® is the registered trademark of Linus Torvalds in the United States and other countries. Windows® and Microsoft® Azure are registered trademarks of Microsoft Corporation. “AWS” and “Amazon Web Services” are trademarks or registered trademarks of Amazon.com Inc. or its affiliates. All other trademarks and copyrights are property of their respective owners and are only mentioned for informative purposes. Other names may be trademarks of their respective owners.</p>
@@ -680,10 +732,10 @@ We also provide support for Message-driven POJOs.</p>
         <a href="https://twitter.com/springcentral" title="Twitter"><svg id="twitter-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><circle class="cls-1" cx="37.97" cy="37.97" r="37.97"/><path id="Twitter-2" data-name="Twitter" class="cls-2" d="M55.2,22.73a15.43,15.43,0,0,1-4.88,1.91,7.56,7.56,0,0,0-5.61-2.49A7.78,7.78,0,0,0,37,30a7.56,7.56,0,0,0,.2,1.79,21.63,21.63,0,0,1-15.84-8.23,8,8,0,0,0,2.37,10.52,7.66,7.66,0,0,1-3.48-1v.09A7.84,7.84,0,0,0,26.45,41a7.54,7.54,0,0,1-2,.28A7.64,7.64,0,0,1,23,41.09a7.71,7.71,0,0,0,7.18,5.47,15.21,15.21,0,0,1-9.55,3.37,15.78,15.78,0,0,1-1.83-.11,21.41,21.41,0,0,0,11.78,3.54c14.13,0,21.86-12,21.86-22.42,0-.34,0-.68,0-1a15.67,15.67,0,0,0,3.83-4.08,14.9,14.9,0,0,1-4.41,1.24A7.8,7.8,0,0,0,55.2,22.73Z"/></svg></a>
     </div>
 </footer>
-<script src="./_/js/vendor/import.js"></script>
-<script src="./_/js/site.js"></script>
-<script async src="./_/js/vendor/highlight.js"></script>
-<script async src="./_/js/vendor/asciidoctor-tabs.js" data-sync-storage-key="docs:preferred-tab"></script>
+<script src="../_/js/vendor/import.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+<script async src="../_/js/vendor/asciidoctor-tabs.js" data-sync-storage-key="docs:preferred-tab"></script>
 
 <div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>
@@ -693,8 +745,8 @@ We also provide support for Message-driven POJOs.</p>
                 <div id="counter"></div>
                 <div class="search-by">
                     <a target="_blank" rel="noopener noreferrer" href="https://www.algolia.com/" aria-label="Search by Algolia">
-                        <img class="light" width="140" src="./_/img/algolia-light.svg" />
-                        <img class="dark" width="140" src="./_/img/algolia-dark.svg" />
+                        <img class="light" width="140" src="../_/img/algolia-light.svg" />
+                        <img class="dark" width="140" src="../_/img/algolia-dark.svg" />
                     </a>
                 </div>
                 <div id="hits"></div>
@@ -706,7 +758,7 @@ We also provide support for Message-driven POJOs.</p>
 <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.17.0/dist/algoliasearch-lite.umd.js" integrity="sha256-Lf9DrpGmcRip6OQzbcL6lnvNmoZNSKpyQX5pMlwatWE=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.54.1/dist/instantsearch.production.min.js" integrity="sha256-xYsZPDeNjYNTBWLvqD2Lxe98hOxcDgOHyMPfz4tVAbk=" crossorigin="anonymous"></script>
-<script async id="search-script" src="./_/js/vendor/search.js" data-app-id="WB1FQYI187" data-api-key="9d489079e5ec46dbb238909fee5c9c29" data-index-name="springkafka" data-stylesheet="./_/css/vendor/search.css" data-page-version="3.1.0"></script>
+<script async id="search-script" src="../_/js/vendor/search.js" data-app-id="WB1FQYI187" data-api-key="9d489079e5ec46dbb238909fee5c9c29" data-index-name="springkafka" data-stylesheet="../_/css/vendor/search.css" data-page-version="3.1.0"></script>
 
   </body>
 </html>

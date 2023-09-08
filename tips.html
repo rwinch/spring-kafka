@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Overview :: Spring Kafka</title>
-    <link rel="next" href="whats-new.html">
+    <title>Tips, Tricks and Examples :: Spring Kafka</title>
+    <link rel="prev" href="testing.html">
+    <link rel="next" href="other-resources.html">
     <meta name="generator" content="Antora 3.2.0-alpha.2">
     <script>
 !function (theme, navWidth) {
@@ -278,7 +279,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Overview</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -479,7 +480,7 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="tips.html">Tips, Tricks and Examples</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -536,13 +537,13 @@
   <div class="content">
     <div
       class="toc"
-      data-title="Overview"
+      data-title="Tips, Tricks and Examples"
       data-levels="2"
     >
       <div class="toc-menu"></div>
     </div>
     <div class="sidebar-links">
-        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/index.adoc">
+        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/tips.adoc">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24"
@@ -580,27 +581,214 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Spring Kafka</a></li>
-    <li><a href="index.html">Overview</a></li>
+    <li><a href="tips.html">Tips, Tricks and Examples</a></li>
   </ul>
 </nav>
 <article>
-<h1 id="page-title" class="page">Overview</h1>
+<h1 id="page-title" class="page">Tips, Tricks and Examples</h1>
+<div class="sect1">
+<h2 id="tip-assign-all-parts"><a class="anchor" href="#tip-assign-all-parts"></a>Manually Assigning All Partitions</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p><strong>3.1.0-SNAPSHOT</strong></p>
+<p>Let&#8217;s say you want to always read all records from all partitions (such as when using a compacted topic to load a distributed cache), it can be useful to manually assign the partitions and not use Kafka&#8217;s group management.
+Doing so can be unwieldy when there are many partitions, because you have to list the partitions.
+It&#8217;s also an issue if the number of partitions changes over time, because you would have to recompile your application each time the partition count changes.</p>
 </div>
 <div class="paragraph">
-<p>The Spring for Apache Kafka project applies core Spring concepts to the development of Kafka-based messaging solutions.
-We provide a &#8220;template&#8221; as a high-level abstraction for sending messages.
-We also provide support for Message-driven POJOs.</p>
+<p>The following is an example of how to use the power of a SpEL expression to create the partition list dynamically when the application starts:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@KafkaListener(topicPartitions = @TopicPartition(topic = "compacted",
+            partitions = "#{@finder.partitions('compacted')}"),
+            partitionOffsets = @PartitionOffset(partition = "*", initialOffset = "0")))
+public void listen(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, String payload) {
+    ...
+}
+
+@Bean
+public PartitionFinder finder(ConsumerFactory&lt;String, String&gt; consumerFactory) {
+    return new PartitionFinder(consumerFactory);
+}
+
+public static class PartitionFinder {
+
+    private final ConsumerFactory&lt;String, String&gt; consumerFactory;
+
+    public PartitionFinder(ConsumerFactory&lt;String, String&gt; consumerFactory) {
+        this.consumerFactory = consumerFactory;
+    }
+
+    public String[] partitions(String topic) {
+        try (Consumer&lt;String, String&gt; consumer = consumerFactory.createConsumer()) {
+            return consumer.partitionsFor(topic).stream()
+                .map(pi -&gt; "" + pi.partition())
+                .toArray(String[]::new);
+        }
+    }
+
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>&#169; 2016 - 2023 VMware, Inc.</p>
+<p>Using this in conjunction with <code>ConsumerConfig.AUTO_OFFSET_RESET_CONFIG=earliest</code> will load all records each time the application is started.
+You should also set the container&#8217;s <code>AckMode</code> to <code>MANUAL</code> to prevent the container from committing offsets for a <code>null</code> consumer group.
+However, starting with version 2.5.5, as shown above, you can apply an initial offset to all partitions; see <a href="kafka/receiving-messages/listener-annotation.html#manual-assignment" class="xref page">Explicit Partition Assignment</a> for more information.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ex-jdbc-sync"><a class="anchor" href="#ex-jdbc-sync"></a>Examples of Kafka Transactions with Other Transaction Managers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following Spring Boot application is an example of chaining database and Kafka transactions.
+The listener container starts the Kafka transaction and the <code>@Transactional</code> annotation starts the DB transaction.
+The DB transaction is committed first; if the Kafka transaction fails to commit, the record will be redelivered so the DB update should be idempotent.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@SpringBootApplication
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+    @Bean
+    public ApplicationRunner runner(KafkaTemplate&lt;String, String&gt; template) {
+        return args -&gt; template.executeInTransaction(t -&gt; t.send("topic1", "test"));
+    }
+
+    @Bean
+    public DataSourceTransactionManager dstm(DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Component
+    public static class Listener {
+
+        private final JdbcTemplate jdbcTemplate;
+
+        private final KafkaTemplate&lt;String, String&gt; kafkaTemplate;
+
+        public Listener(JdbcTemplate jdbcTemplate, KafkaTemplate&lt;String, String&gt; kafkaTemplate) {
+            this.jdbcTemplate = jdbcTemplate;
+            this.kafkaTemplate = kafkaTemplate;
+        }
+
+        @KafkaListener(id = "group1", topics = "topic1")
+        @Transactional("dstm")
+        public void listen1(String in) {
+            this.kafkaTemplate.send("topic2", in.toUpperCase());
+            this.jdbcTemplate.execute("insert into mytable (data) values ('" + in + "')");
+        }
+
+        @KafkaListener(id = "group2", topics = "topic2")
+        public void listen2(String in) {
+            System.out.println(in);
+        }
+
+    }
+
+    @Bean
+    public NewTopic topic1() {
+        return TopicBuilder.name("topic1").build();
+    }
+
+    @Bean
+    public NewTopic topic2() {
+        return TopicBuilder.name("topic2").build();
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">spring.datasource.url=jdbc:mysql://localhost/integration?serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.kafka.consumer.auto-offset-reset=earliest
+spring.kafka.consumer.enable-auto-commit=false
+spring.kafka.consumer.properties.isolation.level=read_committed
+
+spring.kafka.producer.transaction-id-prefix=tx-
+
+#logging.level.org.springframework.transaction=trace
+#logging.level.org.springframework.kafka.transaction=debug
+#logging.level.org.springframework.jdbc=debug</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">create table mytable (data varchar(20));</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.</p>
+<p>For producer-only transactions, transaction synchronization works:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Transactional("dstm")
+public void someMethod(String in) {
+    this.kafkaTemplate.send("topic2", in.toUpperCase());
+    this.jdbcTemplate.execute("insert into mytable (data) values ('" + in + "')");
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>KafkaTemplate</code> will synchronize its transaction with the DB transaction and the commit/rollback occurs after the database.</p>
+</div>
+<div class="paragraph">
+<p>If you wish to commit the Kafka transaction first, and only commit the DB transaction if the Kafka transaction is successful, use nested <code>@Transactional</code> methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Transactional("dstm")
+public void someMethod(String in) {
+    this.jdbcTemplate.execute("insert into mytable (data) values ('" + in + "')");
+    sendToKafka(in);
+}
+
+@Transactional("kafkaTransactionManager")
+public void sendToKafka(String in) {
+    this.kafkaTemplate.send("topic2", in.toUpperCase());
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tip-json"><a class="anchor" href="#tip-json"></a>Customizing the JsonSerializer and JsonDeserializer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The serializer and deserializer support a number of cusomizations using properties, see <a href="kafka/serdes.html#json-serde" class="xref page">JSON</a> for more information.
+The <code>kafka-clients</code> code, not Spring, instantiates these objects, unless you inject them directly into the consumer and producer factories.
+If you wish to configure the (de)serializer using properties, but wish to use, say, a custom <code>ObjectMapper</code>, simply create a subclass and pass the custom mapper into the <code>super</code> constructor. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class CustomJsonSerializer extends JsonSerializer&lt;Object&gt; {
+
+    public CustomJsonSerializer() {
+        super(customizedObjectMapper());
+    }
+
+    private static ObjectMapper customizedObjectMapper() {
+        ObjectMapper mapper = JacksonUtils.enhancedObjectMapper();
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return mapper;
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="whats-new.html">What&#8217;s new?</a></span>
+  <span class="prev"><a href="testing.html">Testing Applications</a></span>
+  <span class="next"><a href="other-resources.html">Other Resources</a></span>
 </nav>
 </article>
 </div>  </div>

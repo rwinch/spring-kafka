@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Overview :: Spring Kafka</title>
-    <link rel="next" href="whats-new.html">
+    <title>Seeking to a Specific Offset :: Spring Kafka</title>
+    <link rel="prev" href="topic/partition-initial-offset.html">
+    <link rel="next" href="container-factory.html">
     <meta name="generator" content="Antora 3.2.0-alpha.2">
     <script>
 !function (theme, navWidth) {
@@ -13,13 +14,13 @@
 }(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'),
   localStorage && localStorage.getItem('nav-width'))
     </script>
-    <link rel="stylesheet" href="./_/css/site.css">
-    <link rel="stylesheet" href="./_/css/vendor/search.css">
-    <link rel="stylesheet" href="./_/css/vendor/asciidoctor-tabs.css">
+    <link rel="stylesheet" href="../_/css/site.css">
+    <link rel="stylesheet" href="../_/css/vendor/search.css">
+    <link rel="stylesheet" href="../_/css/vendor/asciidoctor-tabs.css">
 
     <meta name="version" content="3.1.0">
     <meta name="component" content="kafka">
-    <link rel="icon" href="./_/img/favicon.ico" type="image/vnd.microsoft.icon">
+    <link rel="icon" href="../_/img/favicon.ico" type="image/vnd.microsoft.icon">
   </head>
   <body class="article">
 <header class="header">
@@ -29,7 +30,7 @@
         <img
           id="springlogo"
           class="block"
-          src="./_/img/spring-logo.svg"
+          src="../_/img/spring-logo.svg"
           alt="Spring"
         />
       </a>
@@ -278,224 +279,224 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="index.html">Overview</a>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Overview</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="whats-new.html">What&#8217;s new?</a>
+    <a class="nav-link" href="../whats-new.html">What&#8217;s new?</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="introduction.html">Introduction</a>
+    <a class="nav-link" href="../introduction.html">Introduction</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="quick-tour.html">Quick Tour</a>
+    <a class="nav-link" href="../quick-tour.html">Quick Tour</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="reference.html">Reference</a>
+    <a class="nav-link" href="../reference.html">Reference</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="kafka.html">Using Spring for Apache Kafka</a>
+    <a class="nav-link" href="../kafka.html">Using Spring for Apache Kafka</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/connecting.html">Connecting to Kafka</a>
+    <a class="nav-link" href="connecting.html">Connecting to Kafka</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/configuring-topics.html">Configuring Topics</a>
+    <a class="nav-link" href="configuring-topics.html">Configuring Topics</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/sending-messages.html">Sending Messages</a>
+    <a class="nav-link" href="sending-messages.html">Sending Messages</a>
   </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="kafka/receiving-messages.html">Receiving Messages</a>
+    <a class="nav-link" href="receiving-messages.html">Receiving Messages</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/message-listeners.html">Message Listeners</a>
+    <a class="nav-link" href="receiving-messages/message-listeners.html">Message Listeners</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/message-listener-container.html">Message Listener Containers</a>
+    <a class="nav-link" href="receiving-messages/message-listener-container.html">Message Listener Containers</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/ooo-commits.html">Manually Committing Offsets</a>
+    <a class="nav-link" href="receiving-messages/ooo-commits.html">Manually Committing Offsets</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/listener-annotation.html"><code>@KafkaListener</code> Annotation</a>
+    <a class="nav-link" href="receiving-messages/listener-annotation.html"><code>@KafkaListener</code> Annotation</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/listener-group-id.html">Obtaining the Consumer <code>group.id</code></a>
+    <a class="nav-link" href="receiving-messages/listener-group-id.html">Obtaining the Consumer <code>group.id</code></a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/container-thread-naming.html">Container Thread Naming</a>
+    <a class="nav-link" href="receiving-messages/container-thread-naming.html">Container Thread Naming</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/listener-meta.html"><code>@KafkaListener</code> as a Meta Annotation</a>
+    <a class="nav-link" href="receiving-messages/listener-meta.html"><code>@KafkaListener</code> as a Meta Annotation</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/class-level-kafkalistener.html"><code>@KafkaListener</code> on a Class</a>
+    <a class="nav-link" href="receiving-messages/class-level-kafkalistener.html"><code>@KafkaListener</code> on a Class</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/kafkalistener-attrs.html"><code>@KafkaListener</code> Attribute Modification</a>
+    <a class="nav-link" href="receiving-messages/kafkalistener-attrs.html"><code>@KafkaListener</code> Attribute Modification</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/kafkalistener-lifecycle.html"><code>@KafkaListener</code> Lifecycle Management</a>
+    <a class="nav-link" href="receiving-messages/kafkalistener-lifecycle.html"><code>@KafkaListener</code> Lifecycle Management</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/validation.html"><code>@KafkaListener</code> <code>@Payload</code> Validation</a>
+    <a class="nav-link" href="receiving-messages/validation.html"><code>@KafkaListener</code> <code>@Payload</code> Validation</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/rebalance-listeners.html">Rebalancing Listeners</a>
+    <a class="nav-link" href="receiving-messages/rebalance-listeners.html">Rebalancing Listeners</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/annotation-send-to.html">Forwarding Listener Results using <code>@SendTo</code></a>
+    <a class="nav-link" href="receiving-messages/annotation-send-to.html">Forwarding Listener Results using <code>@SendTo</code></a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/filtering.html">Filtering Messages</a>
+    <a class="nav-link" href="receiving-messages/filtering.html">Filtering Messages</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/retrying-deliveries.html">Retrying Deliveries</a>
+    <a class="nav-link" href="receiving-messages/retrying-deliveries.html">Retrying Deliveries</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/sequencing.html">Starting <code>@KafkaListener</code> s in Sequence</a>
+    <a class="nav-link" href="receiving-messages/sequencing.html">Starting <code>@KafkaListener</code> s in Sequence</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="kafka/receiving-messages/template-receive.html">Using <code>KafkaTemplate</code> to Receive</a>
+    <a class="nav-link" href="receiving-messages/template-receive.html">Using <code>KafkaTemplate</code> to Receive</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/container-props.html">Listener Container Properties</a>
+    <a class="nav-link" href="container-props.html">Listener Container Properties</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/dynamic-containers.html">Dynamically Creating Containers</a>
+    <a class="nav-link" href="dynamic-containers.html">Dynamically Creating Containers</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/events.html">Application Events</a>
+    <a class="nav-link" href="events.html">Application Events</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/topic/partition-initial-offset.html">Topic/Partition Initial Offset</a>
+    <a class="nav-link" href="topic/partition-initial-offset.html">Topic/Partition Initial Offset</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="seek.html">Seeking to a Specific Offset</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/seek.html">Seeking to a Specific Offset</a>
+    <a class="nav-link" href="container-factory.html">Container factory</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/container-factory.html">Container factory</a>
+    <a class="nav-link" href="thread-safety.html">Thread Safety</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/thread-safety.html">Thread Safety</a>
+    <a class="nav-link" href="micrometer.html">Monitoring</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/micrometer.html">Monitoring</a>
+    <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/transactions.html">Transactions</a>
+    <a class="nav-link" href="exactly-once.html">Exactly Once Semantics</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/exactly-once.html">Exactly Once Semantics</a>
+    <a class="nav-link" href="interceptors.html">Wiring Spring Beans into Producer/Consumer Interceptors</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/interceptors.html">Wiring Spring Beans into Producer/Consumer Interceptors</a>
+    <a class="nav-link" href="producer-interceptor-managed-in-spring.html">Producer Interceptor Managed in Spring</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/producer-interceptor-managed-in-spring.html">Producer Interceptor Managed in Spring</a>
+    <a class="nav-link" href="pause-resume.html">Pausing and Resuming Listener Containers</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/pause-resume.html">Pausing and Resuming Listener Containers</a>
+    <a class="nav-link" href="pause-resume-partitions.html">Pausing and Resuming Partitions on Listener Containers</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/pause-resume-partitions.html">Pausing and Resuming Partitions on Listener Containers</a>
+    <a class="nav-link" href="serdes.html">Serialization, Deserialization, and Message Conversion</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/serdes.html">Serialization, Deserialization, and Message Conversion</a>
+    <a class="nav-link" href="headers.html">Message Headers</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/headers.html">Message Headers</a>
+    <a class="nav-link" href="tombstones.html">Null Payloads and Log Compaction of 'Tombstone' Records</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/tombstones.html">Null Payloads and Log Compaction of 'Tombstone' Records</a>
+    <a class="nav-link" href="annotation-error-handling.html">Handling Exceptions</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/annotation-error-handling.html">Handling Exceptions</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kafka/kerberos.html">JAAS and Kerberos</a>
+    <a class="nav-link" href="kerberos.html">JAAS and Kerberos</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="retrytopic.html">Non-Blocking Retries</a>
+    <a class="nav-link" href="../retrytopic.html">Non-Blocking Retries</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/how-the-pattern-works.html">How The Pattern Works</a>
+    <a class="nav-link" href="../retrytopic/how-the-pattern-works.html">How The Pattern Works</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/back-off-delay-precision.html">Back Off Delay Precision</a>
+    <a class="nav-link" href="../retrytopic/back-off-delay-precision.html">Back Off Delay Precision</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/retry-config.html">Configuration</a>
+    <a class="nav-link" href="../retrytopic/retry-config.html">Configuration</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/programmatic-construction.html">Programmatic Construction</a>
+    <a class="nav-link" href="../retrytopic/programmatic-construction.html">Programmatic Construction</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/features.html">Features</a>
+    <a class="nav-link" href="../retrytopic/features.html">Features</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/retry-topic-combine-blocking.html">Combining Blocking and Non-Blocking Retries</a>
+    <a class="nav-link" href="../retrytopic/retry-topic-combine-blocking.html">Combining Blocking and Non-Blocking Retries</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/accessing-delivery-attempts.html">Accessing Delivery Attempts</a>
+    <a class="nav-link" href="../retrytopic/accessing-delivery-attempts.html">Accessing Delivery Attempts</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/topic-naming.html">Topic Naming</a>
+    <a class="nav-link" href="../retrytopic/topic-naming.html">Topic Naming</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/multi-retry.html">Multiple Listeners, Same Topic(s)</a>
+    <a class="nav-link" href="../retrytopic/multi-retry.html">Multiple Listeners, Same Topic(s)</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/dlt-strategies.html">Dlt Strategies</a>
+    <a class="nav-link" href="../retrytopic/dlt-strategies.html">Dlt Strategies</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/retry-topic-lcf.html">Specifying a ListenerContainerFactory</a>
+    <a class="nav-link" href="../retrytopic/retry-topic-lcf.html">Specifying a ListenerContainerFactory</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/access-topic-info-runtime.html">Accessing Topics' Information at Runtime</a>
+    <a class="nav-link" href="../retrytopic/access-topic-info-runtime.html">Accessing Topics' Information at Runtime</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="retrytopic/change-kboe-logging-level.html">Changing KafkaBackOffException Logging Level</a>
+    <a class="nav-link" href="../retrytopic/change-kboe-logging-level.html">Changing KafkaBackOffException Logging Level</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="streams.html">Apache Kafka Streams Support</a>
+    <a class="nav-link" href="../streams.html">Apache Kafka Streams Support</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="testing.html">Testing Applications</a>
+    <a class="nav-link" href="../testing.html">Testing Applications</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="tips.html">Tips, Tricks and Examples</a>
+    <a class="nav-link" href="../tips.html">Tips, Tricks and Examples</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="other-resources.html">Other Resources</a>
+    <a class="nav-link" href="../other-resources.html">Other Resources</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="appendix/override-boot-dependencies.html">Override Spring Boot Dependencies</a>
+    <a class="nav-link" href="../appendix/override-boot-dependencies.html">Override Spring Boot Dependencies</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="appendix/micrometer.html">Micrometer Observation Documentation</a>
+    <a class="nav-link" href="../appendix/micrometer.html">Micrometer Observation Documentation</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="appendix/native-images.html">Native Images</a>
+    <a class="nav-link" href="../appendix/native-images.html">Native Images</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="appendix/change-history.html">Change History</a>
+    <a class="nav-link" href="../appendix/change-history.html">Change History</a>
   </li>
 </ul>
   </li>
@@ -536,13 +537,13 @@
   <div class="content">
     <div
       class="toc"
-      data-title="Overview"
+      data-title="Seeking to a Specific Offset"
       data-levels="2"
     >
       <div class="toc-menu"></div>
     </div>
     <div class="sidebar-links">
-        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/index.adoc">
+        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/kafka/seek.adoc">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24"
@@ -579,28 +580,293 @@
 </aside><div class="doc">
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="index.html">Spring Kafka</a></li>
-    <li><a href="index.html">Overview</a></li>
+    <li><a href="../index.html">Spring Kafka</a></li>
+    <li><a href="../reference.html">Reference</a></li>
+    <li><a href="../kafka.html">Using Spring for Apache Kafka</a></li>
+    <li><a href="seek.html">Seeking to a Specific Offset</a></li>
   </ul>
 </nav>
 <article>
-<h1 id="page-title" class="page">Overview</h1>
+<h1 id="page-title" class="page">Seeking to a Specific Offset</h1>
 <div class="paragraph">
-<p><strong>3.1.0-SNAPSHOT</strong></p>
+<p>In order to seek, your listener must implement <code>ConsumerSeekAware</code>, which has the following methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">void registerSeekCallback(ConsumerSeekCallback callback);
+
+void onPartitionsAssigned(Map&lt;TopicPartition, Long&gt; assignments, ConsumerSeekCallback callback);
+
+void onPartitionsRevoked(Collection&lt;TopicPartition&gt; partitions)
+
+void onIdleContainer(Map&lt;TopicPartition, Long&gt; assignments, ConsumerSeekCallback callback);</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>The Spring for Apache Kafka project applies core Spring concepts to the development of Kafka-based messaging solutions.
-We provide a &#8220;template&#8221; as a high-level abstraction for sending messages.
-We also provide support for Message-driven POJOs.</p>
+<p>The <code>registerSeekCallback</code> is called when the container is started and whenever partitions are assigned.
+You should use this callback when seeking at some arbitrary time after initialization.
+You should save a reference to the callback.
+If you use the same listener in multiple containers (or in a <code>ConcurrentMessageListenerContainer</code>), you should store the callback in a <code>ThreadLocal</code> or some other structure keyed by the listener <code>Thread</code>.</p>
 </div>
 <div class="paragraph">
-<p>&#169; 2016 - 2023 VMware, Inc.</p>
+<p>When using group management, <code>onPartitionsAssigned</code> is called when partitions are assigned.
+You can use this method, for example, for setting initial offsets for the partitions, by calling the callback.
+You can also use this method to associate this thread&#8217;s callback with the assigned partitions (see the example below).
+You must use the callback argument, not the one passed into <code>registerSeekCallback</code>.
+Starting with version 2.5.5, this method is called, even when using <a href="receiving-messages/listener-annotation.html#manual-assignment" class="xref page">manual partition assignment</a>.</p>
 </div>
 <div class="paragraph">
-<p>Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.</p>
+<p><code>onPartitionsRevoked</code> is called when the container is stopped or Kafka revokes assignments.
+You should discard this thread&#8217;s callback and remove any associations to the revoked partitions.</p>
+</div>
+<div class="paragraph">
+<p>The callback has the following methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">void seek(String topic, int partition, long offset);
+
+void seekToBeginning(String topic, int partition);
+
+void seekToBeginning(Collection=&lt;TopicPartitions&gt; partitions);
+
+void seekToEnd(String topic, int partition);
+
+void seekToEnd(Collection=&lt;TopicPartitions&gt; partitions);
+
+void seekRelative(String topic, int partition, long offset, boolean toCurrent);
+
+void seekToTimestamp(String topic, int partition, long timestamp);
+
+void seekToTimestamp(Collection&lt;TopicPartition&gt; topicPartitions, long timestamp);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>seekRelative</code> was added in version 2.3, to perform relative seeks.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>offset</code> negative and <code>toCurrent</code> <code>false</code> - seek relative to the end of the partition.</p>
+</li>
+<li>
+<p><code>offset</code> positive and <code>toCurrent</code> <code>false</code> - seek relative to the beginning of the partition.</p>
+</li>
+<li>
+<p><code>offset</code> negative and <code>toCurrent</code> <code>true</code> - seek relative to the current position (rewind).</p>
+</li>
+<li>
+<p><code>offset</code> positive and <code>toCurrent</code> <code>true</code> - seek relative to the current position (fast forward).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>seekToTimestamp</code> methods were also added in version 2.3.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When seeking to the same timestamp for multiple partitions in the <code>onIdleContainer</code> or <code>onPartitionsAssigned</code> methods, the second method is preferred because it is more efficient to find the offsets for the timestamps in a single call to the consumer&#8217;s <code>offsetsForTimes</code> method.
+When called from other locations, the container will gather all timestamp seek requests and make one call to <code>offsetsForTimes</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You can also perform seek operations from <code>onIdleContainer()</code> when an idle container is detected.
+See <a href="events.html#idle-containers" class="xref page">Detecting Idle and Non-Responsive Consumers</a> for how to enable idle container detection.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>seekToBeginning</code> method that accepts a collection is useful, for example, when processing a compacted topic and you wish to seek to the beginning every time the application is started:
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class MyListener implements ConsumerSeekAware {
+
+...
+
+    @Override
+    public void onPartitionsAssigned(Map&lt;TopicPartition, Long&gt; assignments, ConsumerSeekCallback callback) {
+        callback.seekToBeginning(assignments.keySet());
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To arbitrarily seek at runtime, use the callback reference from the <code>registerSeekCallback</code> for the appropriate thread.</p>
+</div>
+<div class="paragraph">
+<p>Here is a trivial Spring Boot application that demonstrates how to use the callback; it sends 10 records to the topic; hitting <code>&lt;Enter&gt;</code> in the console causes all partitions to seek to the beginning.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@SpringBootApplication
+public class SeekExampleApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SeekExampleApplication.class, args);
+    }
+
+    @Bean
+    public ApplicationRunner runner(Listener listener, KafkaTemplate&lt;String, String&gt; template) {
+        return args -&gt; {
+            IntStream.range(0, 10).forEach(i -&gt; template.send(
+                new ProducerRecord&lt;&gt;("seekExample", i % 3, "foo", "bar")));
+            while (true) {
+                System.in.read();
+                listener.seekToStart();
+            }
+        };
+    }
+
+    @Bean
+    public NewTopic topic() {
+        return new NewTopic("seekExample", 3, (short) 1);
+    }
+
+}
+
+@Component
+class Listener implements ConsumerSeekAware {
+
+    private static final Logger logger = LoggerFactory.getLogger(Listener.class);
+
+    private final ThreadLocal&lt;ConsumerSeekCallback&gt; callbackForThread = new ThreadLocal&lt;&gt;();
+
+    private final Map&lt;TopicPartition, ConsumerSeekCallback&gt; callbacks = new ConcurrentHashMap&lt;&gt;();
+
+    @Override
+    public void registerSeekCallback(ConsumerSeekCallback callback) {
+        this.callbackForThread.set(callback);
+    }
+
+    @Override
+    public void onPartitionsAssigned(Map&lt;TopicPartition, Long&gt; assignments, ConsumerSeekCallback callback) {
+        assignments.keySet().forEach(tp -&gt; this.callbacks.put(tp, this.callbackForThread.get()));
+    }
+
+    @Override
+    public void onPartitionsRevoked(Collection&lt;TopicPartition&gt; partitions) {
+        partitions.forEach(tp -&gt; this.callbacks.remove(tp));
+        this.callbackForThread.remove();
+    }
+
+    @Override
+    public void onIdleContainer(Map&lt;TopicPartition, Long&gt; assignments, ConsumerSeekCallback callback) {
+    }
+
+    @KafkaListener(id = "seekExample", topics = "seekExample", concurrency = "3")
+    public void listen(ConsumerRecord&lt;String, String&gt; in) {
+        logger.info(in.toString());
+    }
+
+    public void seekToStart() {
+        this.callbacks.forEach((tp, callback) -&gt; callback.seekToBeginning(tp.topic(), tp.partition()));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To make things simpler, version 2.3 added the <code>AbstractConsumerSeekAware</code> class, which keeps track of which callback is to be used for a topic/partition.
+The following example shows how to seek to the last record processed, in each partition, each time the container goes idle.
+It also has methods that allow arbitrary external calls to rewind partitions by one record.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class SeekToLastOnIdleListener extends AbstractConsumerSeekAware {
+
+    @KafkaListener(id = "seekOnIdle", topics = "seekOnIdle")
+    public void listen(String in) {
+        ...
+    }
+
+    @Override
+    public void onIdleContainer(Map&lt;org.apache.kafka.common.TopicPartition, Long&gt; assignments,
+            ConsumerSeekCallback callback) {
+
+            assignments.keySet().forEach(tp -&gt; callback.seekRelative(tp.topic(), tp.partition(), -1, true));
+    }
+
+    /**
+    * Rewind all partitions one record.
+    */
+    public void rewindAllOneRecord() {
+        getSeekCallbacks()
+            .forEach((tp, callback) -&gt;
+                callback.seekRelative(tp.topic(), tp.partition(), -1, true));
+    }
+
+    /**
+    * Rewind one partition one record.
+    */
+    public void rewindOnePartitionOneRecord(String topic, int partition) {
+        getSeekCallbackFor(new org.apache.kafka.common.TopicPartition(topic, partition))
+            .seekRelative(topic, partition, -1, true);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Version 2.6 added convenience methods to the abstract class:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>seekToBeginning()</code> - seeks all assigned partitions to the beginning</p>
+</li>
+<li>
+<p><code>seekToEnd()</code> - seeks all assigned partitions to the end</p>
+</li>
+<li>
+<p><code>seekToTimestamp(long time)</code> - seeks all assigned partitions to the offset represented by that timestamp.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class MyListener extends AbstractConsumerSeekAware {
+
+    @KafkaListener(...)
+    void listn(...) {
+        ...
+    }
+}
+
+public class SomeOtherBean {
+
+    MyListener listener;
+
+    ...
+
+    void someMethod() {
+        this.listener.seekToTimestamp(System.currentTimeMillis - 60_000);
+    }
+
+}</code></pre>
+</div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="whats-new.html">What&#8217;s new?</a></span>
+  <span class="prev"><a href="topic/partition-initial-offset.html">Topic/Partition Initial Offset</a></span>
+  <span class="next"><a href="container-factory.html">Container factory</a></span>
 </nav>
 </article>
 </div>  </div>
@@ -616,10 +882,10 @@ We also provide support for Message-driven POJOs.</p>
                 <div class="col-left">
                   <ul class="nav-versions">
                     <li class="component is-current">
-                      <a class="title" href="index.html">Spring Kafka</a>
+                      <a class="title" href="../index.html">Spring Kafka</a>
                       <ul class="versions">
                         <li class="version is-current is-latest">
-                          <a href="index.html">
+                          <a href="../index.html">
                             3.1.0-SNAPSHOT<span class="current">current</span>
                           </a>
                         </li>
@@ -669,7 +935,7 @@ We also provide support for Message-driven POJOs.</p>
 </div>
 <footer class="footer flex">
     <div id="spring-links flex">
-        <img id="springlogo" src="./_/img/spring-logo.svg" alt="Spring">
+        <img id="springlogo" src="../_/img/spring-logo.svg" alt="Spring">
         <p class="smallest antialiased">© <script>var d = new Date();
         document.write(d.getFullYear());</script> <a href="https://www.vmware.com/">VMware</a>, Inc. or its affiliates. <a href="https://www.vmware.com/help/legal.html">Terms of Use</a> • <a href="https://www.vmware.com/help/privacy.html" rel="noopener noreferrer">Privacy</a> • <a href="https://spring.io/trademarks">Trademark Guidelines</a> <span id="thank-you-mobile">• <a href="https://spring.io/thank-you">Thank you</a></span> • <a href="https://www.vmware.com/help/privacy/california-privacy-rights.html">Your California Privacy Rights</a> • <a class="ot-sdk-show-settings">Cookie Settings</a> <span id="teconsent"></span></p>
         <p class="smallest antialiased has-gray-text">Apache®, Apache Tomcat®, Apache Kafka®, Apache Cassandra&trade;, and Apache Geode&trade; are trademarks or registered trademarks of the Apache Software Foundation in the United States and/or other countries. Java&trade;, Java&trade; SE, Java&trade; EE, and OpenJDK&trade; are trademarks of Oracle and/or its affiliates. Kubernetes® is a registered trademark of the Linux Foundation in the United States and other countries. Linux® is the registered trademark of Linus Torvalds in the United States and other countries. Windows® and Microsoft® Azure are registered trademarks of Microsoft Corporation. “AWS” and “Amazon Web Services” are trademarks or registered trademarks of Amazon.com Inc. or its affiliates. All other trademarks and copyrights are property of their respective owners and are only mentioned for informative purposes. Other names may be trademarks of their respective owners.</p>
@@ -680,10 +946,10 @@ We also provide support for Message-driven POJOs.</p>
         <a href="https://twitter.com/springcentral" title="Twitter"><svg id="twitter-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><circle class="cls-1" cx="37.97" cy="37.97" r="37.97"/><path id="Twitter-2" data-name="Twitter" class="cls-2" d="M55.2,22.73a15.43,15.43,0,0,1-4.88,1.91,7.56,7.56,0,0,0-5.61-2.49A7.78,7.78,0,0,0,37,30a7.56,7.56,0,0,0,.2,1.79,21.63,21.63,0,0,1-15.84-8.23,8,8,0,0,0,2.37,10.52,7.66,7.66,0,0,1-3.48-1v.09A7.84,7.84,0,0,0,26.45,41a7.54,7.54,0,0,1-2,.28A7.64,7.64,0,0,1,23,41.09a7.71,7.71,0,0,0,7.18,5.47,15.21,15.21,0,0,1-9.55,3.37,15.78,15.78,0,0,1-1.83-.11,21.41,21.41,0,0,0,11.78,3.54c14.13,0,21.86-12,21.86-22.42,0-.34,0-.68,0-1a15.67,15.67,0,0,0,3.83-4.08,14.9,14.9,0,0,1-4.41,1.24A7.8,7.8,0,0,0,55.2,22.73Z"/></svg></a>
     </div>
 </footer>
-<script src="./_/js/vendor/import.js"></script>
-<script src="./_/js/site.js"></script>
-<script async src="./_/js/vendor/highlight.js"></script>
-<script async src="./_/js/vendor/asciidoctor-tabs.js" data-sync-storage-key="docs:preferred-tab"></script>
+<script src="../_/js/vendor/import.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+<script async src="../_/js/vendor/asciidoctor-tabs.js" data-sync-storage-key="docs:preferred-tab"></script>
 
 <div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>
@@ -693,8 +959,8 @@ We also provide support for Message-driven POJOs.</p>
                 <div id="counter"></div>
                 <div class="search-by">
                     <a target="_blank" rel="noopener noreferrer" href="https://www.algolia.com/" aria-label="Search by Algolia">
-                        <img class="light" width="140" src="./_/img/algolia-light.svg" />
-                        <img class="dark" width="140" src="./_/img/algolia-dark.svg" />
+                        <img class="light" width="140" src="../_/img/algolia-light.svg" />
+                        <img class="dark" width="140" src="../_/img/algolia-dark.svg" />
                     </a>
                 </div>
                 <div id="hits"></div>
@@ -706,7 +972,7 @@ We also provide support for Message-driven POJOs.</p>
 <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.17.0/dist/algoliasearch-lite.umd.js" integrity="sha256-Lf9DrpGmcRip6OQzbcL6lnvNmoZNSKpyQX5pMlwatWE=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.54.1/dist/instantsearch.production.min.js" integrity="sha256-xYsZPDeNjYNTBWLvqD2Lxe98hOxcDgOHyMPfz4tVAbk=" crossorigin="anonymous"></script>
-<script async id="search-script" src="./_/js/vendor/search.js" data-app-id="WB1FQYI187" data-api-key="9d489079e5ec46dbb238909fee5c9c29" data-index-name="springkafka" data-stylesheet="./_/css/vendor/search.css" data-page-version="3.1.0"></script>
+<script async id="search-script" src="../_/js/vendor/search.js" data-app-id="WB1FQYI187" data-api-key="9d489079e5ec46dbb238909fee5c9c29" data-index-name="springkafka" data-stylesheet="../_/css/vendor/search.css" data-page-version="3.1.0"></script>
 
   </body>
 </html>

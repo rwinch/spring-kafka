@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Message Listener Containers :: Spring Kafka</title>
+    <link rel="prev" href="message-listeners.html">
+    <link rel="next" href="ooo-commits.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.2">
+    <script>
+!function (theme, navWidth) {
+  if (theme === 'dark') document.documentElement.classList.add('dark-theme')
+  if (navWidth) document.documentElement.style.setProperty('--nav-width', `${navWidth}px`)
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'),
+  localStorage && localStorage.getItem('nav-width'))
+    </script>
+    <link rel="stylesheet" href="../../_/css/site.css">
+    <link rel="stylesheet" href="../../_/css/vendor/search.css">
+    <link rel="stylesheet" href="../../_/css/vendor/asciidoctor-tabs.css">
+
+    <meta name="version" content="3.1.0">
+    <meta name="component" content="kafka">
+    <link rel="icon" href="../../_/img/favicon.ico" type="image/vnd.microsoft.icon">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://spring.io">
+        <img
+          id="springlogo"
+          class="block"
+          src="../../_/img/spring-logo.svg"
+          alt="Spring"
+        />
+      </a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Why Spring</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/why-spring"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/microservices"
+            >Microservices</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/reactive"
+            >Reactive</a>
+            <a class="navbar-item" href="https://spring.io/event-driven">Event
+              Driven</a>
+            <a class="navbar-item" href="https://spring.io/cloud">Cloud</a>
+            <a class="navbar-item" href="https://spring.io/web-applications">Web
+              Applications</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/serverless"
+            >Serverless</a>
+            <a class="navbar-item" href="https://spring.io/batch">Batch</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Learn</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://spring.io/learn">Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/quickstart"
+            >Quickstart</a>
+            <a class="navbar-item" href="https://spring.io/guides">Guides</a>
+            <a class="navbar-item" href="https://spring.io/blog">Blog</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Projects</a>
+          <div class="navbar-dropdown" style="min-width: 280px">
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-boot"
+            >Spring Boot</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-framework"
+            >Spring Framework</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud"
+            >Spring Cloud</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud-dataflow"
+            >Spring Cloud Data Flow</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-data"
+            >Spring Data</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-integration"
+            >Spring Integration</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-batch"
+            >Spring Batch</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-security"
+            >Spring Security</a>
+            <a
+              class="navbar-item navbar-item-special"
+              href="https://spring.io/projects"
+            >View all projects</a>
+            <a class="navbar-item" href="https://spring.io/tools">Spring Tools 4</a>
+            <a
+              class="navbar-item navbar-item-special-2"
+              href="https://start.spring.io"
+            >Spring Initializr
+              <svg
+                class="external-link-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+              ><polyline
+                  points="15 10.94 15 15 1 15 1 1 5.06 1"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><polyline
+                  points="8.93 1 15 1 15 7.07"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><line
+                  x1="15"
+                  y1="1"
+                  x2="8"
+                  y2="8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></line></svg></a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Academy</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.academy/courses"
+            >Courses</a>
+            <a
+              class="navbar-item"
+              href="https://spring.academy/learning-path"
+            >Get Certified</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Solutions</a>
+          <div class="navbar-dropdown lg">
+            <a class="navbar-item" href="https://spring.io/solutions">Overview</a>
+            <a class="navbar-item" href="https://spring.io/runtime">Spring Runtime</a>
+            <a class="navbar-item" href="https://spring.io/consulting">Spring Consulting</a>
+            <a class="navbar-item" href="https://spring.academy/teams">Spring Academy For Teams</a>
+            <a class="navbar-item" href="https://spring.io/security">Security Advisories</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable is-community">
+          <a class="navbar-link" href="#">Community</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/community"
+            >Overview</a>
+            <a class="navbar-item" href="https://spring.io/events">Events</a>
+            <a class="navbar-item" href="https://spring.io/team">Team</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <label class="theme-toggler">
+      <input
+        type="checkbox"
+        type="checkbox"
+        id="switch-theme-checkbox"
+        name="switch-theme-checkbox"
+      />
+      <span class="icon"><svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="moon"
+          class="svg-inline--fa fa-moon moon"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 384 512"
+        ><path
+            fill="currentColor"
+            d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
+          ></path>
+        </svg>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="sun"
+          class="svg-inline--fa fa-sun sun"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        ><path
+            fill="currentColor"
+            d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"
+          ></path>
+        </svg></span>
+      <span class="text">light</span>
+    </label>
+  </nav>
+</header>
+<script>
+!function (theme) {
+  if (theme === 'dark') {
+    document.getElementById('switch-theme-checkbox').parentElement.classList.add('active')
+  }
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'))
+</script><div class="body">
+<div class="nav-container" data-component="kafka" data-version="3.1.0">
+  <aside class="nav">
+    <div class="panels">
+      <div class="nav-panel-menu is-active" data-panel="menu">
+        <nav class="nav-menu">
+<div class="context">
+  <span class="title">Spring Kafka</span>
+  <span class="version">3.1.0-SNAPSHOT</span>
+  <button class="browse-version" id="browse-version">
+    <svg
+      height="24px"
+      id="Layer_1"
+      style="enable-background:new 0 0 512 512;"
+      version="1.1"
+      viewBox="0 0 512 512"
+      width="24px"
+      xml:space="preserve"
+    ><g><path
+          d="M256,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S273.7,224,256,224L256,224z"
+        ></path><path
+          d="M128.4,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S146,224,128.4,224L128.4,224z"
+        ></path><path
+          d="M384,224c-17.7,0-32,14.3-32,32s14.3,32,32,32s32-14.3,32-32S401.7,224,384,224L384,224z"
+        ></path></g></svg>
+  </button>
+</div><div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../whats-new.html">What&#8217;s new?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../introduction.html">Introduction</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../quick-tour.html">Quick Tour</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../reference.html">Reference</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../kafka.html">Using Spring for Apache Kafka</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../connecting.html">Connecting to Kafka</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuring-topics.html">Configuring Topics</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../sending-messages.html">Sending Messages</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../receiving-messages.html">Receiving Messages</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="message-listeners.html">Message Listeners</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="message-listener-container.html">Message Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="ooo-commits.html">Manually Committing Offsets</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="listener-annotation.html"><code>@KafkaListener</code> Annotation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="listener-group-id.html">Obtaining the Consumer <code>group.id</code></a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="container-thread-naming.html">Container Thread Naming</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="listener-meta.html"><code>@KafkaListener</code> as a Meta Annotation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="class-level-kafkalistener.html"><code>@KafkaListener</code> on a Class</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafkalistener-attrs.html"><code>@KafkaListener</code> Attribute Modification</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="kafkalistener-lifecycle.html"><code>@KafkaListener</code> Lifecycle Management</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="validation.html"><code>@KafkaListener</code> <code>@Payload</code> Validation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="rebalance-listeners.html">Rebalancing Listeners</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="annotation-send-to.html">Forwarding Listener Results using <code>@SendTo</code></a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="filtering.html">Filtering Messages</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="retrying-deliveries.html">Retrying Deliveries</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="sequencing.html">Starting <code>@KafkaListener</code> s in Sequence</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="template-receive.html">Using <code>KafkaTemplate</code> to Receive</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../container-props.html">Listener Container Properties</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../dynamic-containers.html">Dynamically Creating Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../events.html">Application Events</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../topic/partition-initial-offset.html">Topic/Partition Initial Offset</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../seek.html">Seeking to a Specific Offset</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../container-factory.html">Container factory</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../thread-safety.html">Thread Safety</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../micrometer.html">Monitoring</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../exactly-once.html">Exactly Once Semantics</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../interceptors.html">Wiring Spring Beans into Producer/Consumer Interceptors</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../producer-interceptor-managed-in-spring.html">Producer Interceptor Managed in Spring</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../pause-resume.html">Pausing and Resuming Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../pause-resume-partitions.html">Pausing and Resuming Partitions on Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../serdes.html">Serialization, Deserialization, and Message Conversion</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../headers.html">Message Headers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../tombstones.html">Null Payloads and Log Compaction of 'Tombstone' Records</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../annotation-error-handling.html">Handling Exceptions</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kerberos.html">JAAS and Kerberos</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../retrytopic.html">Non-Blocking Retries</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../retrytopic/how-the-pattern-works.html">How The Pattern Works</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../retrytopic/back-off-delay-precision.html">Back Off Delay Precision</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../retrytopic/retry-config.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../retrytopic/programmatic-construction.html">Programmatic Construction</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../retrytopic/features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../retrytopic/retry-topic-combine-blocking.html">Combining Blocking and Non-Blocking Retries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../retrytopic/accessing-delivery-attempts.html">Accessing Delivery Attempts</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../retrytopic/topic-naming.html">Topic Naming</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../retrytopic/multi-retry.html">Multiple Listeners, Same Topic(s)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../retrytopic/dlt-strategies.html">Dlt Strategies</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../retrytopic/retry-topic-lcf.html">Specifying a ListenerContainerFactory</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../retrytopic/access-topic-info-runtime.html">Accessing Topics' Information at Runtime</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../retrytopic/change-kboe-logging-level.html">Changing KafkaBackOffException Logging Level</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../streams.html">Apache Kafka Streams Support</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../testing.html">Testing Applications</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../tips.html">Tips, Tricks and Examples</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../other-resources.html">Other Resources</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../appendix/override-boot-dependencies.html">Override Spring Boot Dependencies</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../appendix/micrometer.html">Micrometer Observation Documentation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../appendix/native-images.html">Native Images</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../appendix/change-history.html">Change History</a>
+  </li>
+</ul>
+  </li>
+</ul>
+          <div class="toggle-sm">
+            <button id="nav-toggle-2" class="nav-toggle"></button>
+          </div>
+        </nav>
+      </div>
+      <div class="nav-collapse">
+        <button id="nav-collapse-toggle"><span></span></button>        
+      </div>
+    </div>
+    <div class="nav-resize"></div>
+  </aside>
+</div>
+<script>
+!function (sidebar) {
+  if (sidebar) {
+    document.body.classList.add('nav-sm')
+  }
+}(localStorage && localStorage.getItem('sidebar') === 'close')
+</script><main class="article">
+<div class="toolbar" role="navigation">
+  <button id="nav-toggle-1" class="nav-toggle"></button>
+<div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+</div>
+  <div class="content">
+<aside class="sidebar">
+  <div class="content">
+    <div
+      class="toc"
+      data-title="Message Listener Containers"
+      data-levels="2"
+    >
+      <div class="toc-menu"></div>
+    </div>
+    <div class="sidebar-links">
+        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/kafka/receiving-messages/message-listener-container.adoc">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+          ><path
+              d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z"
+            ></path></svg>
+          Edit this Page
+        </a>
+              <a href="https://github.com/rwinch/spring-kafka" title="Github">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="512px"
+            id="Layer_1"
+            version="1.1"
+            viewBox="0 0 512 512"
+            width="512px"
+          ><style type="text/css"><![CDATA[
+              .st0{fill-rule:evenodd;clip-rule:evenodd;} ]]></style><g><path
+                class="st0"
+                d="M256,32C132.3,32,32,134.8,32,261.7c0,101.5,64.2,187.5,153.2,217.9c11.2,2.1,15.3-5,15.3-11.1   c0-5.5-0.2-19.9-0.3-39.1c-62.3,13.9-75.5-30.8-75.5-30.8c-10.2-26.5-24.9-33.6-24.9-33.6c-20.3-14.3,1.5-14,1.5-14   c22.5,1.6,34.3,23.7,34.3,23.7c20,35.1,52.4,25,65.2,19.1c2-14.8,7.8-25,14.2-30.7c-49.7-5.8-102-25.5-102-113.5   c0-25.1,8.7-45.6,23-61.6c-2.3-5.8-10-29.2,2.2-60.8c0,0,18.8-6.2,61.6,23.5c17.9-5.1,37-7.6,56.1-7.7c19,0.1,38.2,2.6,56.1,7.7   c42.8-29.7,61.5-23.5,61.5-23.5c12.2,31.6,4.5,55,2.2,60.8c14.3,16.1,23,36.6,23,61.6c0,88.2-52.4,107.6-102.3,113.3   c8,7.1,15.2,21.1,15.2,42.5c0,30.7-0.3,55.5-0.3,63c0,6.1,4,13.3,15.4,11C415.9,449.1,480,363.1,480,261.7   C480,134.8,379.7,32,256,32z"
+              ></path></g></svg>
+          Github Project
+        </a>
+        <a href="https://stackoverflow.com/tags/spring-kafka">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path
+              d="M290.7 311L95 269.7 86.8 309l195.7 41zm51-87L188.2 95.7l-25.5 30.8 153.5 128.3zm-31.2 39.7L129.2 179l-16.7 36.5L293.7 300zM262 32l-32 24 119.3 160.3 32-24zm20.5 328h-200v39.7h200zm39.7 80H42.7V320h-40v160h359.5V320h-40z"
+            ></path></svg>
+          Stack Overflow
+        </a>
+    </div>
+  </div>
+</aside><div class="doc">
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../index.html">Spring Kafka</a></li>
+    <li><a href="../../reference.html">Reference</a></li>
+    <li><a href="../../kafka.html">Using Spring for Apache Kafka</a></li>
+    <li><a href="../receiving-messages.html">Receiving Messages</a></li>
+    <li><a href="message-listener-container.html">Message Listener Containers</a></li>
+  </ul>
+</nav>
+<article>
+<h1 id="page-title" class="page">Message Listener Containers</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Two <code>MessageListenerContainer</code> implementations are provided:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>KafkaMessageListenerContainer</code></p>
+</li>
+<li>
+<p><code>ConcurrentMessageListenerContainer</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>KafkaMessageListenerContainer</code> receives all message from all topics or partitions on a single thread.
+The <code>ConcurrentMessageListenerContainer</code> delegates to one or more <code>KafkaMessageListenerContainer</code> instances to provide multi-threaded consumption.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.2.7, you can add a <code>RecordInterceptor</code> to the listener container; it will be invoked before calling the listener allowing inspection or modification of the record.
+If the interceptor returns null, the listener is not called.
+Starting with version 2.7, it has additional methods which are called after the listener exits (normally, or by throwing an exception).
+Also, starting with version 2.7, there is now a <code>BatchInterceptor</code>, providing similar functionality for <a href="#batch-listeners">[batch-listeners]</a>.
+In addition, the <code>ConsumerAwareRecordInterceptor</code> (and <code>BatchInterceptor</code>) provide access to the <code>Consumer&lt;?, ?&gt;</code>.
+This might be used, for example, to access the consumer metrics in the interceptor.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You should not execute any methods that affect the consumer&#8217;s positions and or committed offsets in these interceptors; the container needs to manage such information.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If the interceptor mutates the record (by creating a new one), the <code>topic</code>, <code>partition</code>, and <code>offset</code> must remain the same to avoid unexpected side effects such as record loss.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>CompositeRecordInterceptor</code> and <code>CompositeBatchInterceptor</code> can be used to invoke multiple interceptors.</p>
+</div>
+<div class="paragraph">
+<p>By default, starting with version 2.8, when using transactions, the interceptor is invoked before the transaction has started.
+You can set the listener container&#8217;s <code>interceptBeforeTx</code> property to <code>false</code> to invoke the interceptor after the transaction has started instead.
+Starting with version 2.9, this will apply to any transaction manager, not just <code>KafkaAwareTransactionManager</code> s.
+This allows, for example, the interceptor to participate in a JDBC transaction started by the container.</p>
+</div>
+<div class="paragraph">
+<p>Starting with versions 2.3.8, 2.4.6, the <code>ConcurrentMessageListenerContainer</code> now supports <a href="https://kafka.apache.org/documentation/#static_membership">Static Membership</a> when the concurrency is greater than one.
+The <code>group.instance.id</code> is suffixed with <code>-n</code> with <code>n</code> starting at <code>1</code>.
+This, together with an increased <code>session.timeout.ms</code>, can be used to reduce rebalance events, for example, when application instances are restarted.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="kafka-container"><a class="anchor" href="#kafka-container"></a>Using <code>KafkaMessageListenerContainer</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following constructor is available:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public KafkaMessageListenerContainer(ConsumerFactory&lt;K, V&gt; consumerFactory,
+                    ContainerProperties containerProperties)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It receives a <code>ConsumerFactory</code> and information about topics and partitions, as well as other configuration, in a <code>ContainerProperties</code>
+object.
+<code>ContainerProperties</code> has the following constructors:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public ContainerProperties(TopicPartitionOffset... topicPartitions)
+
+public ContainerProperties(String... topics)
+
+public ContainerProperties(Pattern topicPattern)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first constructor takes an array of <code>TopicPartitionOffset</code> arguments to explicitly instruct the container about which partitions to use (using the consumer <code>assign()</code> method) and with an optional initial offset.
+A positive value is an absolute offset by default.
+A negative value is relative to the current last offset within a partition by default.
+A constructor for <code>TopicPartitionOffset</code> that takes an additional <code>boolean</code> argument is provided.
+If this is <code>true</code>, the initial offsets (positive or negative) are relative to the current position for this consumer.
+The offsets are applied when the container is started.
+The second takes an array of topics, and Kafka allocates the partitions based on the <code>group.id</code> property&#8201;&#8212;&#8201;distributing partitions across the group.
+The third uses a regex <code>Pattern</code> to select the topics.</p>
+</div>
+<div class="paragraph">
+<p>To assign a <code>MessageListener</code> to a container, you can use the <code>ContainerProps.setMessageListener</code> method when creating the Container.
+The following example shows how to do so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ContainerProperties containerProps = new ContainerProperties("topic1", "topic2");
+containerProps.setMessageListener(new MessageListener&lt;Integer, String&gt;() {
+    ...
+});
+DefaultKafkaConsumerFactory&lt;Integer, String&gt; cf =
+                        new DefaultKafkaConsumerFactory&lt;&gt;(consumerProps());
+KafkaMessageListenerContainer&lt;Integer, String&gt; container =
+                        new KafkaMessageListenerContainer&lt;&gt;(cf, containerProps);
+return container;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that when creating a <code>DefaultKafkaConsumerFactory</code>, using the constructor that just takes in the properties as above means that key and value <code>Deserializer</code> classes are picked up from configuration.
+Alternatively, <code>Deserializer</code> instances may be passed to the <code>DefaultKafkaConsumerFactory</code> constructor for key and/or value, in which case all Consumers share the same instances.
+Another option is to provide <code>Supplier&lt;Deserializer&gt;</code> s (starting with version 2.3) that will be used to obtain separate <code>Deserializer</code> instances for each <code>Consumer</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">DefaultKafkaConsumerFactory&lt;Integer, CustomValue&gt; cf =
+                        new DefaultKafkaConsumerFactory&lt;&gt;(consumerProps(), null, () -&gt; new CustomValueDeserializer());
+KafkaMessageListenerContainer&lt;Integer, String&gt; container =
+                        new KafkaMessageListenerContainer&lt;&gt;(cf, containerProps);
+return container;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Refer to the <a href="https://docs.spring.io/spring-kafka/api/org/springframework/kafka/listener/ContainerProperties.html">Javadoc</a> for <code>ContainerProperties</code> for more information about the various properties that you can set.</p>
+</div>
+<div class="paragraph">
+<p>Since version 2.1.1, a new property called <code>logContainerConfig</code> is available.
+When <code>true</code> and <code>INFO</code> logging is enabled each listener container writes a log message summarizing its configuration properties.</p>
+</div>
+<div class="paragraph">
+<p>By default, logging of topic offset commits is performed at the <code>DEBUG</code> logging level.
+Starting with version 2.1.2, a property in <code>ContainerProperties</code> called <code>commitLogLevel</code> lets you specify the log level for these messages.
+For example, to change the log level to <code>INFO</code>, you can use <code>containerProperties.setCommitLogLevel(LogIfLevelEnabled.Level.INFO);</code>.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.2, a new container property called <code>missingTopicsFatal</code> has been added (default: <code>false</code> since 2.3.4).
+This prevents the container from starting if any of the configured topics are not present on the broker.
+It does not apply if the container is configured to listen to a topic pattern (regex).
+Previously, the container threads looped within the <code>consumer.poll()</code> method waiting for the topic to appear while logging many messages.
+Aside from the logs, there was no indication that there was a problem.</p>
+</div>
+<div class="paragraph">
+<p>As of version 2.8, a new container property <code>authExceptionRetryInterval</code> has been introduced.
+This causes the container to retry fetching messages after getting any <code>AuthenticationException</code> or <code>AuthorizationException</code> from the <code>KafkaConsumer</code>.
+This can happen when, for example, the configured user is denied access to read a certain topic or credentials are incorrect.
+Defining <code>authExceptionRetryInterval</code> allows the container to recover when proper permissions are granted.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+By default, no interval is configured - authentication and authorization errors are considered fatal, which causes the container to stop.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.8, when creating the consumer factory, if you provide deserializers as objects (in the constructor or via the setters), the factory will invoke the <code>configure()</code> method to configure them with the configuration properties.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-ConcurrentMessageListenerContainer"><a class="anchor" href="#using-ConcurrentMessageListenerContainer"></a>Using <code>ConcurrentMessageListenerContainer</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The single constructor is similar to the <code>KafkaListenerContainer</code> constructor.
+The following listing shows the constructor&#8217;s signature:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public ConcurrentMessageListenerContainer(ConsumerFactory&lt;K, V&gt; consumerFactory,
+                            ContainerProperties containerProperties)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It also has a <code>concurrency</code> property.
+For example, <code>container.setConcurrency(3)</code> creates three <code>KafkaMessageListenerContainer</code> instances.</p>
+</div>
+<div class="paragraph">
+<p>For the first constructor, Kafka distributes the partitions across the consumers using its group management capabilities.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When listening to multiple topics, the default partition distribution may not be what you expect.
+For example, if you have three topics with five partitions each and you want to use <code>concurrency=15</code>, you see only five active consumers, each assigned one partition from each topic, with the other 10 consumers being idle.
+This is because the default Kafka <code>PartitionAssignor</code> is the <code>RangeAssignor</code> (see its Javadoc).
+For this scenario, you may want to consider using the <code>RoundRobinAssignor</code> instead, which distributes the partitions across all of the consumers.
+Then, each consumer is assigned one topic or partition.
+To change the <code>PartitionAssignor</code>, you can set the <code>partition.assignment.strategy</code> consumer property (<code>ConsumerConfigs.PARTITION_ASSIGNMENT_STRATEGY_CONFIG</code>) in the properties provided to the <code>DefaultKafkaConsumerFactory</code>.</p>
+</div>
+<div class="paragraph">
+<p>When using Spring Boot, you can assign set the strategy as follows:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">spring.kafka.consumer.properties.partition.assignment.strategy=\
+org.apache.kafka.clients.consumer.RoundRobinAssignor</code></pre>
+</div>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When the container properties are configured with <code>TopicPartitionOffset</code> s, the <code>ConcurrentMessageListenerContainer</code> distributes the <code>TopicPartitionOffset</code> instances across the delegate <code>KafkaMessageListenerContainer</code> instances.</p>
+</div>
+<div class="paragraph">
+<p>If, say, six <code>TopicPartitionOffset</code> instances are provided and the <code>concurrency</code> is <code>3</code>; each container gets two partitions.
+For five <code>TopicPartitionOffset</code> instances, two containers get two partitions, and the third gets one.
+If the <code>concurrency</code> is greater than the number of <code>TopicPartitions</code>, the <code>concurrency</code> is adjusted down such that each container gets one partition.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>client.id</code> property (if set) is appended with <code>-n</code> where <code>n</code> is the consumer instance that corresponds to the concurrency.
+This is required to provide unique names for MBeans when JMX is enabled.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Starting with version 1.3, the <code>MessageListenerContainer</code> provides access to the metrics of the underlying <code>KafkaConsumer</code>.
+In the case of <code>ConcurrentMessageListenerContainer</code>, the <code>metrics()</code> method returns the metrics for all the target <code>KafkaMessageListenerContainer</code> instances.
+The metrics are grouped into the <code>Map&lt;MetricName, ? extends Metric&gt;</code> by the <code>client-id</code> provided for the underlying <code>KafkaConsumer</code>.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.3, the <code>ContainerProperties</code> provides an <code>idleBetweenPolls</code> option to let the main loop in the listener container to sleep between <code>KafkaConsumer.poll()</code> calls.
+An actual sleep interval is selected as the minimum from the provided option and difference between the <code>max.poll.interval.ms</code> consumer config and the current records batch processing time.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="committing-offsets"><a class="anchor" href="#committing-offsets"></a>Committing Offsets</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Several options are provided for committing offsets.
+If the <code>enable.auto.commit</code> consumer property is <code>true</code>, Kafka auto-commits the offsets according to its configuration.
+If it is <code>false</code>, the containers support several <code>AckMode</code> settings (described in the next list).
+The default <code>AckMode</code> is <code>BATCH</code>.
+Starting with version 2.3, the framework sets <code>enable.auto.commit</code> to <code>false</code> unless explicitly set in the configuration.
+Previously, the Kafka default (<code>true</code>) was used if the property was not set.</p>
+</div>
+<div class="paragraph">
+<p>The consumer <code>poll()</code> method returns one or more <code>ConsumerRecords</code>.
+The <code>MessageListener</code> is called for each record.
+The following lists describes the action taken by the container for each <code>AckMode</code> (when transactions are not being used):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>RECORD</code>: Commit the offset when the listener returns after processing the record.</p>
+</li>
+<li>
+<p><code>BATCH</code>: Commit the offset when all the records returned by the <code>poll()</code> have been processed.</p>
+</li>
+<li>
+<p><code>TIME</code>: Commit the offset when all the records returned by the <code>poll()</code> have been processed, as long as the <code>ackTime</code> since the last commit has been exceeded.</p>
+</li>
+<li>
+<p><code>COUNT</code>: Commit the offset when all the records returned by the <code>poll()</code> have been processed, as long as <code>ackCount</code> records have been received since the last commit.</p>
+</li>
+<li>
+<p><code>COUNT_TIME</code>: Similar to <code>TIME</code> and <code>COUNT</code>, but the commit is performed if either condition is <code>true</code>.</p>
+</li>
+<li>
+<p><code>MANUAL</code>: The message listener is responsible to <code>acknowledge()</code> the <code>Acknowledgment</code>.
+After that, the same semantics as <code>BATCH</code> are applied.</p>
+</li>
+<li>
+<p><code>MANUAL_IMMEDIATE</code>: Commit the offset immediately when the <code>Acknowledgment.acknowledge()</code> method is called by the listener.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When using <a href="../transactions.html" class="xref page">transactions</a>, the offset(s) are sent to the transaction and the semantics are equivalent to <code>RECORD</code> or <code>BATCH</code>, depending on the listener type (record or batch).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>MANUAL</code>, and <code>MANUAL_IMMEDIATE</code> require the listener to be an <code>AcknowledgingMessageListener</code> or a <code>BatchAcknowledgingMessageListener</code>.
+See <a href="#message-listeners">Message Listeners</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Depending on the <code>syncCommits</code> container property, the <code>commitSync()</code> or <code>commitAsync()</code> method on the consumer is used.
+<code>syncCommits</code> is <code>true</code> by default; also see <code>setSyncCommitTimeout</code>.
+See <code>setCommitCallback</code> to get the results of asynchronous commits; the default callback is the <code>LoggingCommitCallback</code> which logs errors (and successes at debug level).</p>
+</div>
+<div class="paragraph">
+<p>Because the listener container has it&#8217;s own mechanism for committing offsets, it prefers the Kafka <code>ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG</code> to be <code>false</code>.
+Starting with version 2.3, it unconditionally sets it to false unless specifically set in the consumer factory or the container&#8217;s consumer property overrides.</p>
+</div>
+<div class="paragraph">
+<p>The <code>Acknowledgment</code> has the following method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface Acknowledgment {
+
+    void acknowledge();
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method gives the listener control over when offsets are committed.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.3, the <code>Acknowledgment</code> interface has two additional methods <code>nack(long sleep)</code> and <code>nack(int index, long sleep)</code>.
+The first one is used with a record listener, the second with a batch listener.
+Calling the wrong method for your listener type will throw an <code>IllegalStateException</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you want to commit a partial batch, using <code>nack()</code>, When using transactions, set the <code>AckMode</code> to <code>MANUAL</code>; invoking <code>nack()</code> will send the offsets of the successfully processed records to the transaction.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<code>nack()</code> can only be called on the consumer thread that invokes your listener.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<code>nack()</code> is not allowed when using <a href="ooo-commits.html" class="xref page">Out of Order Commits</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>With a record listener, when <code>nack()</code> is called, any pending offsets are committed, the remaining records from the last poll are discarded, and seeks are performed on their partitions so that the failed record and unprocessed records are redelivered on the next <code>poll()</code>.
+The consumer can be paused before redelivery, by setting the <code>sleep</code> argument.
+This is similar functionality to throwing an exception when the container is configured with a <code>DefaultErrorHandler</code>.</p>
+</div>
+<div class="paragraph">
+<p>When using a batch listener, you can specify the index within the batch where the failure occurred.
+When <code>nack()</code> is called, offsets will be committed for records before the index and seeks are performed on the partitions for the failed and discarded records so that they will be redelivered on the next <code>poll()</code>.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="../annotation-error-handling.html#error-handlers" class="xref page">Container Error Handlers</a> for more information.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The consumer is paused during the sleep so that we continue to poll the broker to keep the consumer alive.
+The actual sleep time, and its resolution, depends on the container&#8217;s <code>pollTimeout</code> which defaults to 5 seconds.
+The minimum sleep time is equal to the <code>pollTimeout</code> and all sleep times will be a multiple of it.
+For small sleep times or, to increase its accuracy, consider reducing the container&#8217;s <code>pollTimeout</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Starting with version 3.0.10, batch listeners can commit the offsets of parts of the batch, using <code>acknowledge(index)</code> on the <code>Acknowledgment</code> argument.
+When this method is called, the offset of the record at the index (as well as all previous records) will be committed.
+Calling <code>acknowledge()</code> after a partial batch commit is performed will commit the offsets of the remainder of the batch.
+The following limitations apply:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>AckMode.MANUAL_IMMEDIATE</code> is required</p>
+</li>
+<li>
+<p>The method must be called on the listener thread</p>
+</li>
+<li>
+<p>The listener must consume a <code>List</code> rather than the raw <code>ConsumerRecords</code></p>
+</li>
+<li>
+<p>The index must be in the range of the list&#8217;s elements</p>
+</li>
+<li>
+<p>The index must be larger than that used in a previous call</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These restrictions are enforced and the method will throw an <code>IllegalArgumentException</code> or <code>IllegalStateException</code>, depending on the violation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="container-auto-startup"><a class="anchor" href="#container-auto-startup"></a>Listener Container Auto Startup</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The listener containers implement <code>SmartLifecycle</code>, and <code>autoStartup</code> is <code>true</code> by default.
+The containers are started in a late phase (<code>Integer.MAX-VALUE - 100</code>).
+Other components that implement <code>SmartLifecycle</code>, to handle data from listeners, should be started in an earlier phase.
+The <code>- 100</code> leaves room for later phases to enable components to be auto-started after the containers.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="message-listeners.html">Message Listeners</a></span>
+  <span class="next"><a href="ooo-commits.html">Manually Committing Offsets</a></span>
+</nav>
+</article>
+</div>  </div>
+</main>
+<div class="modal micromodal-slide" id="modal-versions" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true">
+            <main class="modal__content" id="modal-versions-content">
+              <button data-micromodal-close class="modal-versions-close">
+                <svg width="28px" height="28px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><style>.cls-1h{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1h" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1h" x1="7" x2="25" y1="25" y2="7"/></g></svg>
+              </button>
+              <div class="colset">
+                <div class="col-left">
+                  <ul class="nav-versions">
+                    <li class="component is-current">
+                      <a class="title" href="../../index.html">Spring Kafka</a>
+                      <ul class="versions">
+                        <li class="version is-current is-latest">
+                          <a href="../../index.html">
+                            3.1.0-SNAPSHOT<span class="current">current</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-right">
+                  <ul>
+                    <li>
+                      Related Spring Documentation
+                      <ul>
+                        <li><a href="https://docs.spring.io/spring-framework/reference/">Spring Framework</a></li>
+                        <li>
+                          Spring Data
+                          <ul>
+                            <li><a href="https://docs.spring.io/spring-data-commons/reference/">Spring Data Commons</a></li>
+                            <li><a href="https://docs.spring.io/spring-data-jpa/reference/">Spring Data JPA</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="https://docs.spring.io/spring-integration/reference/">Spring Integration</a></li>
+                        <li><a href="https://docs.spring.io/spring-batch/reference/">Spring Batch</a></li>
+                        <li>
+                          <a href="https://docs.spring.io/spring-security/reference/">Spring Security</a>
+                          <ul>
+                            <li><a href="https://docs.spring.io/spring-ldap/reference/">Spring LDAP</a></li>
+                            <li><a href="https://docs.spring.io/spring-session/reference/">Spring Session</a></li>
+                            <li><a href="https://docs.spring.io/spring-authorization-server/reference/">Spring Authorization Server</a></li>
+                            <li><a href="https://docs.spring.io/spring-vault/reference/">Spring Vault</a></li>
+                            <li><a href="https://docs.spring.io/spring-security-kerberos/reference/">Spring Security Kerberos</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="https://docs.spring.io/spring-ai/reference/">Spring AI</a></li>
+                        <li><a href="https://docs.spring.io/spring-cli/reference/">Spring CLI</a></li>
+                        <li><a href="https://docs.spring.io/spring-graphql/reference/">Spring GraphQL</a></li>
+                        <li><a href="https://docs.spring.io/spring-shell/reference/">Spring Shell</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+</div>
+<footer class="footer flex">
+    <div id="spring-links flex">
+        <img id="springlogo" src="../../_/img/spring-logo.svg" alt="Spring">
+        <p class="smallest antialiased">© <script>var d = new Date();
+        document.write(d.getFullYear());</script> <a href="https://www.vmware.com/">VMware</a>, Inc. or its affiliates. <a href="https://www.vmware.com/help/legal.html">Terms of Use</a> • <a href="https://www.vmware.com/help/privacy.html" rel="noopener noreferrer">Privacy</a> • <a href="https://spring.io/trademarks">Trademark Guidelines</a> <span id="thank-you-mobile">• <a href="https://spring.io/thank-you">Thank you</a></span> • <a href="https://www.vmware.com/help/privacy/california-privacy-rights.html">Your California Privacy Rights</a> • <a class="ot-sdk-show-settings">Cookie Settings</a> <span id="teconsent"></span></p>
+        <p class="smallest antialiased has-gray-text">Apache®, Apache Tomcat®, Apache Kafka®, Apache Cassandra&trade;, and Apache Geode&trade; are trademarks or registered trademarks of the Apache Software Foundation in the United States and/or other countries. Java&trade;, Java&trade; SE, Java&trade; EE, and OpenJDK&trade; are trademarks of Oracle and/or its affiliates. Kubernetes® is a registered trademark of the Linux Foundation in the United States and other countries. Linux® is the registered trademark of Linus Torvalds in the United States and other countries. Windows® and Microsoft® Azure are registered trademarks of Microsoft Corporation. “AWS” and “Amazon Web Services” are trademarks or registered trademarks of Amazon.com Inc. or its affiliates. All other trademarks and copyrights are property of their respective owners and are only mentioned for informative purposes. Other names may be trademarks of their respective owners.</p>
+    </div>
+    <div id="social-icons" class="flex jc-between">
+        <a href="https://www.youtube.com/user/SpringSourceDev" title="Youtube"><svg id="youtube-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle class="cls-1" cx="20" cy="20" r="20"/><path class="cls-2" d="M30.91,14.53a2.89,2.89,0,0,0-2-2C27.12,12,20,12,20,12s-7.12,0-8.9.47a2.9,2.9,0,0,0-2,2A30.56,30.56,0,0,0,8.63,20a30.44,30.44,0,0,0,.46,5.47,2.89,2.89,0,0,0,2,2C12.9,28,20,28,20,28s7.12,0,8.9-.47a2.87,2.87,0,0,0,2-2A30.56,30.56,0,0,0,31.37,20,28.88,28.88,0,0,0,30.91,14.53ZM17.73,23.41V16.59L23.65,20Z"/></svg></a>
+        <a href="https://github.com/spring-projects" title="Github"><svg id="github-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><path class="cls-1" d="M38,0a38,38,0,1,0,38,38A38,38,0,0,0,38,0Z"/></g><path class="cls-2" d="M38,15.59A22.95,22.95,0,0,0,30.71,60.3c1.15.21,1.57-.5,1.57-1.11s0-2,0-3.9c-6.38,1.39-7.73-3.07-7.73-3.07A6.09,6.09,0,0,0,22,48.86c-2.09-1.42.15-1.39.15-1.39a4.81,4.81,0,0,1,3.52,2.36c2,3.5,5.37,2.49,6.67,1.91a4.87,4.87,0,0,1,1.46-3.07c-5.09-.58-10.45-2.55-10.45-11.34a8.84,8.84,0,0,1,2.36-6.15,8.29,8.29,0,0,1,.23-6.07s1.92-.62,6.3,2.35a21.82,21.82,0,0,1,11.49,0c4.38-3,6.3-2.35,6.3-2.35a8.29,8.29,0,0,1,.23,6.07,8.84,8.84,0,0,1,2.36,6.15c0,8.81-5.37,10.75-10.48,11.32a5.46,5.46,0,0,1,1.56,4.25c0,3.07,0,5.54,0,6.29s.42,1.33,1.58,1.1A22.94,22.94,0,0,0,38,15.59Z"/></svg></a>
+        <a href="https://twitter.com/springcentral" title="Twitter"><svg id="twitter-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><circle class="cls-1" cx="37.97" cy="37.97" r="37.97"/><path id="Twitter-2" data-name="Twitter" class="cls-2" d="M55.2,22.73a15.43,15.43,0,0,1-4.88,1.91,7.56,7.56,0,0,0-5.61-2.49A7.78,7.78,0,0,0,37,30a7.56,7.56,0,0,0,.2,1.79,21.63,21.63,0,0,1-15.84-8.23,8,8,0,0,0,2.37,10.52,7.66,7.66,0,0,1-3.48-1v.09A7.84,7.84,0,0,0,26.45,41a7.54,7.54,0,0,1-2,.28A7.64,7.64,0,0,1,23,41.09a7.71,7.71,0,0,0,7.18,5.47,15.21,15.21,0,0,1-9.55,3.37,15.78,15.78,0,0,1-1.83-.11,21.41,21.41,0,0,0,11.78,3.54c14.13,0,21.86-12,21.86-22.42,0-.34,0-.68,0-1a15.67,15.67,0,0,0,3.83-4.08,14.9,14.9,0,0,1-4.41,1.24A7.8,7.8,0,0,0,55.2,22.73Z"/></svg></a>
+    </div>
+</footer>
+<script src="../../_/js/vendor/import.js"></script>
+<script src="../../_/js/site.js"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script async src="../../_/js/vendor/asciidoctor-tabs.js" data-sync-storage-key="docs:preferred-tab"></script>
+
+<div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+            <main class="modal__content" id="modal-1-content">
+                <div id="searchbox"></div>
+                <div id="counter"></div>
+                <div class="search-by">
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.algolia.com/" aria-label="Search by Algolia">
+                        <img class="light" width="140" src="../../_/img/algolia-light.svg" />
+                        <img class="dark" width="140" src="../../_/img/algolia-dark.svg" />
+                    </a>
+                </div>
+                <div id="hits"></div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.17.0/dist/algoliasearch-lite.umd.js" integrity="sha256-Lf9DrpGmcRip6OQzbcL6lnvNmoZNSKpyQX5pMlwatWE=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.54.1/dist/instantsearch.production.min.js" integrity="sha256-xYsZPDeNjYNTBWLvqD2Lxe98hOxcDgOHyMPfz4tVAbk=" crossorigin="anonymous"></script>
+<script async id="search-script" src="../../_/js/vendor/search.js" data-app-id="WB1FQYI187" data-api-key="9d489079e5ec46dbb238909fee5c9c29" data-index-name="springkafka" data-stylesheet="../../_/css/vendor/search.css" data-page-version="3.1.0"></script>
+
+  </body>
+</html>

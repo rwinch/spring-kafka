@@ -1,0 +1,365 @@
+{
+  "$id": "https://schemas.antora.org/site-manifest/1-0-0/draft-01",
+  "generated": "2023-09-08T06:01:39.277Z",
+  "url": "https://rwinch.github.io/spring-kafka",
+  "components": {
+    "kafka": {
+      "title": "Spring Kafka",
+      "latest": "3.1.0",
+      "versions": {
+        "3.1.0": {
+          "prerelease": true,
+          "displayVersion": "3.1.0-SNAPSHOT",
+          "url": "/index.html",
+          "pages": [
+            {
+              "path": "index.adoc",
+              "url": "/index.html",
+              "title": "Overview"
+            },
+            {
+              "path": "appendix.adoc",
+              "url": "/appendix.html",
+              "title": "Appendix"
+            },
+            {
+              "path": "appendix/change-history.adoc",
+              "url": "/appendix/change-history.html",
+              "title": "Change History"
+            },
+            {
+              "path": "appendix/micrometer.adoc",
+              "url": "/appendix/micrometer.html",
+              "title": "Micrometer Observation Documentation"
+            },
+            {
+              "path": "appendix/native-images.adoc",
+              "url": "/appendix/native-images.html",
+              "title": "Native Images"
+            },
+            {
+              "path": "appendix/override-boot-dependencies.adoc",
+              "url": "/appendix/override-boot-dependencies.html",
+              "title": "Override Spring Boot Dependencies"
+            },
+            {
+              "path": "introduction.adoc",
+              "url": "/introduction.html",
+              "title": "Introduction"
+            },
+            {
+              "path": "kafka.adoc",
+              "url": "/kafka.html",
+              "title": "Using Spring for Apache Kafka"
+            },
+            {
+              "path": "kafka/annotation-error-handling.adoc",
+              "url": "/kafka/annotation-error-handling.html",
+              "title": "Handling Exceptions"
+            },
+            {
+              "path": "kafka/configuring-topics.adoc",
+              "url": "/kafka/configuring-topics.html",
+              "title": "Configuring Topics"
+            },
+            {
+              "path": "kafka/connecting.adoc",
+              "url": "/kafka/connecting.html",
+              "title": "Connecting to Kafka"
+            },
+            {
+              "path": "kafka/container-factory.adoc",
+              "url": "/kafka/container-factory.html",
+              "title": "Container factory"
+            },
+            {
+              "path": "kafka/container-props.adoc",
+              "url": "/kafka/container-props.html",
+              "title": "Listener Container Properties"
+            },
+            {
+              "path": "kafka/dynamic-containers.adoc",
+              "url": "/kafka/dynamic-containers.html",
+              "title": "Dynamically Creating Containers"
+            },
+            {
+              "path": "kafka/events.adoc",
+              "url": "/kafka/events.html",
+              "title": "Application Events"
+            },
+            {
+              "path": "kafka/exactly-once.adoc",
+              "url": "/kafka/exactly-once.html",
+              "title": "Exactly Once Semantics"
+            },
+            {
+              "path": "kafka/headers.adoc",
+              "url": "/kafka/headers.html",
+              "title": "Message Headers"
+            },
+            {
+              "path": "kafka/interceptors.adoc",
+              "url": "/kafka/interceptors.html",
+              "title": "Wiring Spring Beans into Producer/Consumer Interceptors"
+            },
+            {
+              "path": "kafka/kerberos.adoc",
+              "url": "/kafka/kerberos.html",
+              "title": "JAAS and Kerberos"
+            },
+            {
+              "path": "kafka/micrometer.adoc",
+              "url": "/kafka/micrometer.html",
+              "title": "Monitoring"
+            },
+            {
+              "path": "kafka/pause-resume-partitions.adoc",
+              "url": "/kafka/pause-resume-partitions.html",
+              "title": "Pausing and Resuming Partitions on Listener Containers"
+            },
+            {
+              "path": "kafka/pause-resume.adoc",
+              "url": "/kafka/pause-resume.html",
+              "title": "Pausing and Resuming Listener Containers"
+            },
+            {
+              "path": "kafka/producer-interceptor-managed-in-spring.adoc",
+              "url": "/kafka/producer-interceptor-managed-in-spring.html",
+              "title": "Producer Interceptor Managed in Spring"
+            },
+            {
+              "path": "kafka/receiving-messages.adoc",
+              "url": "/kafka/receiving-messages.html",
+              "title": "Receiving Messages"
+            },
+            {
+              "path": "kafka/receiving-messages/annotation-send-to.adoc",
+              "url": "/kafka/receiving-messages/annotation-send-to.html",
+              "title": "Forwarding Listener Results using <code>@SendTo</code>"
+            },
+            {
+              "path": "kafka/receiving-messages/class-level-kafkalistener.adoc",
+              "url": "/kafka/receiving-messages/class-level-kafkalistener.html",
+              "title": "<code>@KafkaListener</code> on a Class"
+            },
+            {
+              "path": "kafka/receiving-messages/container-thread-naming.adoc",
+              "url": "/kafka/receiving-messages/container-thread-naming.html",
+              "title": "Container Thread Naming"
+            },
+            {
+              "path": "kafka/receiving-messages/filtering.adoc",
+              "url": "/kafka/receiving-messages/filtering.html",
+              "title": "Filtering Messages"
+            },
+            {
+              "path": "kafka/receiving-messages/kafkalistener-attrs.adoc",
+              "url": "/kafka/receiving-messages/kafkalistener-attrs.html",
+              "title": "<code>@KafkaListener</code> Attribute Modification"
+            },
+            {
+              "path": "kafka/receiving-messages/kafkalistener-lifecycle.adoc",
+              "url": "/kafka/receiving-messages/kafkalistener-lifecycle.html",
+              "title": "<code>@KafkaListener</code> Lifecycle Management"
+            },
+            {
+              "path": "kafka/receiving-messages/listener-annotation.adoc",
+              "url": "/kafka/receiving-messages/listener-annotation.html",
+              "title": "<code>@KafkaListener</code> Annotation"
+            },
+            {
+              "path": "kafka/receiving-messages/listener-group-id.adoc",
+              "url": "/kafka/receiving-messages/listener-group-id.html",
+              "title": "Obtaining the Consumer <code>group.id</code>"
+            },
+            {
+              "path": "kafka/receiving-messages/listener-meta.adoc",
+              "url": "/kafka/receiving-messages/listener-meta.html",
+              "title": "<code>@KafkaListener</code> as a Meta Annotation"
+            },
+            {
+              "path": "kafka/receiving-messages/message-listener-container.adoc",
+              "url": "/kafka/receiving-messages/message-listener-container.html",
+              "title": "Message Listener Containers"
+            },
+            {
+              "path": "kafka/receiving-messages/message-listeners.adoc",
+              "url": "/kafka/receiving-messages/message-listeners.html",
+              "title": "Message Listeners"
+            },
+            {
+              "path": "kafka/receiving-messages/ooo-commits.adoc",
+              "url": "/kafka/receiving-messages/ooo-commits.html",
+              "title": "Manually Committing Offsets"
+            },
+            {
+              "path": "kafka/receiving-messages/rebalance-listeners.adoc",
+              "url": "/kafka/receiving-messages/rebalance-listeners.html",
+              "title": "Rebalancing Listeners"
+            },
+            {
+              "path": "kafka/receiving-messages/retrying-deliveries.adoc",
+              "url": "/kafka/receiving-messages/retrying-deliveries.html",
+              "title": "Retrying Deliveries"
+            },
+            {
+              "path": "kafka/receiving-messages/sequencing.adoc",
+              "url": "/kafka/receiving-messages/sequencing.html",
+              "title": "Starting <code>@KafkaListener</code> s in Sequence"
+            },
+            {
+              "path": "kafka/receiving-messages/template-receive.adoc",
+              "url": "/kafka/receiving-messages/template-receive.html",
+              "title": "Using <code>KafkaTemplate</code> to Receive"
+            },
+            {
+              "path": "kafka/receiving-messages/validation.adoc",
+              "url": "/kafka/receiving-messages/validation.html",
+              "title": "<code>@KafkaListener</code> <code>@Payload</code> Validation"
+            },
+            {
+              "path": "kafka/seek.adoc",
+              "url": "/kafka/seek.html",
+              "title": "Seeking to a Specific Offset"
+            },
+            {
+              "path": "kafka/sending-messages.adoc",
+              "url": "/kafka/sending-messages.html",
+              "title": "Sending Messages"
+            },
+            {
+              "path": "kafka/serdes.adoc",
+              "url": "/kafka/serdes.html",
+              "title": "Serialization, Deserialization, and Message Conversion"
+            },
+            {
+              "path": "kafka/thread-safety.adoc",
+              "url": "/kafka/thread-safety.html",
+              "title": "Thread Safety"
+            },
+            {
+              "path": "kafka/tombstones.adoc",
+              "url": "/kafka/tombstones.html",
+              "title": "Null Payloads and Log Compaction of 'Tombstone' Records"
+            },
+            {
+              "path": "kafka/topic/partition-initial-offset.adoc",
+              "url": "/kafka/topic/partition-initial-offset.html",
+              "title": "Topic/Partition Initial Offset"
+            },
+            {
+              "path": "kafka/transactions.adoc",
+              "url": "/kafka/transactions.html",
+              "title": "Transactions"
+            },
+            {
+              "path": "other-resources.adoc",
+              "url": "/other-resources.html",
+              "title": "Other Resources"
+            },
+            {
+              "path": "quick-tour.adoc",
+              "url": "/quick-tour.html",
+              "title": "Quick Tour"
+            },
+            {
+              "path": "reference.adoc",
+              "url": "/reference.html",
+              "title": "Reference"
+            },
+            {
+              "path": "retrytopic.adoc",
+              "url": "/retrytopic.html",
+              "title": "Non-Blocking Retries"
+            },
+            {
+              "path": "retrytopic/access-topic-info-runtime.adoc",
+              "url": "/retrytopic/access-topic-info-runtime.html",
+              "title": "Accessing Topics' Information at Runtime"
+            },
+            {
+              "path": "retrytopic/accessing-delivery-attempts.adoc",
+              "url": "/retrytopic/accessing-delivery-attempts.html",
+              "title": "Accessing Delivery Attempts"
+            },
+            {
+              "path": "retrytopic/back-off-delay-precision.adoc",
+              "url": "/retrytopic/back-off-delay-precision.html",
+              "title": "Back Off Delay Precision"
+            },
+            {
+              "path": "retrytopic/change-kboe-logging-level.adoc",
+              "url": "/retrytopic/change-kboe-logging-level.html",
+              "title": "Changing KafkaBackOffException Logging Level"
+            },
+            {
+              "path": "retrytopic/dlt-strategies.adoc",
+              "url": "/retrytopic/dlt-strategies.html",
+              "title": "Dlt Strategies"
+            },
+            {
+              "path": "retrytopic/features.adoc",
+              "url": "/retrytopic/features.html",
+              "title": "Features"
+            },
+            {
+              "path": "retrytopic/how-the-pattern-works.adoc",
+              "url": "/retrytopic/how-the-pattern-works.html",
+              "title": "How The Pattern Works"
+            },
+            {
+              "path": "retrytopic/multi-retry.adoc",
+              "url": "/retrytopic/multi-retry.html",
+              "title": "Multiple Listeners, Same Topic(s)"
+            },
+            {
+              "path": "retrytopic/programmatic-construction.adoc",
+              "url": "/retrytopic/programmatic-construction.html",
+              "title": "Programmatic Construction"
+            },
+            {
+              "path": "retrytopic/retry-config.adoc",
+              "url": "/retrytopic/retry-config.html",
+              "title": "Configuration"
+            },
+            {
+              "path": "retrytopic/retry-topic-combine-blocking.adoc",
+              "url": "/retrytopic/retry-topic-combine-blocking.html",
+              "title": "Combining Blocking and Non-Blocking Retries"
+            },
+            {
+              "path": "retrytopic/retry-topic-lcf.adoc",
+              "url": "/retrytopic/retry-topic-lcf.html",
+              "title": "Specifying a ListenerContainerFactory"
+            },
+            {
+              "path": "retrytopic/topic-naming.adoc",
+              "url": "/retrytopic/topic-naming.html",
+              "title": "Topic Naming"
+            },
+            {
+              "path": "streams.adoc",
+              "url": "/streams.html",
+              "title": "Apache Kafka Streams Support"
+            },
+            {
+              "path": "testing.adoc",
+              "url": "/testing.html",
+              "title": "Testing Applications"
+            },
+            {
+              "path": "tips.adoc",
+              "url": "/tips.html",
+              "title": "Tips, Tricks and Examples"
+            },
+            {
+              "path": "whats-new.adoc",
+              "url": "/whats-new.html",
+              "title": "What&#8217;s new?"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

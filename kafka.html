@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Overview :: Spring Kafka</title>
-    <link rel="next" href="whats-new.html">
+    <title>Using Spring for Apache Kafka :: Spring Kafka</title>
+    <link rel="prev" href="reference.html">
+    <link rel="next" href="kafka/connecting.html">
     <meta name="generator" content="Antora 3.2.0-alpha.2">
     <script>
 !function (theme, navWidth) {
@@ -278,7 +279,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Overview</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -297,7 +298,7 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="reference.html">Reference</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="kafka.html">Using Spring for Apache Kafka</a>
 <ul class="nav-list">
@@ -536,13 +537,13 @@
   <div class="content">
     <div
       class="toc"
-      data-title="Overview"
+      data-title="Using Spring for Apache Kafka"
       data-levels="2"
     >
       <div class="toc-menu"></div>
     </div>
     <div class="sidebar-links">
-        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/index.adoc">
+        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/kafka.adoc">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24"
@@ -580,27 +581,93 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Spring Kafka</a></li>
-    <li><a href="index.html">Overview</a></li>
+    <li><a href="reference.html">Reference</a></li>
+    <li><a href="kafka.html">Using Spring for Apache Kafka</a></li>
   </ul>
 </nav>
 <article>
-<h1 id="page-title" class="page">Overview</h1>
+<h1 id="page-title" class="page">Using Spring for Apache Kafka</h1>
 <div class="paragraph">
-<p><strong>3.1.0-SNAPSHOT</strong></p>
+<p>This section offers detailed explanations of the various concerns that impact using Spring for Apache Kafka.
+For a quick but less detailed introduction, see <a href="quick-tour.html" class="xref page">Quick Tour</a>.</p>
 </div>
-<div class="paragraph">
-<p>The Spring for Apache Kafka project applies core Spring concepts to the development of Kafka-based messaging solutions.
-We provide a &#8220;template&#8221; as a high-level abstraction for sending messages.
-We also provide support for Message-driven POJOs.</p>
-</div>
-<div class="paragraph">
-<p>&#169; 2016 - 2023 VMware, Inc.</p>
-</div>
-<div class="paragraph">
-<p>Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.</p>
+<div class="section-summary">
+<h2>Section Summary</h2>
+<ul class="nav-section-summary">
+  <li>
+    <a href="kafka/connecting.html">Connecting to Kafka</a>
+  </li>
+  <li>
+    <a href="kafka/configuring-topics.html">Configuring Topics</a>
+  </li>
+  <li>
+    <a href="kafka/sending-messages.html">Sending Messages</a>
+  </li>
+  <li>
+    <a href="kafka/receiving-messages.html">Receiving Messages</a>
+  </li>
+  <li>
+    <a href="kafka/container-props.html">Listener Container Properties</a>
+  </li>
+  <li>
+    <a href="kafka/dynamic-containers.html">Dynamically Creating Containers</a>
+  </li>
+  <li>
+    <a href="kafka/events.html">Application Events</a>
+  </li>
+  <li>
+    <a href="kafka/topic/partition-initial-offset.html">Topic/Partition Initial Offset</a>
+  </li>
+  <li>
+    <a href="kafka/seek.html">Seeking to a Specific Offset</a>
+  </li>
+  <li>
+    <a href="kafka/container-factory.html">Container factory</a>
+  </li>
+  <li>
+    <a href="kafka/thread-safety.html">Thread Safety</a>
+  </li>
+  <li>
+    <a href="kafka/micrometer.html">Monitoring</a>
+  </li>
+  <li>
+    <a href="kafka/transactions.html">Transactions</a>
+  </li>
+  <li>
+    <a href="kafka/exactly-once.html">Exactly Once Semantics</a>
+  </li>
+  <li>
+    <a href="kafka/interceptors.html">Wiring Spring Beans into Producer/Consumer Interceptors</a>
+  </li>
+  <li>
+    <a href="kafka/producer-interceptor-managed-in-spring.html">Producer Interceptor Managed in Spring</a>
+  </li>
+  <li>
+    <a href="kafka/pause-resume.html">Pausing and Resuming Listener Containers</a>
+  </li>
+  <li>
+    <a href="kafka/pause-resume-partitions.html">Pausing and Resuming Partitions on Listener Containers</a>
+  </li>
+  <li>
+    <a href="kafka/serdes.html">Serialization, Deserialization, and Message Conversion</a>
+  </li>
+  <li>
+    <a href="kafka/headers.html">Message Headers</a>
+  </li>
+  <li>
+    <a href="kafka/tombstones.html">Null Payloads and Log Compaction of 'Tombstone' Records</a>
+  </li>
+  <li>
+    <a href="kafka/annotation-error-handling.html">Handling Exceptions</a>
+  </li>
+  <li>
+    <a href="kafka/kerberos.html">JAAS and Kerberos</a>
+  </li>
+</ul>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="whats-new.html">What&#8217;s new?</a></span>
+  <span class="prev"><a href="reference.html">Reference</a></span>
+  <span class="next"><a href="kafka/connecting.html">Connecting to Kafka</a></span>
 </nav>
 </article>
 </div>  </div>

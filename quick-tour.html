@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Overview :: Spring Kafka</title>
-    <link rel="next" href="whats-new.html">
+    <title>Quick Tour :: Spring Kafka</title>
+    <link rel="prev" href="introduction.html">
+    <link rel="next" href="reference.html">
     <meta name="generator" content="Antora 3.2.0-alpha.2">
     <script>
 !function (theme, navWidth) {
@@ -278,7 +279,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Overview</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -288,7 +289,7 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="introduction.html">Introduction</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="quick-tour.html">Quick Tour</a>
   </li>
 </ul>
@@ -536,13 +537,13 @@
   <div class="content">
     <div
       class="toc"
-      data-title="Overview"
+      data-title="Quick Tour"
       data-levels="2"
     >
       <div class="toc-menu"></div>
     </div>
     <div class="sidebar-links">
-        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/index.adoc">
+        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/quick-tour.adoc">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24"
@@ -580,27 +581,475 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Spring Kafka</a></li>
-    <li><a href="index.html">Overview</a></li>
+    <li><a href="introduction.html">Introduction</a></li>
+    <li><a href="quick-tour.html">Quick Tour</a></li>
   </ul>
 </nav>
 <article>
-<h1 id="page-title" class="page">Overview</h1>
+<h1 id="page-title" class="page">Quick Tour</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p><strong>3.1.0-SNAPSHOT</strong></p>
+<p>Prerequisites: You must install and run Apache Kafka.
+Then you must put the Spring for Apache Kafka (<code>spring-kafka</code>) JAR and all of its dependencies on your class path.
+The easiest way to do that is to declare a dependency in your build tool.</p>
 </div>
 <div class="paragraph">
-<p>The Spring for Apache Kafka project applies core Spring concepts to the development of Kafka-based messaging solutions.
-We provide a &#8220;template&#8221; as a high-level abstraction for sending messages.
-We also provide support for Message-driven POJOs.</p>
+<p>If you are not using Spring Boot, declare the <code>spring-kafka</code> jar as a dependency in your project.</p>
+</div>
+<div id="_tabs_1" class="openblock tabs is-sync is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_1_maven" class="tab">
+<p>Maven</p>
+</li>
+<li id="_tabs_1_gradle" class="tab">
+<p>Gradle</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_1_maven--panel" class="tabpanel" aria-labelledby="_tabs_1_maven">
+<div class="listingblock primary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.kafka&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-kafka&lt;/artifactId&gt;
+  &lt;version&gt;3.1.0-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_1_gradle--panel" class="tabpanel" aria-labelledby="_tabs_1_gradle">
+<div class="listingblock secondary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">compile 'org.springframework.kafka:spring-kafka:3.1.0-SNAPSHOT'</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+When using Spring Boot, (and you haven&#8217;t used start.spring.io to create your project), omit the version and Boot will automatically bring in the correct version that is compatible with your Boot version:
+</td>
+</tr>
+</table>
+</div>
+<div id="_tabs_2" class="openblock tabs is-sync is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_2_maven" class="tab">
+<p>Maven</p>
+</li>
+<li id="_tabs_2_gradle" class="tab">
+<p>Gradle</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_2_maven--panel" class="tabpanel" aria-labelledby="_tabs_2_maven">
+<div class="listingblock primary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.kafka&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-kafka&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_2_gradle--panel" class="tabpanel" aria-labelledby="_tabs_2_gradle">
+<div class="listingblock secondary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">compile 'org.springframework.kafka:spring-kafka'</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div class="paragraph">
-<p>&#169; 2016 - 2023 VMware, Inc.</p>
+<p>However, the quickest way to get started is to use <a href="https://start.spring.io">start.spring.io</a> (or the wizards in Spring Tool Suits and Intellij IDEA) and create a project, selecting 'Spring for Apache Kafka' as a dependency.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="compatibility"><a class="anchor" href="#compatibility"></a>Compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This quick tour works with the following versions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apache Kafka Clients 3.3.x</p>
+</li>
+<li>
+<p>Spring Framework 6.0.x</p>
+</li>
+<li>
+<p>Minimum Java version: 17</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="getting-started"><a class="anchor" href="#getting-started"></a>Getting Started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The simplest way to get started is to use <a href="https://start.spring.io">start.spring.io</a> (or the wizards in Spring Tool Suits and Intellij IDEA) and create a project, selecting 'Spring for Apache Kafka' as a dependency.
+Refer to the <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/messaging.html#messaging.kafka">Spring Boot documentation</a> for more information about its opinionated auto configuration of the infrastructure beans.</p>
 </div>
 <div class="paragraph">
-<p>Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.</p>
+<p>Here is a minimal consumer application.</p>
+</div>
+<div class="sect2">
+<h3 id="spring-boot-consumer-app"><a class="anchor" href="#spring-boot-consumer-app"></a>Spring Boot Consumer App</h3>
+<div id="_tabs_3" class="openblock tabs is-sync is-loading">
+<div class="title">Application</div>
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_3_java" class="tab">
+<p>Java</p>
+</li>
+<li id="_tabs_3_kotlin" class="tab">
+<p>Kotlin</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_3_java--panel" class="tabpanel" aria-labelledby="_tabs_3_java">
+<div class="listingblock primary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@SpringBootApplication
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+    @Bean
+    public NewTopic topic() {
+        return TopicBuilder.name("topic1")
+                .partitions(10)
+                .replicas(1)
+                .build();
+    }
+
+    @KafkaListener(id = "myId", topics = "topic1")
+    public void listen(String in) {
+        System.out.println(in);
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_3_kotlin--panel" class="tabpanel" aria-labelledby="_tabs_3_kotlin">
+<div class="listingblock secondary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">@SpringBootApplication
+class Application {
+
+    @Bean
+    fun topic() = NewTopic("topic1", 10, 1)
+
+    @KafkaListener(id = "myId", topics = ["topic1"])
+    fun listen(value: String?) {
+        println(value)
+    }
+
+}
+
+fun main(args: Array&lt;String&gt;) = runApplication&lt;Application&gt;(*args)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">application.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">spring.kafka.consumer.auto-offset-reset=earliest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>NewTopic</code> bean causes the topic to be created on the broker; it is not needed if the topic already exists.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="spring-boot-producer-app"><a class="anchor" href="#spring-boot-producer-app"></a>Spring Boot Producer App</h3>
+<div id="_tabs_4" class="openblock tabs is-sync is-loading">
+<div class="title">Application</div>
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_4_java" class="tab">
+<p>Java</p>
+</li>
+<li id="_tabs_4_kotlin" class="tab">
+<p>Kotlin</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_4_java--panel" class="tabpanel" aria-labelledby="_tabs_4_java">
+<div class="listingblock primary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@SpringBootApplication
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+    @Bean
+    public NewTopic topic() {
+        return TopicBuilder.name("topic1")
+                .partitions(10)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public ApplicationRunner runner(KafkaTemplate&lt;String, String&gt; template) {
+        return args -&gt; {
+            template.send("topic1", "test");
+        };
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_4_kotlin--panel" class="tabpanel" aria-labelledby="_tabs_4_kotlin">
+<div class="listingblock secondary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">@SpringBootApplication
+class Application {
+
+    @Bean
+    fun topic() = NewTopic("topic1", 10, 1)
+
+    @Bean
+    fun runner(template: KafkaTemplate&lt;String?, String?&gt;) =
+        ApplicationRunner { template.send("topic1", "test") }
+
+    companion object {
+        @JvmStatic
+        fun main(args: Array&lt;String&gt;) = runApplication&lt;Application&gt;(*args)
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="with-java-configuration-no-spring-boot"><a class="anchor" href="#with-java-configuration-no-spring-boot"></a>With Java Configuration (No Spring Boot)</h3>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Spring for Apache Kafka is designed to be used in a Spring Application Context.
+For example, if you create the listener container yourself outside of a Spring context, not all functions will work unless you satisfy all of the <code>&#8230;&#8203;Aware</code> interfaces that the container implements.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Here is an example of an application that does not use Spring Boot; it has both a <code>Consumer</code> and <code>Producer</code>.</p>
+</div>
+<div id="_tabs_5" class="openblock tabs is-sync is-loading">
+<div class="title">Without Boot</div>
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_5_java" class="tab">
+<p>Java</p>
+</li>
+<li id="_tabs_5_kotlin" class="tab">
+<p>Kotlin</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_5_java--panel" class="tabpanel" aria-labelledby="_tabs_5_java">
+<div class="listingblock primary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class Sender {
+
+	public static void main(String[] args) {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+		context.getBean(Sender.class).send("test", 42);
+	}
+
+	private final KafkaTemplate&lt;Integer, String&gt; template;
+
+	public Sender(KafkaTemplate&lt;Integer, String&gt; template) {
+		this.template = template;
+	}
+
+	public void send(String toSend, int key) {
+		this.template.send("topic1", key, toSend);
+	}
+
+}
+
+public class Listener {
+
+    @KafkaListener(id = "listen1", topics = "topic1")
+    public void listen1(String in) {
+        System.out.println(in);
+    }
+
+}
+
+@Configuration
+@EnableKafka
+public class Config {
+
+    @Bean
+    ConcurrentKafkaListenerContainerFactory&lt;Integer, String&gt;
+                        kafkaListenerContainerFactory(ConsumerFactory&lt;Integer, String&gt; consumerFactory) {
+        ConcurrentKafkaListenerContainerFactory&lt;Integer, String&gt; factory =
+                                new ConcurrentKafkaListenerContainerFactory&lt;&gt;();
+        factory.setConsumerFactory(consumerFactory);
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory&lt;Integer, String&gt; consumerFactory() {
+        return new DefaultKafkaConsumerFactory&lt;&gt;(consumerProps());
+    }
+
+    private Map&lt;String, Object&gt; consumerProps() {
+        Map&lt;String, Object&gt; props = new HashMap&lt;&gt;();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "group");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, IntegerDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        // ...
+        return props;
+    }
+
+    @Bean
+    public Sender sender(KafkaTemplate&lt;Integer, String&gt; template) {
+        return new Sender(template);
+    }
+
+    @Bean
+    public Listener listener() {
+        return new Listener();
+    }
+
+    @Bean
+    public ProducerFactory&lt;Integer, String&gt; producerFactory() {
+        return new DefaultKafkaProducerFactory&lt;&gt;(senderProps());
+    }
+
+    private Map&lt;String, Object&gt; senderProps() {
+        Map&lt;String, Object&gt; props = new HashMap&lt;&gt;();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ProducerConfig.LINGER_MS_CONFIG, 10);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, IntegerSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        //...
+        return props;
+    }
+
+    @Bean
+    public KafkaTemplate&lt;Integer, String&gt; kafkaTemplate(ProducerFactory&lt;Integer, String&gt; producerFactory) {
+        return new KafkaTemplate&lt;Integer, String&gt;(producerFactory);
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_5_kotlin--panel" class="tabpanel" aria-labelledby="_tabs_5_kotlin">
+<div class="listingblock secondary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">class Sender(private val template: KafkaTemplate&lt;Int, String&gt;) {
+
+    fun send(toSend: String, key: Int) {
+        template.send("topic1", key, toSend)
+    }
+
+}
+
+class Listener {
+
+    @KafkaListener(id = "listen1", topics = ["topic1"])
+    fun listen1(`in`: String) {
+        println(`in`)
+    }
+
+}
+
+@Configuration
+@EnableKafka
+class Config {
+
+    @Bean
+    fun kafkaListenerContainerFactory(consumerFactory: ConsumerFactory&lt;Int, String&gt;) =
+        ConcurrentKafkaListenerContainerFactory&lt;Int, String&gt;().also { it.consumerFactory = consumerFactory }
+
+
+    @Bean
+    fun consumerFactory() = DefaultKafkaConsumerFactory&lt;Int, String&gt;(consumerProps)
+
+    val consumerProps = mapOf(
+        ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to "localhost:9092",
+        ConsumerConfig.GROUP_ID_CONFIG to "group",
+        ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to IntegerDeserializer::class.java,
+        ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
+        ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest"
+    )
+
+    @Bean
+    fun sender(template: KafkaTemplate&lt;Int, String&gt;) = Sender(template)
+
+    @Bean
+    fun listener() = Listener()
+
+    @Bean
+    fun producerFactory() = DefaultKafkaProducerFactory&lt;Int, String&gt;(senderProps)
+
+    val senderProps = mapOf(
+        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to "localhost:9092",
+        ProducerConfig.LINGER_MS_CONFIG to 10,
+        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to IntegerSerializer::class.java,
+        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java
+    )
+
+    @Bean
+    fun kafkaTemplate(producerFactory: ProducerFactory&lt;Int, String&gt;) = KafkaTemplate(producerFactory)
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see, you have to define several infrastructure beans when not using Spring Boot.</p>
+</div>
+</div>
+</div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="whats-new.html">What&#8217;s new?</a></span>
+  <span class="prev"><a href="introduction.html">Introduction</a></span>
+  <span class="next"><a href="reference.html">Reference</a></span>
 </nav>
 </article>
 </div>  </div>

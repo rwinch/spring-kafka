@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Serialization, Deserialization, and Message Conversion :: Spring Kafka</title>
+    <link rel="prev" href="pause-resume-partitions.html">
+    <link rel="next" href="headers.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.2">
+    <script>
+!function (theme, navWidth) {
+  if (theme === 'dark') document.documentElement.classList.add('dark-theme')
+  if (navWidth) document.documentElement.style.setProperty('--nav-width', `${navWidth}px`)
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'),
+  localStorage && localStorage.getItem('nav-width'))
+    </script>
+    <link rel="stylesheet" href="../_/css/site.css">
+    <link rel="stylesheet" href="../_/css/vendor/search.css">
+    <link rel="stylesheet" href="../_/css/vendor/asciidoctor-tabs.css">
+
+    <meta name="version" content="3.1.0">
+    <meta name="component" content="kafka">
+    <link rel="icon" href="../_/img/favicon.ico" type="image/vnd.microsoft.icon">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://spring.io">
+        <img
+          id="springlogo"
+          class="block"
+          src="../_/img/spring-logo.svg"
+          alt="Spring"
+        />
+      </a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Why Spring</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/why-spring"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/microservices"
+            >Microservices</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/reactive"
+            >Reactive</a>
+            <a class="navbar-item" href="https://spring.io/event-driven">Event
+              Driven</a>
+            <a class="navbar-item" href="https://spring.io/cloud">Cloud</a>
+            <a class="navbar-item" href="https://spring.io/web-applications">Web
+              Applications</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/serverless"
+            >Serverless</a>
+            <a class="navbar-item" href="https://spring.io/batch">Batch</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Learn</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://spring.io/learn">Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/quickstart"
+            >Quickstart</a>
+            <a class="navbar-item" href="https://spring.io/guides">Guides</a>
+            <a class="navbar-item" href="https://spring.io/blog">Blog</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Projects</a>
+          <div class="navbar-dropdown" style="min-width: 280px">
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-boot"
+            >Spring Boot</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-framework"
+            >Spring Framework</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud"
+            >Spring Cloud</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud-dataflow"
+            >Spring Cloud Data Flow</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-data"
+            >Spring Data</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-integration"
+            >Spring Integration</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-batch"
+            >Spring Batch</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-security"
+            >Spring Security</a>
+            <a
+              class="navbar-item navbar-item-special"
+              href="https://spring.io/projects"
+            >View all projects</a>
+            <a class="navbar-item" href="https://spring.io/tools">Spring Tools 4</a>
+            <a
+              class="navbar-item navbar-item-special-2"
+              href="https://start.spring.io"
+            >Spring Initializr
+              <svg
+                class="external-link-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+              ><polyline
+                  points="15 10.94 15 15 1 15 1 1 5.06 1"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><polyline
+                  points="8.93 1 15 1 15 7.07"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><line
+                  x1="15"
+                  y1="1"
+                  x2="8"
+                  y2="8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></line></svg></a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Academy</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.academy/courses"
+            >Courses</a>
+            <a
+              class="navbar-item"
+              href="https://spring.academy/learning-path"
+            >Get Certified</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Solutions</a>
+          <div class="navbar-dropdown lg">
+            <a class="navbar-item" href="https://spring.io/solutions">Overview</a>
+            <a class="navbar-item" href="https://spring.io/runtime">Spring Runtime</a>
+            <a class="navbar-item" href="https://spring.io/consulting">Spring Consulting</a>
+            <a class="navbar-item" href="https://spring.academy/teams">Spring Academy For Teams</a>
+            <a class="navbar-item" href="https://spring.io/security">Security Advisories</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable is-community">
+          <a class="navbar-link" href="#">Community</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/community"
+            >Overview</a>
+            <a class="navbar-item" href="https://spring.io/events">Events</a>
+            <a class="navbar-item" href="https://spring.io/team">Team</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <label class="theme-toggler">
+      <input
+        type="checkbox"
+        type="checkbox"
+        id="switch-theme-checkbox"
+        name="switch-theme-checkbox"
+      />
+      <span class="icon"><svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="moon"
+          class="svg-inline--fa fa-moon moon"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 384 512"
+        ><path
+            fill="currentColor"
+            d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
+          ></path>
+        </svg>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="sun"
+          class="svg-inline--fa fa-sun sun"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        ><path
+            fill="currentColor"
+            d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"
+          ></path>
+        </svg></span>
+      <span class="text">light</span>
+    </label>
+  </nav>
+</header>
+<script>
+!function (theme) {
+  if (theme === 'dark') {
+    document.getElementById('switch-theme-checkbox').parentElement.classList.add('active')
+  }
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'))
+</script><div class="body">
+<div class="nav-container" data-component="kafka" data-version="3.1.0">
+  <aside class="nav">
+    <div class="panels">
+      <div class="nav-panel-menu is-active" data-panel="menu">
+        <nav class="nav-menu">
+<div class="context">
+  <span class="title">Spring Kafka</span>
+  <span class="version">3.1.0-SNAPSHOT</span>
+  <button class="browse-version" id="browse-version">
+    <svg
+      height="24px"
+      id="Layer_1"
+      style="enable-background:new 0 0 512 512;"
+      version="1.1"
+      viewBox="0 0 512 512"
+      width="24px"
+      xml:space="preserve"
+    ><g><path
+          d="M256,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S273.7,224,256,224L256,224z"
+        ></path><path
+          d="M128.4,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S146,224,128.4,224L128.4,224z"
+        ></path><path
+          d="M384,224c-17.7,0-32,14.3-32,32s14.3,32,32,32s32-14.3,32-32S401.7,224,384,224L384,224z"
+        ></path></g></svg>
+  </button>
+</div><div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../whats-new.html">What&#8217;s new?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../introduction.html">Introduction</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../quick-tour.html">Quick Tour</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference.html">Reference</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../kafka.html">Using Spring for Apache Kafka</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="connecting.html">Connecting to Kafka</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="configuring-topics.html">Configuring Topics</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sending-messages.html">Sending Messages</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="receiving-messages.html">Receiving Messages</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/message-listeners.html">Message Listeners</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/message-listener-container.html">Message Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/ooo-commits.html">Manually Committing Offsets</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/listener-annotation.html"><code>@KafkaListener</code> Annotation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/listener-group-id.html">Obtaining the Consumer <code>group.id</code></a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/container-thread-naming.html">Container Thread Naming</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/listener-meta.html"><code>@KafkaListener</code> as a Meta Annotation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/class-level-kafkalistener.html"><code>@KafkaListener</code> on a Class</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/kafkalistener-attrs.html"><code>@KafkaListener</code> Attribute Modification</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/kafkalistener-lifecycle.html"><code>@KafkaListener</code> Lifecycle Management</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/validation.html"><code>@KafkaListener</code> <code>@Payload</code> Validation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/rebalance-listeners.html">Rebalancing Listeners</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/annotation-send-to.html">Forwarding Listener Results using <code>@SendTo</code></a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/filtering.html">Filtering Messages</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/retrying-deliveries.html">Retrying Deliveries</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/sequencing.html">Starting <code>@KafkaListener</code> s in Sequence</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/template-receive.html">Using <code>KafkaTemplate</code> to Receive</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="container-props.html">Listener Container Properties</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="dynamic-containers.html">Dynamically Creating Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="events.html">Application Events</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="topic/partition-initial-offset.html">Topic/Partition Initial Offset</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="seek.html">Seeking to a Specific Offset</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="container-factory.html">Container factory</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="thread-safety.html">Thread Safety</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="micrometer.html">Monitoring</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="exactly-once.html">Exactly Once Semantics</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="interceptors.html">Wiring Spring Beans into Producer/Consumer Interceptors</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="producer-interceptor-managed-in-spring.html">Producer Interceptor Managed in Spring</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="pause-resume.html">Pausing and Resuming Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="pause-resume-partitions.html">Pausing and Resuming Partitions on Listener Containers</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="serdes.html">Serialization, Deserialization, and Message Conversion</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="headers.html">Message Headers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="tombstones.html">Null Payloads and Log Compaction of 'Tombstone' Records</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="annotation-error-handling.html">Handling Exceptions</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kerberos.html">JAAS and Kerberos</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../retrytopic.html">Non-Blocking Retries</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/how-the-pattern-works.html">How The Pattern Works</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/back-off-delay-precision.html">Back Off Delay Precision</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/retry-config.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/programmatic-construction.html">Programmatic Construction</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/retry-topic-combine-blocking.html">Combining Blocking and Non-Blocking Retries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/accessing-delivery-attempts.html">Accessing Delivery Attempts</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/topic-naming.html">Topic Naming</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/multi-retry.html">Multiple Listeners, Same Topic(s)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/dlt-strategies.html">Dlt Strategies</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/retry-topic-lcf.html">Specifying a ListenerContainerFactory</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/access-topic-info-runtime.html">Accessing Topics' Information at Runtime</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/change-kboe-logging-level.html">Changing KafkaBackOffException Logging Level</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../streams.html">Apache Kafka Streams Support</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../testing.html">Testing Applications</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../tips.html">Tips, Tricks and Examples</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../other-resources.html">Other Resources</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/override-boot-dependencies.html">Override Spring Boot Dependencies</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/micrometer.html">Micrometer Observation Documentation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/native-images.html">Native Images</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/change-history.html">Change History</a>
+  </li>
+</ul>
+  </li>
+</ul>
+          <div class="toggle-sm">
+            <button id="nav-toggle-2" class="nav-toggle"></button>
+          </div>
+        </nav>
+      </div>
+      <div class="nav-collapse">
+        <button id="nav-collapse-toggle"><span></span></button>        
+      </div>
+    </div>
+    <div class="nav-resize"></div>
+  </aside>
+</div>
+<script>
+!function (sidebar) {
+  if (sidebar) {
+    document.body.classList.add('nav-sm')
+  }
+}(localStorage && localStorage.getItem('sidebar') === 'close')
+</script><main class="article">
+<div class="toolbar" role="navigation">
+  <button id="nav-toggle-1" class="nav-toggle"></button>
+<div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+</div>
+  <div class="content">
+<aside class="sidebar">
+  <div class="content">
+    <div
+      class="toc"
+      data-title="Serialization, Deserialization, and Message Conversion"
+      data-levels="2"
+    >
+      <div class="toc-menu"></div>
+    </div>
+    <div class="sidebar-links">
+        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/kafka/serdes.adoc">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+          ><path
+              d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z"
+            ></path></svg>
+          Edit this Page
+        </a>
+              <a href="https://github.com/rwinch/spring-kafka" title="Github">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="512px"
+            id="Layer_1"
+            version="1.1"
+            viewBox="0 0 512 512"
+            width="512px"
+          ><style type="text/css"><![CDATA[
+              .st0{fill-rule:evenodd;clip-rule:evenodd;} ]]></style><g><path
+                class="st0"
+                d="M256,32C132.3,32,32,134.8,32,261.7c0,101.5,64.2,187.5,153.2,217.9c11.2,2.1,15.3-5,15.3-11.1   c0-5.5-0.2-19.9-0.3-39.1c-62.3,13.9-75.5-30.8-75.5-30.8c-10.2-26.5-24.9-33.6-24.9-33.6c-20.3-14.3,1.5-14,1.5-14   c22.5,1.6,34.3,23.7,34.3,23.7c20,35.1,52.4,25,65.2,19.1c2-14.8,7.8-25,14.2-30.7c-49.7-5.8-102-25.5-102-113.5   c0-25.1,8.7-45.6,23-61.6c-2.3-5.8-10-29.2,2.2-60.8c0,0,18.8-6.2,61.6,23.5c17.9-5.1,37-7.6,56.1-7.7c19,0.1,38.2,2.6,56.1,7.7   c42.8-29.7,61.5-23.5,61.5-23.5c12.2,31.6,4.5,55,2.2,60.8c14.3,16.1,23,36.6,23,61.6c0,88.2-52.4,107.6-102.3,113.3   c8,7.1,15.2,21.1,15.2,42.5c0,30.7-0.3,55.5-0.3,63c0,6.1,4,13.3,15.4,11C415.9,449.1,480,363.1,480,261.7   C480,134.8,379.7,32,256,32z"
+              ></path></g></svg>
+          Github Project
+        </a>
+        <a href="https://stackoverflow.com/tags/spring-kafka">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path
+              d="M290.7 311L95 269.7 86.8 309l195.7 41zm51-87L188.2 95.7l-25.5 30.8 153.5 128.3zm-31.2 39.7L129.2 179l-16.7 36.5L293.7 300zM262 32l-32 24 119.3 160.3 32-24zm20.5 328h-200v39.7h200zm39.7 80H42.7V320h-40v160h359.5V320h-40z"
+            ></path></svg>
+          Stack Overflow
+        </a>
+    </div>
+  </div>
+</aside><div class="doc">
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Spring Kafka</a></li>
+    <li><a href="../reference.html">Reference</a></li>
+    <li><a href="../kafka.html">Using Spring for Apache Kafka</a></li>
+    <li><a href="serdes.html">Serialization, Deserialization, and Message Conversion</a></li>
+  </ul>
+</nav>
+<article>
+<h1 id="page-title" class="page">Serialization, Deserialization, and Message Conversion</h1>
+<div class="sect1">
+<h2 id="overview"><a class="anchor" href="#overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apache Kafka provides a high-level API for serializing and deserializing record values as well as their keys.
+It is present with the <code>org.apache.kafka.common.serialization.Serializer&lt;T&gt;</code> and
+<code>org.apache.kafka.common.serialization.Deserializer&lt;T&gt;</code> abstractions with some built-in implementations.
+Meanwhile, we can specify serializer and deserializer classes by using <code>Producer</code> or <code>Consumer</code> configuration properties.
+The following example shows how to do so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, IntegerDeserializer.class);
+props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+...
+props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, IntegerSerializer.class);
+props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more complex or particular cases, the <code>KafkaConsumer</code> (and, therefore, <code>KafkaProducer</code>) provides overloaded
+constructors to accept <code>Serializer</code> and <code>Deserializer</code> instances for <code>keys</code> and <code>values</code>, respectively.</p>
+</div>
+<div class="paragraph">
+<p>When you use this API, the <code>DefaultKafkaProducerFactory</code> and <code>DefaultKafkaConsumerFactory</code> also provide properties (through constructors or setter methods) to inject custom <code>Serializer</code> and <code>Deserializer</code> instances into the target <code>Producer</code> or <code>Consumer</code>.
+Also, you can pass in <code>Supplier&lt;Serializer&gt;</code> or <code>Supplier&lt;Deserializer&gt;</code> instances through constructors - these <code>Supplier</code> s are called on creation of each <code>Producer</code> or <code>Consumer</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="string-serde"><a class="anchor" href="#string-serde"></a>String serialization</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Since version 2.5, Spring for Apache Kafka provides <code>ToStringSerializer</code> and <code>ParseStringDeserializer</code> classes that use String representation of entities.
+They rely on methods <code>toString</code> and some <code>Function&lt;String&gt;</code> or <code>BiFunction&lt;String, Headers&gt;</code> to parse the String and populate properties of an instance.
+Usually, this would invoke some static method on the class, such as <code>parse</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ToStringSerializer&lt;Thing&gt; thingSerializer = new ToStringSerializer&lt;&gt;();
+//...
+ParseStringDeserializer&lt;Thing&gt; deserializer = new ParseStringDeserializer&lt;&gt;(Thing::parse);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, the <code>ToStringSerializer</code> is configured to convey type information about the serialized entity in the record <code>Headers</code>.
+You can disable this by setting the <code>addTypeInfo</code> property to false.
+This information can be used by <code>ParseStringDeserializer</code> on the receiving side.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ToStringSerializer.ADD_TYPE_INFO_HEADERS</code> (default <code>true</code>): You can set it to <code>false</code> to disable this feature on the <code>ToStringSerializer</code> (sets the <code>addTypeInfo</code> property).</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ParseStringDeserializer&lt;Object&gt; deserializer = new ParseStringDeserializer&lt;&gt;((str, headers) -&gt; {
+    byte[] header = headers.lastHeader(ToStringSerializer.VALUE_TYPE).value();
+    String entityType = new String(header);
+
+    if (entityType.contains("Thing")) {
+        return Thing.parse(str);
+    }
+    else {
+        // ...parsing logic
+    }
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can configure the <code>Charset</code> used to convert <code>String</code> to/from <code>byte[]</code> with the default being <code>UTF-8</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can configure the deserializer with the name of the parser method using <code>ConsumerConfig</code> properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ParseStringDeserializer.KEY_PARSER</code></p>
+</li>
+<li>
+<p><code>ParseStringDeserializer.VALUE_PARSER</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The properties must contain the fully qualified name of the class followed by the method name, separated by a period <code>.</code>.
+The method must be static and have a signature of either <code>(String, Headers)</code> or <code>(String)</code>.</p>
+</div>
+<div class="paragraph">
+<p>A <code>ToFromStringSerde</code> is also provided, for use with Kafka Streams.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="json-serde"><a class="anchor" href="#json-serde"></a>JSON</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Spring for Apache Kafka also provides <code>JsonSerializer</code> and <code>JsonDeserializer</code> implementations that are based on the
+Jackson JSON object mapper.
+The <code>JsonSerializer</code> allows writing any Java object as a JSON <code>byte[]</code>.
+The <code>JsonDeserializer</code> requires an additional <code>Class&lt;?&gt; targetType</code> argument to allow the deserialization of a consumed <code>byte[]</code> to the proper target object.
+The following example shows how to create a <code>JsonDeserializer</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">JsonDeserializer&lt;Thing&gt; thingDeserializer = new JsonDeserializer&lt;&gt;(Thing.class);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can customize both <code>JsonSerializer</code> and <code>JsonDeserializer</code> with an <code>ObjectMapper</code>.
+You can also extend them to implement some particular configuration logic in the <code>configure(Map&lt;String, ?&gt; configs, boolean isKey)</code> method.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.3, all the JSON-aware components are configured by default with a <code>JacksonUtils.enhancedObjectMapper()</code> instance, which comes with the <code>MapperFeature.DEFAULT_VIEW_INCLUSION</code> and <code>DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES</code> features disabled.
+Also such an instance is supplied with well-known modules for custom data types, such a Java time and Kotlin support.
+See <code>JacksonUtils.enhancedObjectMapper()</code> JavaDocs for more information.
+This method also registers a <code>org.springframework.kafka.support.JacksonMimeTypeModule</code> for <code>org.springframework.util.MimeType</code> objects serialization into the plain string for inter-platform compatibility over the network.
+A <code>JacksonMimeTypeModule</code> can be registered as a bean in the application context and it will be auto-configured into the <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/howto.html#howto.spring-mvc.customize-jackson-objectmapper">Spring Boot <code>ObjectMapper</code> instance</a>.</p>
+</div>
+<div class="paragraph">
+<p>Also starting with version 2.3, the <code>JsonDeserializer</code> provides <code>TypeReference</code>-based constructors for better handling of target generic container types.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.1, you can convey type information in record <code>Headers</code>, allowing the handling of multiple types.
+In addition, you can configure the serializer and deserializer by using the following Kafka properties.
+They have no effect if you have provided <code>Serializer</code> and <code>Deserializer</code> instances for <code>KafkaConsumer</code> and <code>KafkaProducer</code>, respectively.</p>
+</div>
+<div class="sect2">
+<h3 id="serdes-json-config"><a class="anchor" href="#serdes-json-config"></a>Configuration Properties</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JsonSerializer.ADD_TYPE_INFO_HEADERS</code> (default <code>true</code>): You can set it to <code>false</code> to disable this feature on the <code>JsonSerializer</code> (sets the <code>addTypeInfo</code> property).</p>
+</li>
+<li>
+<p><code>JsonSerializer.TYPE_MAPPINGS</code> (default <code>empty</code>): See <a href="#serdes-mapping-types">Mapping Types</a>.</p>
+</li>
+<li>
+<p><code>JsonDeserializer.USE_TYPE_INFO_HEADERS</code> (default <code>true</code>): You can set it to <code>false</code> to ignore headers set by the serializer.</p>
+</li>
+<li>
+<p><code>JsonDeserializer.REMOVE_TYPE_INFO_HEADERS</code> (default <code>true</code>): You can set it to <code>false</code> to retain headers set by the serializer.</p>
+</li>
+<li>
+<p><code>JsonDeserializer.KEY_DEFAULT_TYPE</code>: Fallback type for deserialization of keys if no header information is present.</p>
+</li>
+<li>
+<p><code>JsonDeserializer.VALUE_DEFAULT_TYPE</code>: Fallback type for deserialization of values if no header information is present.</p>
+</li>
+<li>
+<p><code>JsonDeserializer.TRUSTED_PACKAGES</code> (default <code>java.util</code>, <code>java.lang</code>): Comma-delimited list of package patterns allowed for deserialization.
+<code>*</code> means deserialize all.</p>
+</li>
+<li>
+<p><code>JsonDeserializer.TYPE_MAPPINGS</code> (default <code>empty</code>): See <a href="#serdes-mapping-types">Mapping Types</a>.</p>
+</li>
+<li>
+<p><code>JsonDeserializer.KEY_TYPE_METHOD</code> (default <code>empty</code>): See <a href="#serdes-type-methods">Using Methods to Determine Types</a>.</p>
+</li>
+<li>
+<p><code>JsonDeserializer.VALUE_TYPE_METHOD</code> (default <code>empty</code>): See <a href="#serdes-type-methods">Using Methods to Determine Types</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.2, the type information headers (if added by the serializer) are removed by the deserializer.
+You can revert to the previous behavior by setting the <code>removeTypeHeaders</code> property to <code>false</code>, either directly on the deserializer or with the configuration property described earlier.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="../tips.html#tip-json" class="xref page">Customizing the JsonSerializer and JsonDeserializer</a>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Starting with version 2.8, if you construct the serializer or deserializer programmatically as shown in <a href="#prog-json">Programmatic Construction</a>, the above properties will be applied by the factories, as long as you have not set any properties explicitly (using <code>set*()</code> methods or using the fluent API).
+Previously, when creating programmatically, the configuration properties were never applied; this is still the case if you explicitly set properties on the object directly.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="serdes-mapping-types"><a class="anchor" href="#serdes-mapping-types"></a>Mapping Types</h3>
+<div class="paragraph">
+<p>Starting with version 2.2, when using JSON, you can now provide type mappings by using the properties in the preceding list.
+Previously, you had to customize the type mapper within the serializer and deserializer.
+Mappings consist of a comma-delimited list of <code>token:className</code> pairs.
+On outbound, the payload&#8217;s class name is mapped to the corresponding token.
+On inbound, the token in the type header is mapped to the corresponding class name.</p>
+</div>
+<div class="paragraph">
+<p>The following example creates a set of mappings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">senderProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+senderProps.put(JsonSerializer.TYPE_MAPPINGS, "cat:com.mycat.Cat, hat:com.myhat.hat");
+...
+consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+consumerProps.put(JsonDeSerializer.TYPE_MAPPINGS, "cat:com.yourcat.Cat, hat:com.yourhat.hat");</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The corresponding objects must be compatible.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If you use <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/messaging.html#messaging.kafka">Spring Boot</a>, you can provide these properties in the <code>application.properties</code> (or yaml) file.
+The following example shows how to do so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">spring.kafka.producer.value-serializer=org.springframework.kafka.support.serializer.JsonSerializer
+spring.kafka.producer.properties.spring.json.type.mapping=cat:com.mycat.Cat,hat:com.myhat.Hat</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can perform only simple configuration with properties.
+For more advanced configuration (such as using a custom <code>ObjectMapper</code> in the serializer and deserializer), you should use the producer and consumer factory constructors that accept a pre-built serializer and deserializer.
+The following Spring Boot example overrides the default factories:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public ConsumerFactory&lt;String, Thing&gt; kafkaConsumerFactory(JsonDeserializer customValueDeserializer) {
+    Map&lt;String, Object&gt; properties = new HashMap&lt;&gt;();
+    // properties.put(..., ...)
+    // ...
+    return new DefaultKafkaConsumerFactory&lt;&gt;(properties,
+        new StringDeserializer(), customValueDeserializer);
+}
+
+@Bean
+public ProducerFactory&lt;String, Thing&gt; kafkaProducerFactory(JsonSerializer customValueSerializer) {
+
+    return new DefaultKafkaProducerFactory&lt;&gt;(properties.buildProducerProperties(),
+        new StringSerializer(), customValueSerializer);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Setters are also provided, as an alternative to using these constructors.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.2, you can explicitly configure the deserializer to use the supplied target type and ignore type information in headers by using one of the overloaded constructors that have a boolean <code>useHeadersIfPresent</code> (which is <code>true</code> by default).
+The following example shows how to do so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">DefaultKafkaConsumerFactory&lt;Integer, Cat1&gt; cf = new DefaultKafkaConsumerFactory&lt;&gt;(props,
+        new IntegerDeserializer(), new JsonDeserializer&lt;&gt;(Cat1.class, false));</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="serdes-type-methods"><a class="anchor" href="#serdes-type-methods"></a>Using Methods to Determine Types</h3>
+<div class="paragraph">
+<p>Starting with version 2.5, you can now configure the deserializer, via properties, to invoke a method to determine the target type.
+If present, this will override any of the other techniques discussed above.
+This can be useful if the data is published by an application that does not use the Spring serializer and you need to deserialize to different types depending on the data, or other headers.
+Set these properties to the method name - a fully qualified class name followed by the method name, separated by a period <code>.</code>.
+The method must be declared as <code>public static</code>, have one of three signatures <code>(String topic, byte[] data, Headers headers)</code>, <code>(byte[] data, Headers headers)</code> or <code>(byte[] data)</code> and return a Jackson <code>JavaType</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JsonDeserializer.KEY_TYPE_METHOD</code> : <code>spring.json.key.type.method</code></p>
+</li>
+<li>
+<p><code>JsonDeserializer.VALUE_TYPE_METHOD</code> : <code>spring.json.value.type.method</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can use arbitrary headers or inspect the data to determine the type.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">JavaType thing1Type = TypeFactory.defaultInstance().constructType(Thing1.class);
+
+JavaType thing2Type = TypeFactory.defaultInstance().constructType(Thing2.class);
+
+public static JavaType thingOneOrThingTwo(byte[] data, Headers headers) {
+    // {"thisIsAFieldInThing1":"value", ...
+    if (data[21] == '1') {
+        return thing1Type;
+    }
+    else {
+        return thing2Type;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more sophisticated data inspection consider using <code>JsonPath</code> or similar but, the simpler the test to determine the type, the more efficient the process will be.</p>
+</div>
+<div class="paragraph">
+<p>The following is an example of creating the deserializer programmatically (when providing the consumer factory with the deserializer in the constructor):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">JsonDeserializer&lt;Object&gt; deser = new JsonDeserializer&lt;&gt;()
+        .trustedPackages("*")
+        .typeResolver(SomeClass::thing1Thing2JavaTypeForTopic);
+
+...
+
+public static JavaType thing1Thing2JavaTypeForTopic(String topic, byte[] data, Headers headers) {
+    ...
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="prog-json"><a class="anchor" href="#prog-json"></a>Programmatic Construction</h3>
+<div class="paragraph">
+<p>When constructing the serializer/deserializer programmatically for use in the producer/consumer factory, since version 2.3, you can use the fluent API, which simplifies configuration.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public ProducerFactory&lt;MyKeyType, MyValueType&gt; pf() {
+    Map&lt;String, Object&gt; props = new HashMap&lt;&gt;();
+    // props.put(..., ...)
+    // ...
+    DefaultKafkaProducerFactory&lt;MyKeyType, MyValueType&gt; pf = new DefaultKafkaProducerFactory&lt;&gt;(props,
+        new JsonSerializer&lt;MyKeyType&gt;()
+            .forKeys()
+            .noTypeInfo(),
+        new JsonSerializer&lt;MyValueType&gt;()
+            .noTypeInfo());
+    return pf;
+}
+
+@Bean
+public ConsumerFactory&lt;MyKeyType, MyValueType&gt; cf() {
+    Map&lt;String, Object&gt; props = new HashMap&lt;&gt;();
+    // props.put(..., ...)
+    // ...
+    DefaultKafkaConsumerFactory&lt;MyKeyType, MyValueType&gt; cf = new DefaultKafkaConsumerFactory&lt;&gt;(props,
+        new JsonDeserializer&lt;&gt;(MyKeyType.class)
+            .forKeys()
+            .ignoreTypeHeaders(),
+        new JsonDeserializer&lt;&gt;(MyValueType.class)
+            .ignoreTypeHeaders());
+    return cf;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To provide type mapping programmatically, similar to <a href="#serdes-type-methods">Using Methods to Determine Types</a>, use the <code>typeFunction</code> property.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">JsonDeserializer&lt;Object&gt; deser = new JsonDeserializer&lt;&gt;()
+        .trustedPackages("*")
+        .typeFunction(MyUtils::thingOneOrThingTwo);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, as long as you don&#8217;t use the fluent API to configure properties, or set them using <code>set*()</code> methods, the factories will configure the serializer/deserializer using the configuration properties; see <a href="#serdes-json-config">Configuration Properties</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="delegating-serialization"><a class="anchor" href="#delegating-serialization"></a>Delegating Serializer and Deserializer</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="using-headers"><a class="anchor" href="#using-headers"></a>Using Headers</h3>
+<div class="paragraph">
+<p>Version 2.3 introduced the <code>DelegatingSerializer</code> and <code>DelegatingDeserializer</code>, which allow producing and consuming records with different key and/or value types.
+Producers must set a header <code>DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR</code> to a selector value that is used to select which serializer to use for the value and <code>DelegatingSerializer.KEY_SERIALIZATION_SELECTOR</code> for the key; if a match is not found, an <code>IllegalStateException</code> is thrown.</p>
+</div>
+<div class="paragraph">
+<p>For incoming records, the deserializer uses the same headers to select the deserializer to use; if a match is not found or the header is not present, the raw <code>byte[]</code> is returned.</p>
+</div>
+<div class="paragraph">
+<p>You can configure the map of selector to <code>Serializer</code> / <code>Deserializer</code> via a constructor, or you can configure it via Kafka producer/consumer properties with the keys <code>DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR_CONFIG</code> and <code>DelegatingSerializer.KEY_SERIALIZATION_SELECTOR_CONFIG</code>.
+For the serializer, the producer property can be a <code>Map&lt;String, Object&gt;</code> where the key is the selector and the value is a <code>Serializer</code> instance, a serializer <code>Class</code> or the class name.
+The property can also be a String of comma-delimited map entries, as shown below.</p>
+</div>
+<div class="paragraph">
+<p>For the deserializer, the consumer property can be a <code>Map&lt;String, Object&gt;</code> where the key is the selector and the value is a <code>Deserializer</code> instance, a deserializer <code>Class</code> or the class name.
+The property can also be a String of comma-delimited map entries, as shown below.</p>
+</div>
+<div class="paragraph">
+<p>To configure using properties, use the following syntax:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">producerProps.put(DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR_CONFIG,
+    "thing1:com.example.MyThing1Serializer, thing2:com.example.MyThing2Serializer")
+
+consumerProps.put(DelegatingDeserializer.VALUE_SERIALIZATION_SELECTOR_CONFIG,
+    "thing1:com.example.MyThing1Deserializer, thing2:com.example.MyThing2Deserializer")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Producers would then set the <code>DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR</code> header to <code>thing1</code> or <code>thing2</code>.</p>
+</div>
+<div class="paragraph">
+<p>This technique supports sending different types to the same topic (or different topics).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Starting with version 2.5.1, it is not necessary to set the selector header, if the type (key or value) is one of the standard types supported by <code>Serdes</code> (<code>Long</code>, <code>Integer</code>, etc).
+Instead, the serializer will set the header to the class name of the type.
+It is not necessary to configure serializers or deserializers for these types, they will be created (once) dynamically.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For another technique to send different types to different topics, see <a href="sending-messages.html#routing-template" class="xref page">Using <code>RoutingKafkaTemplate</code></a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="by-type"><a class="anchor" href="#by-type"></a>By Type</h3>
+<div class="paragraph">
+<p>Version 2.8 introduced the <code>DelegatingByTypeSerializer</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public ProducerFactory&lt;Integer, Object&gt; producerFactory(Map&lt;String, Object&gt; config) {
+    return new DefaultKafkaProducerFactory&lt;&gt;(config,
+            null, new DelegatingByTypeSerializer(Map.of(
+                    byte[].class, new ByteArraySerializer(),
+                    Bytes.class, new BytesSerializer(),
+                    String.class, new StringSerializer())));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.8.3, you can configure the serializer to check if the map key is assignable from the target object, useful when a delegate serializer can serialize sub classes.
+In this case, if there are amiguous matches, an ordered <code>Map</code>, such as a <code>LinkedHashMap</code> should be provided.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="by-topic"><a class="anchor" href="#by-topic"></a>By Topic</h3>
+<div class="paragraph">
+<p>Starting with version 2.8, the <code>DelegatingByTopicSerializer</code> and <code>DelegatingByTopicDeserializer</code> allow selection of a serializer/deserializer based on the topic name.
+Regex <code>Pattern</code> s are used to lookup the instance to use.
+The map can be configured using a constructor, or via properties (a comma delimited list of <code>pattern:serializer</code>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">producerConfigs.put(DelegatingByTopicSerializer.VALUE_SERIALIZATION_TOPIC_CONFIG,
+            "topic[0-4]:" + ByteArraySerializer.class.getName()
+        + ", topic[5-9]:" + StringSerializer.class.getName());
+...
+ConsumerConfigs.put(DelegatingByTopicDeserializer.VALUE_SERIALIZATION_TOPIC_CONFIG,
+            "topic[0-4]:" + ByteArrayDeserializer.class.getName()
+        + ", topic[5-9]:" + StringDeserializer.class.getName());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use <code>KEY_SERIALIZATION_TOPIC_CONFIG</code> when using this for keys.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public ProducerFactory&lt;Integer, Object&gt; producerFactory(Map&lt;String, Object&gt; config) {
+    return new DefaultKafkaProducerFactory&lt;&gt;(config,
+            null,
+            new DelegatingByTopicSerializer(Map.of(
+                    Pattern.compile("topic[0-4]"), new ByteArraySerializer(),
+                    Pattern.compile("topic[5-9]"), new StringSerializer())),
+                    new JsonSerializer&lt;Object&gt;());  // default
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can specify a default serializer/deserializer to use when there is no pattern match using <code>DelegatingByTopicSerialization.KEY_SERIALIZATION_TOPIC_DEFAULT</code> and <code>DelegatingByTopicSerialization.VALUE_SERIALIZATION_TOPIC_DEFAULT</code>.</p>
+</div>
+<div class="paragraph">
+<p>An additional property <code>DelegatingByTopicSerialization.CASE_SENSITIVE</code> (default <code>true</code>), when set to <code>false</code> makes the topic lookup case insensitive.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="retrying-deserialization"><a class="anchor" href="#retrying-deserialization"></a>Retrying Deserializer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>RetryingDeserializer</code> uses a delegate <code>Deserializer</code> and <code>RetryTemplate</code> to retry deserialization when the delegate might have transient errors, such a network issues, during deserialization.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ConsumerFactory cf = new DefaultKafkaConsumerFactory(myConsumerConfigs,
+    new RetryingDeserializer(myUnreliableKeyDeserializer, retryTemplate),
+    new RetryingDeserializer(myUnreliableValueDeserializer, retryTemplate));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Refer to the <a href="https://github.com/spring-projects/spring-retry">spring-retry</a> project for configuration of the <code>RetryTemplate</code> with a retry policy, back off policy, etc.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="messaging-message-conversion"><a class="anchor" href="#messaging-message-conversion"></a>Spring Messaging Message Conversion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Although the <code>Serializer</code> and <code>Deserializer</code> API is quite simple and flexible from the low-level Kafka <code>Consumer</code> and <code>Producer</code> perspective, you might need more flexibility at the Spring Messaging level, when using either <code>@KafkaListener</code> or <a href="https://docs.spring.io/spring-integration/docs/current/reference/html/kafka.html#kafka">Spring Integration&#8217;s Apache Kafka Support</a>.
+To let you easily convert to and from <code>org.springframework.messaging.Message</code>, Spring for Apache Kafka provides a <code>MessageConverter</code> abstraction with the <code>MessagingMessageConverter</code> implementation and its <code>JsonMessageConverter</code> (and subclasses) customization.
+You can inject the <code>MessageConverter</code> into a <code>KafkaTemplate</code> instance directly and by using <code>AbstractKafkaListenerContainerFactory</code> bean definition for the <code>@KafkaListener.containerFactory()</code> property.
+The following example shows how to do so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public KafkaListenerContainerFactory&lt;?&gt; kafkaJsonListenerContainerFactory() {
+    ConcurrentKafkaListenerContainerFactory&lt;Integer, String&gt; factory =
+        new ConcurrentKafkaListenerContainerFactory&lt;&gt;();
+    factory.setConsumerFactory(consumerFactory());
+    factory.setRecordMessageConverter(new JsonMessageConverter());
+    return factory;
+}
+...
+@KafkaListener(topics = "jsonData",
+                containerFactory = "kafkaJsonListenerContainerFactory")
+public void jsonListener(Cat cat) {
+...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When using Spring Boot, simply define the converter as a <code>@Bean</code> and Spring Boot auto configuration will wire it into the auto-configured template and container factory.</p>
+</div>
+<div class="paragraph">
+<p>When you use a <code>@KafkaListener</code>, the parameter type is provided to the message converter to assist with the conversion.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This type inference can be achieved only when the <code>@KafkaListener</code> annotation is declared at the method level.
+With a class-level <code>@KafkaListener</code>, the payload type is used to select which <code>@KafkaHandler</code> method to invoke, so it must already have been converted before the method can be chosen.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>On the consumer side, you can configure a <code>JsonMessageConverter</code>; it can handle <code>ConsumerRecord</code> values of type <code>byte[]</code>, <code>Bytes</code> and <code>String</code> so should be used in conjunction with a <code>ByteArrayDeserializer</code>, <code>BytesDeserializer</code> or <code>StringDeserializer</code>.
+(<code>byte[]</code> and <code>Bytes</code> are more efficient because they avoid an unnecessary <code>byte[]</code> to <code>String</code> conversion).
+You can also configure the specific subclass of <code>JsonMessageConverter</code> corresponding to the deserializer, if you so wish.</p>
+</div>
+<div class="paragraph">
+<p>On the producer side, when you use Spring Integration or the <code>KafkaTemplate.send(Message&lt;?&gt; message)</code> method (see <a href="sending-messages.html#kafka-template" class="xref page">Using <code>KafkaTemplate</code></a>), you must configure a message converter that is compatible with the configured Kafka <code>Serializer</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>StringJsonMessageConverter</code> with <code>StringSerializer</code></p>
+</li>
+<li>
+<p><code>BytesJsonMessageConverter</code> with <code>BytesSerializer</code></p>
+</li>
+<li>
+<p><code>ByteArrayJsonMessageConverter</code> with <code>ByteArraySerializer</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Again, using <code>byte[]</code> or <code>Bytes</code> is more efficient because they avoid a <code>String</code> to <code>byte[]</code> conversion.</p>
+</div>
+<div class="paragraph">
+<p>For convenience, starting with version 2.3, the framework also provides a <code>StringOrBytesSerializer</code> which can serialize all three value types so it can be used with any of the message converters.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.7.1, message payload conversion can be delegated to a <code>spring-messaging</code> <code>SmartMessageConverter</code>; this enables conversion, for example, to be based on the <code>MessageHeaders.CONTENT_TYPE</code> header.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>KafkaMessageConverter.fromMessage()</code> method is called for outbound conversion to a <code>ProducerRecord</code> with the message payload in the <code>ProducerRecord.value()</code> property.
+The <code>KafkaMessageConverter.toMessage()</code> method is called for inbound conversion from <code>ConsumerRecord</code> with the payload being the <code>ConsumerRecord.value()</code> property.
+The <code>SmartMessageConverter.toMessage()</code> method is called to create a new outbound <code>Message&lt;?&gt;</code> from the <code>Message</code> passed to`fromMessage()` (usually by <code>KafkaTemplate.send(Message&lt;?&gt; msg)</code>).
+Similarly, in the <code>KafkaMessageConverter.toMessage()</code> method, after the converter has created a new <code>Message&lt;?&gt;</code> from the <code>ConsumerRecord</code>, the <code>SmartMessageConverter.fromMessage()</code> method is called and then the final inbound message is created with the newly converted payload.
+In either case, if the <code>SmartMessageConverter</code> returns <code>null</code>, the original message is used.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When the default converter is used in the <code>KafkaTemplate</code> and listener container factory, you configure the <code>SmartMessageConverter</code> by calling <code>setMessagingConverter()</code> on the template and via the <code>contentMessageConverter</code> property on <code>@KafkaListener</code> methods.</p>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">template.setMessagingConverter(mySmartConverter);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@KafkaListener(id = "withSmartConverter", topics = "someTopic",
+    contentTypeConverter = "mySmartConverter")
+public void smart(Thing thing) {
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="data-projection"><a class="anchor" href="#data-projection"></a>Using Spring Data Projection Interfaces</h3>
+<div class="paragraph">
+<p>Starting with version 2.1.1, you can convert JSON to a Spring Data Projection interface instead of a concrete type.
+This allows very selective, and low-coupled bindings to data, including the lookup of values from multiple places inside the JSON document.
+For example the following interface can be defined as message payload type:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">interface SomeSample {
+
+  @JsonPath({ "$.username", "$.user.name" })
+  String getUsername();
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@KafkaListener(id="projection.listener", topics = "projection")
+public void projection(SomeSample in) {
+    String username = in.getUsername();
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Accessor methods will be used to lookup the property name as field in the received JSON document by default.
+The <code>@JsonPath</code> expression allows customization of the value lookup, and even to define multiple JSON Path expressions, to lookup values from multiple places until an expression returns an actual value.</p>
+</div>
+<div class="paragraph">
+<p>To enable this feature, use a <code>ProjectingMessageConverter</code> configured with an appropriate delegate converter (used for outbound conversion and converting non-projection interfaces).
+You must also add <code>spring-data:spring-data-commons</code> and <code>com.jayway.jsonpath:json-path</code> to the class path.</p>
+</div>
+<div class="paragraph">
+<p>When used as the parameter to a <code>@KafkaListener</code> method, the interface type is automatically passed to the converter as normal.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="error-handling-deserializer"><a class="anchor" href="#error-handling-deserializer"></a>Using <code>ErrorHandlingDeserializer</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When a deserializer fails to deserialize a message, Spring has no way to handle the problem, because it occurs before the <code>poll()</code> returns.
+To solve this problem, the <code>ErrorHandlingDeserializer</code> has been introduced.
+This deserializer delegates to a real deserializer (key or value).
+If the delegate fails to deserialize the record content, the <code>ErrorHandlingDeserializer</code> returns a <code>null</code> value and a <code>DeserializationException</code> in a header that contains the cause and the raw bytes.
+When you use a record-level <code>MessageListener</code>, if the <code>ConsumerRecord</code> contains a <code>DeserializationException</code> header for either the key or value, the container&#8217;s <code>ErrorHandler</code> is called with the failed <code>ConsumerRecord</code>.
+The record is not passed to the listener.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can configure the <code>ErrorHandlingDeserializer</code> to create a custom value by providing a <code>failedDeserializationFunction</code>, which is a <code>Function&lt;FailedDeserializationInfo, T&gt;</code>.
+This function is invoked to create an instance of <code>T</code>, which is passed to the listener in the usual fashion.
+An object of type <code>FailedDeserializationInfo</code>, which contains all the contextual information is provided to the function.
+You can find the <code>DeserializationException</code> (as a serialized Java object) in headers.
+See the <a href="https://docs.spring.io/spring-kafka/api/org/springframework/kafka/support/serializer/ErrorHandlingDeserializer.html">Javadoc</a> for the <code>ErrorHandlingDeserializer</code> for more information.</p>
+</div>
+<div class="paragraph">
+<p>You can use the <code>DefaultKafkaConsumerFactory</code> constructor that takes key and value <code>Deserializer</code> objects and wire in appropriate <code>ErrorHandlingDeserializer</code> instances that you have configured with the proper delegates.
+Alternatively, you can use consumer configuration properties (which are used by the <code>ErrorHandlingDeserializer</code>) to instantiate the delegates.
+The property names are <code>ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS</code> and <code>ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS</code>.
+The property value can be a class or class name.
+The following example shows how to set these properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">... // other props
+props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, JsonDeserializer.class);
+props.put(JsonDeserializer.KEY_DEFAULT_TYPE, "com.example.MyKey")
+props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName());
+props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.example.MyValue")
+props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.example")
+return new DefaultKafkaConsumerFactory&lt;&gt;(props);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example uses a <code>failedDeserializationFunction</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class BadFoo extends Foo {
+
+  private final FailedDeserializationInfo failedDeserializationInfo;
+
+  public BadFoo(FailedDeserializationInfo failedDeserializationInfo) {
+    this.failedDeserializationInfo = failedDeserializationInfo;
+  }
+
+  public FailedDeserializationInfo getFailedDeserializationInfo() {
+    return this.failedDeserializationInfo;
+  }
+
+}
+
+public class FailedFooProvider implements Function&lt;FailedDeserializationInfo, Foo&gt; {
+
+  @Override
+  public Foo apply(FailedDeserializationInfo info) {
+    return new BadFoo(info);
+  }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The preceding example uses the following configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">...
+consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+consumerProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
+consumerProps.put(ErrorHandlingDeserializer.VALUE_FUNCTION, FailedFooProvider.class);
+...</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If the consumer is configured with an <code>ErrorHandlingDeserializer</code> it is important to configure the <code>KafkaTemplate</code> and its producer with a serializer that can handle normal objects as well as raw <code>byte[]</code> values, which result from deserialization exceptions.
+The generic value type of the template should be <code>Object</code>.
+One technique is to use the <code>DelegatingByTypeSerializer</code>; an example follows:
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public ProducerFactory&lt;String, Object&gt; producerFactory() {
+  return new DefaultKafkaProducerFactory&lt;&gt;(producerConfiguration(), new StringSerializer(),
+    new DelegatingByTypeSerializer(Map.of(byte[].class, new ByteArraySerializer(),
+          MyNormalObject.class, new JsonSerializer&lt;Object&gt;())));
+}
+
+@Bean
+public KafkaTemplate&lt;String, Object&gt; kafkaTemplate() {
+  return new KafkaTemplate&lt;&gt;(producerFactory());
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When using an <code>ErrorHandlingDeserializer</code> with a batch listener, you must check for the deserialization exceptions in message headers.
+When used with a <code>DefaultBatchErrorHandler</code>, you can use that header to determine which record the exception failed on and communicate to the error handler via a <code>BatchListenerFailedException</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@KafkaListener(id = "test", topics = "test")
+void listen(List&lt;Thing&gt; in, @Header(KafkaHeaders.BATCH_CONVERTED_HEADERS) List&lt;Map&lt;String, Object&gt;&gt; headers) {
+    for (int i = 0; i &lt; in.size(); i++) {
+        Thing thing = in.get(i);
+        if (thing == null
+                &amp;&amp; headers.get(i).get(SerializationUtils.VALUE_DESERIALIZER_EXCEPTION_HEADER) != null) {
+            try {
+                DeserializationException deserEx = SerializationUtils.byteArrayToDeserializationException(this.logger,
+                        headers.get(i).get(SerializationUtils.VALUE_DESERIALIZER_EXCEPTION_HEADER));
+                if (deserEx != null) {
+                    logger.error(deserEx, "Record at index " + i + " could not be deserialized");
+                }
+            }
+            catch (Exception ex) {
+                logger.error(ex, "Record at index " + i + " could not be deserialized");
+            }
+            throw new BatchListenerFailedException("Deserialization", deserEx, i);
+        }
+        process(thing);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>SerializationUtils.byteArrayToDeserializationException()</code> can be used to convert the header to a <code>DeserializationException</code>.</p>
+</div>
+<div class="paragraph">
+<p>When consuming <code>List&lt;ConsumerRecord&lt;?, ?&gt;</code>, <code>SerializationUtils.getExceptionFromHeader()</code> is used instead:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@KafkaListener(id = "kgh2036", topics = "kgh2036")
+void listen(List&lt;ConsumerRecord&lt;String, Thing&gt;&gt; in) {
+    for (int i = 0; i &lt; in.size(); i++) {
+        ConsumerRecord&lt;String, Thing&gt; rec = in.get(i);
+        if (rec.value() == null) {
+            DeserializationException deserEx = SerializationUtils.getExceptionFromHeader(rec,
+                    SerializationUtils.VALUE_DESERIALIZER_EXCEPTION_HEADER, this.logger);
+            if (deserEx != null) {
+                logger.error(deserEx, "Record at offset " + rec.offset() + " could not be deserialized");
+                throw new BatchListenerFailedException("Deserialization", deserEx, i);
+            }
+        }
+        process(rec.value());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If you are also using a <code>DeadLetterPublishingRecoverer</code>, the record published for a <code>DeserializationException</code> will have a <code>record.value()</code> of type <code>byte[]</code>; this should not be serialized.
+Consider using a <code>DelegatingByTypeSerializer</code> configured to use a <code>ByteArraySerializer</code> for <code>byte[]</code> and the normal serializer (Json, Avro, etc) for all other types.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="payload-conversion-with-batch"><a class="anchor" href="#payload-conversion-with-batch"></a>Payload Conversion with Batch Listeners</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can also use a <code>JsonMessageConverter</code> within a <code>BatchMessagingMessageConverter</code> to convert batch messages when you use a batch listener container factory.
+See <a href="#">Serialization, Deserialization, and Message Conversion</a> and <a href="#messaging-message-conversion">Spring Messaging Message Conversion</a> for more information.</p>
+</div>
+<div class="paragraph">
+<p>By default, the type for the conversion is inferred from the listener argument.
+If you configure the <code>JsonMessageConverter</code> with a <code>DefaultJackson2TypeMapper</code> that has its <code>TypePrecedence</code> set to <code>TYPE_ID</code> (instead of the default <code>INFERRED</code>), the converter uses the type information in headers (if present) instead.
+This allows, for example, listener methods to be declared with interfaces instead of concrete classes.
+Also, the type converter supports mapping, so the deserialization can be to a different type than the source (as long as the data is compatible).
+This is also useful when you use <a href="receiving-messages/class-level-kafkalistener.html" class="xref page">class-level <code>@KafkaListener</code> instances</a> where the payload must have already been converted to determine which method to invoke.
+The following example creates beans that use this method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public KafkaListenerContainerFactory&lt;?&gt; kafkaListenerContainerFactory() {
+    ConcurrentKafkaListenerContainerFactory&lt;Integer, String&gt; factory =
+            new ConcurrentKafkaListenerContainerFactory&lt;&gt;();
+    factory.setConsumerFactory(consumerFactory());
+    factory.setBatchListener(true);
+    factory.setBatchMessageConverter(new BatchMessagingMessageConverter(converter()));
+    return factory;
+}
+
+@Bean
+public JsonMessageConverter converter() {
+    return new JsonMessageConverter();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that, for this to work, the method signature for the conversion target must be a container object with a single generic parameter type, such as the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@KafkaListener(topics = "blc1")
+public void listen(List&lt;Foo&gt; foos, @Header(KafkaHeaders.OFFSET) List&lt;Long&gt; offsets) {
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that you can still access the batch headers.</p>
+</div>
+<div class="paragraph">
+<p>If the batch converter has a record converter that supports it, you can also receive a list of messages where the payloads are converted according to the generic type.
+The following example shows how to do so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@KafkaListener(topics = "blc3", groupId = "blc3")
+public void listen1(List&lt;Message&lt;Foo&gt;&gt; fooMessages) {
+    ...
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="conversionservice-customization"><a class="anchor" href="#conversionservice-customization"></a><code>ConversionService</code> Customization</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Starting with version 2.1.1, the <code>org.springframework.core.convert.ConversionService</code> used by the default <code>o.s.messaging.handler.annotation.support.MessageHandlerMethodFactory</code> to resolve parameters for the invocation of a listener method is supplied with all beans that implement any of the following interfaces:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>org.springframework.core.convert.converter.Converter</code></p>
+</li>
+<li>
+<p><code>org.springframework.core.convert.converter.GenericConverter</code></p>
+</li>
+<li>
+<p><code>org.springframework.format.Formatter</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This lets you further customize listener deserialization without changing the default configuration for  <code>ConsumerFactory</code> and <code>KafkaListenerContainerFactory</code>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Setting a custom <code>MessageHandlerMethodFactory</code> on the <code>KafkaListenerEndpointRegistrar</code> through a <code>KafkaListenerConfigurer</code> bean disables this feature.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="custom-arg-resolve"><a class="anchor" href="#custom-arg-resolve"></a>Adding custom <code>HandlerMethodArgumentResolver</code> to <code>@KafkaListener</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Starting with version 2.4.2 you are able to add your own <code>HandlerMethodArgumentResolver</code> and resolve custom method parameters.
+All you need is to implement <code>KafkaListenerConfigurer</code> and use method <code>setCustomMethodArgumentResolvers()</code> from class <code>KafkaListenerEndpointRegistrar</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Configuration
+class CustomKafkaConfig implements KafkaListenerConfigurer {
+
+    @Override
+    public void configureKafkaListeners(KafkaListenerEndpointRegistrar registrar) {
+        registrar.setCustomMethodArgumentResolvers(
+            new HandlerMethodArgumentResolver() {
+
+                @Override
+                public boolean supportsParameter(MethodParameter parameter) {
+                    return CustomMethodArgument.class.isAssignableFrom(parameter.getParameterType());
+                }
+
+                @Override
+                public Object resolveArgument(MethodParameter parameter, Message&lt;?&gt; message) {
+                    return new CustomMethodArgument(
+                        message.getHeaders().get(KafkaHeaders.RECEIVED_TOPIC, String.class)
+                    );
+                }
+            }
+        );
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also completely replace the framework&#8217;s argument resolution by adding a custom <code>MessageHandlerMethodFactory</code> to the <code>KafkaListenerEndpointRegistrar</code> bean.
+If you do this, and your application needs to handle tombstone records, with a <code>null</code> <code>value()</code> (e.g. from a compacted topic), you should add a <code>KafkaNullAwarePayloadArgumentResolver</code> to the factory; it must be the last resolver because it supports all types and can match arguments without a <code>@Payload</code> annotation.
+If you are using a <code>DefaultMessageHandlerMethodFactory</code>, set this resolver as the last custom resolver; the factory will ensure that this resolver will be used before the standard <code>PayloadMethodArgumentResolver</code>, which has no knowledge of <code>KafkaNull</code> payloads.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="tombstones.html" class="xref page">Null Payloads and Log Compaction of 'Tombstone' Records</a>.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="pause-resume-partitions.html">Pausing and Resuming Partitions on Listener Containers</a></span>
+  <span class="next"><a href="headers.html">Message Headers</a></span>
+</nav>
+</article>
+</div>  </div>
+</main>
+<div class="modal micromodal-slide" id="modal-versions" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true">
+            <main class="modal__content" id="modal-versions-content">
+              <button data-micromodal-close class="modal-versions-close">
+                <svg width="28px" height="28px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><style>.cls-1h{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1h" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1h" x1="7" x2="25" y1="25" y2="7"/></g></svg>
+              </button>
+              <div class="colset">
+                <div class="col-left">
+                  <ul class="nav-versions">
+                    <li class="component is-current">
+                      <a class="title" href="../index.html">Spring Kafka</a>
+                      <ul class="versions">
+                        <li class="version is-current is-latest">
+                          <a href="../index.html">
+                            3.1.0-SNAPSHOT<span class="current">current</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-right">
+                  <ul>
+                    <li>
+                      Related Spring Documentation
+                      <ul>
+                        <li><a href="https://docs.spring.io/spring-framework/reference/">Spring Framework</a></li>
+                        <li>
+                          Spring Data
+                          <ul>
+                            <li><a href="https://docs.spring.io/spring-data-commons/reference/">Spring Data Commons</a></li>
+                            <li><a href="https://docs.spring.io/spring-data-jpa/reference/">Spring Data JPA</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="https://docs.spring.io/spring-integration/reference/">Spring Integration</a></li>
+                        <li><a href="https://docs.spring.io/spring-batch/reference/">Spring Batch</a></li>
+                        <li>
+                          <a href="https://docs.spring.io/spring-security/reference/">Spring Security</a>
+                          <ul>
+                            <li><a href="https://docs.spring.io/spring-ldap/reference/">Spring LDAP</a></li>
+                            <li><a href="https://docs.spring.io/spring-session/reference/">Spring Session</a></li>
+                            <li><a href="https://docs.spring.io/spring-authorization-server/reference/">Spring Authorization Server</a></li>
+                            <li><a href="https://docs.spring.io/spring-vault/reference/">Spring Vault</a></li>
+                            <li><a href="https://docs.spring.io/spring-security-kerberos/reference/">Spring Security Kerberos</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="https://docs.spring.io/spring-ai/reference/">Spring AI</a></li>
+                        <li><a href="https://docs.spring.io/spring-cli/reference/">Spring CLI</a></li>
+                        <li><a href="https://docs.spring.io/spring-graphql/reference/">Spring GraphQL</a></li>
+                        <li><a href="https://docs.spring.io/spring-shell/reference/">Spring Shell</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+</div>
+<footer class="footer flex">
+    <div id="spring-links flex">
+        <img id="springlogo" src="../_/img/spring-logo.svg" alt="Spring">
+        <p class="smallest antialiased">© <script>var d = new Date();
+        document.write(d.getFullYear());</script> <a href="https://www.vmware.com/">VMware</a>, Inc. or its affiliates. <a href="https://www.vmware.com/help/legal.html">Terms of Use</a> • <a href="https://www.vmware.com/help/privacy.html" rel="noopener noreferrer">Privacy</a> • <a href="https://spring.io/trademarks">Trademark Guidelines</a> <span id="thank-you-mobile">• <a href="https://spring.io/thank-you">Thank you</a></span> • <a href="https://www.vmware.com/help/privacy/california-privacy-rights.html">Your California Privacy Rights</a> • <a class="ot-sdk-show-settings">Cookie Settings</a> <span id="teconsent"></span></p>
+        <p class="smallest antialiased has-gray-text">Apache®, Apache Tomcat®, Apache Kafka®, Apache Cassandra&trade;, and Apache Geode&trade; are trademarks or registered trademarks of the Apache Software Foundation in the United States and/or other countries. Java&trade;, Java&trade; SE, Java&trade; EE, and OpenJDK&trade; are trademarks of Oracle and/or its affiliates. Kubernetes® is a registered trademark of the Linux Foundation in the United States and other countries. Linux® is the registered trademark of Linus Torvalds in the United States and other countries. Windows® and Microsoft® Azure are registered trademarks of Microsoft Corporation. “AWS” and “Amazon Web Services” are trademarks or registered trademarks of Amazon.com Inc. or its affiliates. All other trademarks and copyrights are property of their respective owners and are only mentioned for informative purposes. Other names may be trademarks of their respective owners.</p>
+    </div>
+    <div id="social-icons" class="flex jc-between">
+        <a href="https://www.youtube.com/user/SpringSourceDev" title="Youtube"><svg id="youtube-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle class="cls-1" cx="20" cy="20" r="20"/><path class="cls-2" d="M30.91,14.53a2.89,2.89,0,0,0-2-2C27.12,12,20,12,20,12s-7.12,0-8.9.47a2.9,2.9,0,0,0-2,2A30.56,30.56,0,0,0,8.63,20a30.44,30.44,0,0,0,.46,5.47,2.89,2.89,0,0,0,2,2C12.9,28,20,28,20,28s7.12,0,8.9-.47a2.87,2.87,0,0,0,2-2A30.56,30.56,0,0,0,31.37,20,28.88,28.88,0,0,0,30.91,14.53ZM17.73,23.41V16.59L23.65,20Z"/></svg></a>
+        <a href="https://github.com/spring-projects" title="Github"><svg id="github-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><path class="cls-1" d="M38,0a38,38,0,1,0,38,38A38,38,0,0,0,38,0Z"/></g><path class="cls-2" d="M38,15.59A22.95,22.95,0,0,0,30.71,60.3c1.15.21,1.57-.5,1.57-1.11s0-2,0-3.9c-6.38,1.39-7.73-3.07-7.73-3.07A6.09,6.09,0,0,0,22,48.86c-2.09-1.42.15-1.39.15-1.39a4.81,4.81,0,0,1,3.52,2.36c2,3.5,5.37,2.49,6.67,1.91a4.87,4.87,0,0,1,1.46-3.07c-5.09-.58-10.45-2.55-10.45-11.34a8.84,8.84,0,0,1,2.36-6.15,8.29,8.29,0,0,1,.23-6.07s1.92-.62,6.3,2.35a21.82,21.82,0,0,1,11.49,0c4.38-3,6.3-2.35,6.3-2.35a8.29,8.29,0,0,1,.23,6.07,8.84,8.84,0,0,1,2.36,6.15c0,8.81-5.37,10.75-10.48,11.32a5.46,5.46,0,0,1,1.56,4.25c0,3.07,0,5.54,0,6.29s.42,1.33,1.58,1.1A22.94,22.94,0,0,0,38,15.59Z"/></svg></a>
+        <a href="https://twitter.com/springcentral" title="Twitter"><svg id="twitter-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><circle class="cls-1" cx="37.97" cy="37.97" r="37.97"/><path id="Twitter-2" data-name="Twitter" class="cls-2" d="M55.2,22.73a15.43,15.43,0,0,1-4.88,1.91,7.56,7.56,0,0,0-5.61-2.49A7.78,7.78,0,0,0,37,30a7.56,7.56,0,0,0,.2,1.79,21.63,21.63,0,0,1-15.84-8.23,8,8,0,0,0,2.37,10.52,7.66,7.66,0,0,1-3.48-1v.09A7.84,7.84,0,0,0,26.45,41a7.54,7.54,0,0,1-2,.28A7.64,7.64,0,0,1,23,41.09a7.71,7.71,0,0,0,7.18,5.47,15.21,15.21,0,0,1-9.55,3.37,15.78,15.78,0,0,1-1.83-.11,21.41,21.41,0,0,0,11.78,3.54c14.13,0,21.86-12,21.86-22.42,0-.34,0-.68,0-1a15.67,15.67,0,0,0,3.83-4.08,14.9,14.9,0,0,1-4.41,1.24A7.8,7.8,0,0,0,55.2,22.73Z"/></svg></a>
+    </div>
+</footer>
+<script src="../_/js/vendor/import.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+<script async src="../_/js/vendor/asciidoctor-tabs.js" data-sync-storage-key="docs:preferred-tab"></script>
+
+<div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+            <main class="modal__content" id="modal-1-content">
+                <div id="searchbox"></div>
+                <div id="counter"></div>
+                <div class="search-by">
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.algolia.com/" aria-label="Search by Algolia">
+                        <img class="light" width="140" src="../_/img/algolia-light.svg" />
+                        <img class="dark" width="140" src="../_/img/algolia-dark.svg" />
+                    </a>
+                </div>
+                <div id="hits"></div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.17.0/dist/algoliasearch-lite.umd.js" integrity="sha256-Lf9DrpGmcRip6OQzbcL6lnvNmoZNSKpyQX5pMlwatWE=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.54.1/dist/instantsearch.production.min.js" integrity="sha256-xYsZPDeNjYNTBWLvqD2Lxe98hOxcDgOHyMPfz4tVAbk=" crossorigin="anonymous"></script>
+<script async id="search-script" src="../_/js/vendor/search.js" data-app-id="WB1FQYI187" data-api-key="9d489079e5ec46dbb238909fee5c9c29" data-index-name="springkafka" data-stylesheet="../_/css/vendor/search.css" data-page-version="3.1.0"></script>
+
+  </body>
+</html>

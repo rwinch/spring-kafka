@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sending Messages :: Spring Kafka</title>
+    <link rel="prev" href="configuring-topics.html">
+    <link rel="next" href="receiving-messages.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.2">
+    <script>
+!function (theme, navWidth) {
+  if (theme === 'dark') document.documentElement.classList.add('dark-theme')
+  if (navWidth) document.documentElement.style.setProperty('--nav-width', `${navWidth}px`)
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'),
+  localStorage && localStorage.getItem('nav-width'))
+    </script>
+    <link rel="stylesheet" href="../_/css/site.css">
+    <link rel="stylesheet" href="../_/css/vendor/search.css">
+    <link rel="stylesheet" href="../_/css/vendor/asciidoctor-tabs.css">
+
+    <meta name="version" content="3.1.0">
+    <meta name="component" content="kafka">
+    <link rel="icon" href="../_/img/favicon.ico" type="image/vnd.microsoft.icon">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://spring.io">
+        <img
+          id="springlogo"
+          class="block"
+          src="../_/img/spring-logo.svg"
+          alt="Spring"
+        />
+      </a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Why Spring</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/why-spring"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/microservices"
+            >Microservices</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/reactive"
+            >Reactive</a>
+            <a class="navbar-item" href="https://spring.io/event-driven">Event
+              Driven</a>
+            <a class="navbar-item" href="https://spring.io/cloud">Cloud</a>
+            <a class="navbar-item" href="https://spring.io/web-applications">Web
+              Applications</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/serverless"
+            >Serverless</a>
+            <a class="navbar-item" href="https://spring.io/batch">Batch</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Learn</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://spring.io/learn">Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/quickstart"
+            >Quickstart</a>
+            <a class="navbar-item" href="https://spring.io/guides">Guides</a>
+            <a class="navbar-item" href="https://spring.io/blog">Blog</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Projects</a>
+          <div class="navbar-dropdown" style="min-width: 280px">
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects"
+            >Overview</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-boot"
+            >Spring Boot</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-framework"
+            >Spring Framework</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud"
+            >Spring Cloud</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-cloud-dataflow"
+            >Spring Cloud Data Flow</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-data"
+            >Spring Data</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-integration"
+            >Spring Integration</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-batch"
+            >Spring Batch</a>
+            <a
+              class="navbar-item"
+              href="https://spring.io/projects/spring-security"
+            >Spring Security</a>
+            <a
+              class="navbar-item navbar-item-special"
+              href="https://spring.io/projects"
+            >View all projects</a>
+            <a class="navbar-item" href="https://spring.io/tools">Spring Tools 4</a>
+            <a
+              class="navbar-item navbar-item-special-2"
+              href="https://start.spring.io"
+            >Spring Initializr
+              <svg
+                class="external-link-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+              ><polyline
+                  points="15 10.94 15 15 1 15 1 1 5.06 1"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><polyline
+                  points="8.93 1 15 1 15 7.07"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></polyline><line
+                  x1="15"
+                  y1="1"
+                  x2="8"
+                  y2="8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-miterlimit="10"
+                  stroke-width="2"
+                ></line></svg></a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Academy</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.academy/courses"
+            >Courses</a>
+            <a
+              class="navbar-item"
+              href="https://spring.academy/learning-path"
+            >Get Certified</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Solutions</a>
+          <div class="navbar-dropdown lg">
+            <a class="navbar-item" href="https://spring.io/solutions">Overview</a>
+            <a class="navbar-item" href="https://spring.io/runtime">Spring Runtime</a>
+            <a class="navbar-item" href="https://spring.io/consulting">Spring Consulting</a>
+            <a class="navbar-item" href="https://spring.academy/teams">Spring Academy For Teams</a>
+            <a class="navbar-item" href="https://spring.io/security">Security Advisories</a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable is-community">
+          <a class="navbar-link" href="#">Community</a>
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item"
+              href="https://spring.io/community"
+            >Overview</a>
+            <a class="navbar-item" href="https://spring.io/events">Events</a>
+            <a class="navbar-item" href="https://spring.io/team">Team</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <label class="theme-toggler">
+      <input
+        type="checkbox"
+        type="checkbox"
+        id="switch-theme-checkbox"
+        name="switch-theme-checkbox"
+      />
+      <span class="icon"><svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="moon"
+          class="svg-inline--fa fa-moon moon"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 384 512"
+        ><path
+            fill="currentColor"
+            d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
+          ></path>
+        </svg>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="sun"
+          class="svg-inline--fa fa-sun sun"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        ><path
+            fill="currentColor"
+            d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"
+          ></path>
+        </svg></span>
+      <span class="text">light</span>
+    </label>
+  </nav>
+</header>
+<script>
+!function (theme) {
+  if (theme === 'dark') {
+    document.getElementById('switch-theme-checkbox').parentElement.classList.add('active')
+  }
+}(localStorage && localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)') && 'dark'))
+</script><div class="body">
+<div class="nav-container" data-component="kafka" data-version="3.1.0">
+  <aside class="nav">
+    <div class="panels">
+      <div class="nav-panel-menu is-active" data-panel="menu">
+        <nav class="nav-menu">
+<div class="context">
+  <span class="title">Spring Kafka</span>
+  <span class="version">3.1.0-SNAPSHOT</span>
+  <button class="browse-version" id="browse-version">
+    <svg
+      height="24px"
+      id="Layer_1"
+      style="enable-background:new 0 0 512 512;"
+      version="1.1"
+      viewBox="0 0 512 512"
+      width="24px"
+      xml:space="preserve"
+    ><g><path
+          d="M256,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S273.7,224,256,224L256,224z"
+        ></path><path
+          d="M128.4,224c-17.7,0-32,14.3-32,32s14.3,32,32,32c17.7,0,32-14.3,32-32S146,224,128.4,224L128.4,224z"
+        ></path><path
+          d="M384,224c-17.7,0-32,14.3-32,32s14.3,32,32,32s32-14.3,32-32S401.7,224,384,224L384,224z"
+        ></path></g></svg>
+  </button>
+</div><div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../whats-new.html">What&#8217;s new?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../introduction.html">Introduction</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../quick-tour.html">Quick Tour</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference.html">Reference</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../kafka.html">Using Spring for Apache Kafka</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="connecting.html">Connecting to Kafka</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="configuring-topics.html">Configuring Topics</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="sending-messages.html">Sending Messages</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="receiving-messages.html">Receiving Messages</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/message-listeners.html">Message Listeners</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/message-listener-container.html">Message Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/ooo-commits.html">Manually Committing Offsets</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/listener-annotation.html"><code>@KafkaListener</code> Annotation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/listener-group-id.html">Obtaining the Consumer <code>group.id</code></a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/container-thread-naming.html">Container Thread Naming</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/listener-meta.html"><code>@KafkaListener</code> as a Meta Annotation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/class-level-kafkalistener.html"><code>@KafkaListener</code> on a Class</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/kafkalistener-attrs.html"><code>@KafkaListener</code> Attribute Modification</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/kafkalistener-lifecycle.html"><code>@KafkaListener</code> Lifecycle Management</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/validation.html"><code>@KafkaListener</code> <code>@Payload</code> Validation</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/rebalance-listeners.html">Rebalancing Listeners</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/annotation-send-to.html">Forwarding Listener Results using <code>@SendTo</code></a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/filtering.html">Filtering Messages</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/retrying-deliveries.html">Retrying Deliveries</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/sequencing.html">Starting <code>@KafkaListener</code> s in Sequence</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="receiving-messages/template-receive.html">Using <code>KafkaTemplate</code> to Receive</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="container-props.html">Listener Container Properties</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="dynamic-containers.html">Dynamically Creating Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="events.html">Application Events</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="topic/partition-initial-offset.html">Topic/Partition Initial Offset</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="seek.html">Seeking to a Specific Offset</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="container-factory.html">Container factory</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="thread-safety.html">Thread Safety</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="micrometer.html">Monitoring</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="exactly-once.html">Exactly Once Semantics</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="interceptors.html">Wiring Spring Beans into Producer/Consumer Interceptors</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="producer-interceptor-managed-in-spring.html">Producer Interceptor Managed in Spring</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="pause-resume.html">Pausing and Resuming Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="pause-resume-partitions.html">Pausing and Resuming Partitions on Listener Containers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="serdes.html">Serialization, Deserialization, and Message Conversion</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="headers.html">Message Headers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="tombstones.html">Null Payloads and Log Compaction of 'Tombstone' Records</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="annotation-error-handling.html">Handling Exceptions</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="kerberos.html">JAAS and Kerberos</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../retrytopic.html">Non-Blocking Retries</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/how-the-pattern-works.html">How The Pattern Works</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/back-off-delay-precision.html">Back Off Delay Precision</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/retry-config.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/programmatic-construction.html">Programmatic Construction</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/retry-topic-combine-blocking.html">Combining Blocking and Non-Blocking Retries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/accessing-delivery-attempts.html">Accessing Delivery Attempts</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/topic-naming.html">Topic Naming</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/multi-retry.html">Multiple Listeners, Same Topic(s)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/dlt-strategies.html">Dlt Strategies</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/retry-topic-lcf.html">Specifying a ListenerContainerFactory</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/access-topic-info-runtime.html">Accessing Topics' Information at Runtime</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../retrytopic/change-kboe-logging-level.html">Changing KafkaBackOffException Logging Level</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../streams.html">Apache Kafka Streams Support</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../testing.html">Testing Applications</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../tips.html">Tips, Tricks and Examples</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../other-resources.html">Other Resources</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/override-boot-dependencies.html">Override Spring Boot Dependencies</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/micrometer.html">Micrometer Observation Documentation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/native-images.html">Native Images</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/change-history.html">Change History</a>
+  </li>
+</ul>
+  </li>
+</ul>
+          <div class="toggle-sm">
+            <button id="nav-toggle-2" class="nav-toggle"></button>
+          </div>
+        </nav>
+      </div>
+      <div class="nav-collapse">
+        <button id="nav-collapse-toggle"><span></span></button>        
+      </div>
+    </div>
+    <div class="nav-resize"></div>
+  </aside>
+</div>
+<script>
+!function (sidebar) {
+  if (sidebar) {
+    document.body.classList.add('nav-sm')
+  }
+}(localStorage && localStorage.getItem('sidebar') === 'close')
+</script><main class="article">
+<div class="toolbar" role="navigation">
+  <button id="nav-toggle-1" class="nav-toggle"></button>
+<div class="search">
+  <button class="DocSearch-Button search-button">
+    <svg enable-background="new 0 0 32 32" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+    </svg>
+    <span>Search</span>
+    <span class="search-key"></span>
+  </button>
+</div>
+</div>
+  <div class="content">
+<aside class="sidebar">
+  <div class="content">
+    <div
+      class="toc"
+      data-title="Sending Messages"
+      data-levels="2"
+    >
+      <div class="toc-menu"></div>
+    </div>
+    <div class="sidebar-links">
+        <a href="https://github.com/rwinch/spring-kafka/edit/main/spring-kafka-docs/src/main/antora/modules/ROOT/pages/kafka/sending-messages.adoc">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+          ><path
+              d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z"
+            ></path></svg>
+          Edit this Page
+        </a>
+              <a href="https://github.com/rwinch/spring-kafka" title="Github">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="512px"
+            id="Layer_1"
+            version="1.1"
+            viewBox="0 0 512 512"
+            width="512px"
+          ><style type="text/css"><![CDATA[
+              .st0{fill-rule:evenodd;clip-rule:evenodd;} ]]></style><g><path
+                class="st0"
+                d="M256,32C132.3,32,32,134.8,32,261.7c0,101.5,64.2,187.5,153.2,217.9c11.2,2.1,15.3-5,15.3-11.1   c0-5.5-0.2-19.9-0.3-39.1c-62.3,13.9-75.5-30.8-75.5-30.8c-10.2-26.5-24.9-33.6-24.9-33.6c-20.3-14.3,1.5-14,1.5-14   c22.5,1.6,34.3,23.7,34.3,23.7c20,35.1,52.4,25,65.2,19.1c2-14.8,7.8-25,14.2-30.7c-49.7-5.8-102-25.5-102-113.5   c0-25.1,8.7-45.6,23-61.6c-2.3-5.8-10-29.2,2.2-60.8c0,0,18.8-6.2,61.6,23.5c17.9-5.1,37-7.6,56.1-7.7c19,0.1,38.2,2.6,56.1,7.7   c42.8-29.7,61.5-23.5,61.5-23.5c12.2,31.6,4.5,55,2.2,60.8c14.3,16.1,23,36.6,23,61.6c0,88.2-52.4,107.6-102.3,113.3   c8,7.1,15.2,21.1,15.2,42.5c0,30.7-0.3,55.5-0.3,63c0,6.1,4,13.3,15.4,11C415.9,449.1,480,363.1,480,261.7   C480,134.8,379.7,32,256,32z"
+              ></path></g></svg>
+          Github Project
+        </a>
+        <a href="https://stackoverflow.com/tags/spring-kafka">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path
+              d="M290.7 311L95 269.7 86.8 309l195.7 41zm51-87L188.2 95.7l-25.5 30.8 153.5 128.3zm-31.2 39.7L129.2 179l-16.7 36.5L293.7 300zM262 32l-32 24 119.3 160.3 32-24zm20.5 328h-200v39.7h200zm39.7 80H42.7V320h-40v160h359.5V320h-40z"
+            ></path></svg>
+          Stack Overflow
+        </a>
+    </div>
+  </div>
+</aside><div class="doc">
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Spring Kafka</a></li>
+    <li><a href="../reference.html">Reference</a></li>
+    <li><a href="../kafka.html">Using Spring for Apache Kafka</a></li>
+    <li><a href="sending-messages.html">Sending Messages</a></li>
+  </ul>
+</nav>
+<article>
+<h1 id="page-title" class="page">Sending Messages</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section covers how to send messages.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="kafka-template"><a class="anchor" href="#kafka-template"></a>Using <code>KafkaTemplate</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section covers how to use <code>KafkaTemplate</code> to send messages.</p>
+</div>
+<div class="sect2">
+<h3 id="overview"><a class="anchor" href="#overview"></a>Overview</h3>
+<div class="paragraph">
+<p>The <code>KafkaTemplate</code> wraps a producer and provides convenience methods to send data to Kafka topics.
+The following listing shows the relevant methods from <code>KafkaTemplate</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">CompletableFuture&lt;SendResult&lt;K, V&gt;&gt; sendDefault(V data);
+
+CompletableFuture&lt;SendResult&lt;K, V&gt;&gt; sendDefault(K key, V data);
+
+CompletableFuture&lt;SendResult&lt;K, V&gt;&gt; sendDefault(Integer partition, K key, V data);
+
+CompletableFuture&lt;SendResult&lt;K, V&gt;&gt; sendDefault(Integer partition, Long timestamp, K key, V data);
+
+CompletableFuture&lt;SendResult&lt;K, V&gt;&gt; send(String topic, V data);
+
+CompletableFuture&lt;SendResult&lt;K, V&gt;&gt; send(String topic, K key, V data);
+
+CompletableFuture&lt;SendResult&lt;K, V&gt;&gt; send(String topic, Integer partition, K key, V data);
+
+CompletableFuture&lt;SendResult&lt;K, V&gt;&gt; send(String topic, Integer partition, Long timestamp, K key, V data);
+
+CompletableFuture&lt;SendResult&lt;K, V&gt;&gt; send(ProducerRecord&lt;K, V&gt; record);
+
+CompletableFuture&lt;SendResult&lt;K, V&gt;&gt; send(Message&lt;?&gt; message);
+
+Map&lt;MetricName, ? extends Metric&gt; metrics();
+
+List&lt;PartitionInfo&gt; partitionsFor(String topic);
+
+&lt;T&gt; T execute(ProducerCallback&lt;K, V, T&gt; callback);
+
+// Flush the producer.
+
+void flush();
+
+interface ProducerCallback&lt;K, V, T&gt; {
+
+    T doInKafka(Producer&lt;K, V&gt; producer);
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See the <a href="https://docs.spring.io/spring-kafka/api/org/springframework/kafka/core/KafkaTemplate.html">Javadoc</a> for more detail.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+In version 3.0, the methods that previously returned <code>ListenableFuture</code> have been changed to return <code>CompletableFuture</code>.
+To facilitate the migration, the 2.9 version added a method <code>usingCompletableFuture()</code> which provided the same methods with <code>CompletableFuture</code> return types; this method is no longer available.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>sendDefault</code> API requires that a default topic has been provided to the template.</p>
+</div>
+<div class="paragraph">
+<p>The API takes in a <code>timestamp</code> as a parameter and stores this timestamp in the record.
+How the user-provided timestamp is stored depends on the timestamp type configured on the Kafka topic.
+If the topic is configured to use <code>CREATE_TIME</code>, the user specified timestamp is recorded (or generated if not specified).
+If the topic is configured to use <code>LOG_APPEND_TIME</code>, the user-specified timestamp is ignored and the broker adds in the local broker time.</p>
+</div>
+<div class="paragraph">
+<p>The <code>metrics</code> and <code>partitionsFor</code> methods delegate to the same methods on the underlying <a href="https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/producer/Producer.html"><code>Producer</code></a>.
+The <code>execute</code> method provides direct access to the underlying <a href="https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/producer/Producer.html"><code>Producer</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>To use the template, you can configure a producer factory and provide it in the template&#8217;s constructor.
+The following example shows how to do so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public ProducerFactory&lt;Integer, String&gt; producerFactory() {
+    return new DefaultKafkaProducerFactory&lt;&gt;(producerConfigs());
+}
+
+@Bean
+public Map&lt;String, Object&gt; producerConfigs() {
+    Map&lt;String, Object&gt; props = new HashMap&lt;&gt;();
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, IntegerSerializer.class);
+    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+    // See https://kafka.apache.org/documentation/#producerconfigs for more properties
+    return props;
+}
+
+@Bean
+public KafkaTemplate&lt;Integer, String&gt; kafkaTemplate() {
+    return new KafkaTemplate&lt;Integer, String&gt;(producerFactory());
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.5, you can now override the factory&#8217;s <code>ProducerConfig</code> properties to create templates with different producer configurations from the same factory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public KafkaTemplate&lt;String, String&gt; stringTemplate(ProducerFactory&lt;String, String&gt; pf) {
+    return new KafkaTemplate&lt;&gt;(pf);
+}
+
+@Bean
+public KafkaTemplate&lt;String, byte[]&gt; bytesTemplate(ProducerFactory&lt;String, byte[]&gt; pf) {
+    return new KafkaTemplate&lt;&gt;(pf,
+            Collections.singletonMap(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that a bean of type <code>ProducerFactory&lt;?, ?&gt;</code> (such as the one auto-configured by Spring Boot) can be referenced with different narrowed generic types.</p>
+</div>
+<div class="paragraph">
+<p>You can also configure the template by using standard <code>&lt;bean/&gt;</code> definitions.</p>
+</div>
+<div class="paragraph">
+<p>Then, to use the template, you can invoke one of its methods.</p>
+</div>
+<div class="paragraph">
+<p>When you use the methods with a <code>Message&lt;?&gt;</code> parameter, the topic, partition, and key information is provided in a message header that includes the following items:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>KafkaHeaders.TOPIC</code></p>
+</li>
+<li>
+<p><code>KafkaHeaders.PARTITION</code></p>
+</li>
+<li>
+<p><code>KafkaHeaders.KEY</code></p>
+</li>
+<li>
+<p><code>KafkaHeaders.TIMESTAMP</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The message payload is the data.</p>
+</div>
+<div class="paragraph">
+<p>Optionally, you can configure the <code>KafkaTemplate</code> with a <code>ProducerListener</code> to get an asynchronous callback with the results of the send (success or failure) instead of waiting for the <code>Future</code> to complete.
+The following listing shows the definition of the <code>ProducerListener</code> interface:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface ProducerListener&lt;K, V&gt; {
+
+    void onSuccess(ProducerRecord&lt;K, V&gt; producerRecord, RecordMetadata recordMetadata);
+
+    void onError(ProducerRecord&lt;K, V&gt; producerRecord, RecordMetadata recordMetadata,
+            Exception exception);
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, the template is configured with a <code>LoggingProducerListener</code>, which logs errors and does nothing when the send is successful.</p>
+</div>
+<div class="paragraph">
+<p>For convenience, default method implementations are provided in case you want to implement only one of the methods.</p>
+</div>
+<div class="paragraph">
+<p>Notice that the send methods return a <code>CompletableFuture&lt;SendResult&gt;</code>.
+You can register a callback with the listener to receive the result of the send asynchronously.
+The following example shows how to do so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">CompletableFuture&lt;SendResult&lt;Integer, String&gt;&gt; future = template.send("myTopic", "something");
+future.whenComplete((result, ex) -&gt; {
+    ...
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>SendResult</code> has two properties, a <code>ProducerRecord</code> and <code>RecordMetadata</code>.
+See the Kafka API documentation for information about those objects.</p>
+</div>
+<div class="paragraph">
+<p>The <code>Throwable</code> can be cast to a <code>KafkaProducerException</code>; its <code>failedProducerRecord</code> property contains the failed record.</p>
+</div>
+<div class="paragraph">
+<p>If you wish to block the sending thread to await the result, you can invoke the future&#8217;s <code>get()</code> method; using the method with a timeout is recommended.
+If you have set a <code>linger.ms</code>, you may wish to invoke <code>flush()</code> before waiting or, for convenience, the template has a constructor with an <code>autoFlush</code> parameter that causes the template to <code>flush()</code> on each send.
+Flushing is only needed if you have set the <code>linger.ms</code> producer property and want to immediately send a partial batch.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="examples"><a class="anchor" href="#examples"></a>Examples</h3>
+<div class="paragraph">
+<p>This section shows examples of sending messages to Kafka:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. Non Blocking (Async)</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public void sendToKafka(final MyOutputData data) {
+    final ProducerRecord&lt;String, String&gt; record = createRecord(data);
+
+    CompletableFuture&lt;SendResult&lt;Integer, String&gt;&gt; future = template.send(record);
+    future.whenComplete((result, ex) -&gt; {
+        if (ex == null) {
+            handleSuccess(data);
+        }
+        else {
+            handleFailure(data, record, ex);
+        }
+    });
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Blocking (Sync)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public void sendToKafka(final MyOutputData data) {
+    final ProducerRecord&lt;String, String&gt; record = createRecord(data);
+
+    try {
+        template.send(record).get(10, TimeUnit.SECONDS);
+        handleSuccess(data);
+    }
+    catch (ExecutionException e) {
+        handleFailure(data, record, e.getCause());
+    }
+    catch (TimeoutException | InterruptedException e) {
+        handleFailure(data, record, e);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the cause of the <code>ExecutionException</code> is <code>KafkaProducerException</code> with the <code>failedProducerRecord</code> property.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="routing-template"><a class="anchor" href="#routing-template"></a>Using <code>RoutingKafkaTemplate</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Starting with version 2.5, you can use a <code>RoutingKafkaTemplate</code> to select the producer at runtime, based on the destination <code>topic</code> name.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The routing template does <strong>not</strong> support transactions, <code>execute</code>, <code>flush</code>, or <code>metrics</code> operations because the topic is not known for those operations.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The template requires a map of <code>java.util.regex.Pattern</code> to <code>ProducerFactory&lt;Object, Object&gt;</code> instances.
+This map should be ordered (e.g. a <code>LinkedHashMap</code>) because it is traversed in order; you should add more specific patterns at the beginning.</p>
+</div>
+<div class="paragraph">
+<p>The following simple Spring Boot application provides an example of how to use the same template to send to different topics, each using a different value serializer.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@SpringBootApplication
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+    @Bean
+    public RoutingKafkaTemplate routingTemplate(GenericApplicationContext context,
+            ProducerFactory&lt;Object, Object&gt; pf) {
+
+        // Clone the PF with a different Serializer, register with Spring for shutdown
+        Map&lt;String, Object&gt; configs = new HashMap&lt;&gt;(pf.getConfigurationProperties());
+        configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
+        DefaultKafkaProducerFactory&lt;Object, Object&gt; bytesPF = new DefaultKafkaProducerFactory&lt;&gt;(configs);
+        context.registerBean(DefaultKafkaProducerFactory.class, "bytesPF", bytesPF);
+
+        Map&lt;Pattern, ProducerFactory&lt;Object, Object&gt;&gt; map = new LinkedHashMap&lt;&gt;();
+        map.put(Pattern.compile("two"), bytesPF);
+        map.put(Pattern.compile(".+"), pf); // Default PF with StringSerializer
+        return new RoutingKafkaTemplate(map);
+    }
+
+    @Bean
+    public ApplicationRunner runner(RoutingKafkaTemplate routingTemplate) {
+        return args -&gt; {
+            routingTemplate.send("one", "thing1");
+            routingTemplate.send("two", "thing2".getBytes());
+        };
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The corresponding <code>@KafkaListener</code> s for this example are shown in <a href="receiving-messages/listener-annotation.html#annotation-properties" class="xref page">Annotation Properties</a>.</p>
+</div>
+<div class="paragraph">
+<p>For another technique to achieve similar results, but with the additional capability of sending different types to the same topic, see <a href="serdes.html#delegating-serialization" class="xref page">Delegating Serializer and Deserializer</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="producer-factory"><a class="anchor" href="#producer-factory"></a>Using <code>DefaultKafkaProducerFactory</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As seen in <a href="#kafka-template">Using <code>KafkaTemplate</code></a>, a <code>ProducerFactory</code> is used to create the producer.</p>
+</div>
+<div class="paragraph">
+<p>When not using <a href="transactions.html" class="xref page">Transactions</a>, by default, the <code>DefaultKafkaProducerFactory</code> creates a singleton producer used by all clients, as recommended in the <code>KafkaProducer</code> javadocs.
+However, if you call <code>flush()</code> on the template, this can cause delays for other threads using the same producer.
+Starting with version 2.3, the <code>DefaultKafkaProducerFactory</code> has a new property <code>producerPerThread</code>.
+When set to <code>true</code>, the factory will create (and cache) a separate producer for each thread, to avoid this issue.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+When <code>producerPerThread</code> is <code>true</code>, user code <strong>must</strong> call <code>closeThreadBoundProducer()</code> on the factory when the producer is no longer needed.
+This will physically close the producer and remove it from the <code>ThreadLocal</code>.
+Calling <code>reset()</code> or <code>destroy()</code> will not clean up these producers.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Also see <a href="transactions.html#tx-template-mixed" class="xref page"><code>KafkaTemplate</code> Transactional and non-Transactional Publishing</a>.</p>
+</div>
+<div class="paragraph">
+<p>When creating a <code>DefaultKafkaProducerFactory</code>, key and/or value <code>Serializer</code> classes can be picked up from configuration by calling the constructor that only takes in a Map of properties (see example in <a href="#kafka-template">Using <code>KafkaTemplate</code></a>), or <code>Serializer</code> instances may be passed to the <code>DefaultKafkaProducerFactory</code> constructor (in which case all <code>Producer</code> s share the same instances).
+Alternatively you can provide <code>Supplier&lt;Serializer&gt;</code> s (starting with version 2.3) that will be used to obtain separate <code>Serializer</code> instances for each <code>Producer</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public ProducerFactory&lt;Integer, CustomValue&gt; producerFactory() {
+    return new DefaultKafkaProducerFactory&lt;&gt;(producerConfigs(), null, () -&gt; new CustomValueSerializer());
+}
+
+@Bean
+public KafkaTemplate&lt;Integer, CustomValue&gt; kafkaTemplate() {
+    return new KafkaTemplate&lt;Integer, CustomValue&gt;(producerFactory());
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.5.10, you can now update the producer properties after the factory is created.
+This might be useful, for example, if you have to update SSL key/trust store locations after a credentials change.
+The changes will not affect existing producer instances; call <code>reset()</code> to close any existing  producers so that new producers will be created using the new properties.
+NOTE: You cannot change a transactional producer factory to non-transactional, and vice-versa.</p>
+</div>
+<div class="paragraph">
+<p>Two new methods are now provided:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">void updateConfigs(Map&lt;String, Object&gt; updates);
+
+void removeConfig(String configKey);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.8, if you provide serializers as objects (in the constructor or via the setters), the factory will invoke the <code>configure()</code> method to configure them with the configuration properties.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="replying-template"><a class="anchor" href="#replying-template"></a>Using <code>ReplyingKafkaTemplate</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Version 2.1.3 introduced a subclass of <code>KafkaTemplate</code> to provide request/reply semantics.
+The class is named <code>ReplyingKafkaTemplate</code> and has two additional methods; the following shows the method signatures:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">RequestReplyFuture&lt;K, V, R&gt; sendAndReceive(ProducerRecord&lt;K, V&gt; record);
+
+RequestReplyFuture&lt;K, V, R&gt; sendAndReceive(ProducerRecord&lt;K, V&gt; record,
+    Duration replyTimeout);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(Also see <a href="#exchanging-messages">Request/Reply with <code>Message&lt;?&gt;</code> s</a>).</p>
+</div>
+<div class="paragraph">
+<p>The result is a <code>CompletableFuture</code> that is asynchronously populated with the result (or an exception, for a timeout).
+The result also has a <code>sendFuture</code> property, which is the result of calling <code>KafkaTemplate.send()</code>.
+You can use this future to determine the result of the send operation.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+In version 3.0, the futures returned by these methods (and their <code>sendFuture</code> properties) have been changed to  <code>CompletableFuture</code> s instead of <code>ListenableFuture</code> s.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If the first method is used, or the <code>replyTimeout</code> argument is <code>null</code>, the template&#8217;s <code>defaultReplyTimeout</code> property is used (5 seconds by default).</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.8.8, the template has a new method <code>waitForAssignment</code>.
+This is useful if the reply container is configured with <code>auto.offset.reset=latest</code> to avoid sending a request and a reply sent before the container is initialized.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+When using manual partition assignment (no group management), the duration for the wait must be greater than the container&#8217;s <code>pollTimeout</code> property because the notification will not be sent until after the first poll is completed.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following Spring Boot application shows an example of how to use the feature:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@SpringBootApplication
+public class KRequestingApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(KRequestingApplication.class, args).close();
+    }
+
+    @Bean
+    public ApplicationRunner runner(ReplyingKafkaTemplate&lt;String, String, String&gt; template) {
+        return args -&gt; {
+            if (!template.waitForAssignment(Duration.ofSeconds(10))) {
+                throw new IllegalStateException("Reply container did not initialize");
+            }
+            ProducerRecord&lt;String, String&gt; record = new ProducerRecord&lt;&gt;("kRequests", "foo");
+            RequestReplyFuture&lt;String, String, String&gt; replyFuture = template.sendAndReceive(record);
+            SendResult&lt;String, String&gt; sendResult = replyFuture.getSendFuture().get(10, TimeUnit.SECONDS);
+            System.out.println("Sent ok: " + sendResult.getRecordMetadata());
+            ConsumerRecord&lt;String, String&gt; consumerRecord = replyFuture.get(10, TimeUnit.SECONDS);
+            System.out.println("Return value: " + consumerRecord.value());
+        };
+    }
+
+    @Bean
+    public ReplyingKafkaTemplate&lt;String, String, String&gt; replyingTemplate(
+            ProducerFactory&lt;String, String&gt; pf,
+            ConcurrentMessageListenerContainer&lt;String, String&gt; repliesContainer) {
+
+        return new ReplyingKafkaTemplate&lt;&gt;(pf, repliesContainer);
+    }
+
+    @Bean
+    public ConcurrentMessageListenerContainer&lt;String, String&gt; repliesContainer(
+            ConcurrentKafkaListenerContainerFactory&lt;String, String&gt; containerFactory) {
+
+        ConcurrentMessageListenerContainer&lt;String, String&gt; repliesContainer =
+                containerFactory.createContainer("kReplies");
+        repliesContainer.getContainerProperties().setGroupId("repliesGroup");
+        repliesContainer.setAutoStartup(false);
+        return repliesContainer;
+    }
+
+    @Bean
+    public NewTopic kRequests() {
+        return TopicBuilder.name("kRequests")
+            .partitions(10)
+            .replicas(2)
+            .build();
+    }
+
+    @Bean
+    public NewTopic kReplies() {
+        return TopicBuilder.name("kReplies")
+            .partitions(10)
+            .replicas(2)
+            .build();
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that we can use Boot&#8217;s auto-configured container factory to create the reply container.</p>
+</div>
+<div class="paragraph">
+<p>If a non-trivial deserializer is being used for replies, consider using an <a href="serdes.html#error-handling-deserializer" class="xref page"><code>ErrorHandlingDeserializer</code></a> that delegates to your configured deserializer.
+When so configured, the <code>RequestReplyFuture</code> will be completed exceptionally and you can catch the <code>ExecutionException</code>, with the <code>DeserializationException</code> in its <code>cause</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.6.7, in addition to detecting <code>DeserializationException</code> s, the template will call the <code>replyErrorChecker</code> function, if provided.
+If it returns an exception, the future will be completed exceptionally.</p>
+</div>
+<div class="paragraph">
+<p>Here is an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">template.setReplyErrorChecker(record -&gt; {
+    Header error = record.headers().lastHeader("serverSentAnError");
+    if (error != null) {
+        return new MyException(new String(error.value()));
+    }
+    else {
+        return null;
+    }
+});
+
+...
+
+RequestReplyFuture&lt;Integer, String, String&gt; future = template.sendAndReceive(record);
+try {
+    future.getSendFuture().get(10, TimeUnit.SECONDS); // send ok
+    ConsumerRecord&lt;Integer, String&gt; consumerRecord = future.get(10, TimeUnit.SECONDS);
+    ...
+}
+catch (InterruptedException e) {
+    ...
+}
+catch (ExecutionException e) {
+    if (e.getCause instanceof MyException) {
+        ...
+    }
+}
+catch (TimeoutException e) {
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The template sets a header (named <code>KafkaHeaders.CORRELATION_ID</code> by default), which must be echoed back by the server side.</p>
+</div>
+<div class="paragraph">
+<p>In this case, the following <code>@KafkaListener</code> application responds:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@SpringBootApplication
+public class KReplyingApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(KReplyingApplication.class, args);
+    }
+
+    @KafkaListener(id="server", topics = "kRequests")
+    @SendTo // use default replyTo expression
+    public String listen(String in) {
+        System.out.println("Server received: " + in);
+        return in.toUpperCase();
+    }
+
+    @Bean
+    public NewTopic kRequests() {
+        return TopicBuilder.name("kRequests")
+            .partitions(10)
+            .replicas(2)
+            .build();
+    }
+
+    @Bean // not required if Jackson is on the classpath
+    public MessagingMessageConverter simpleMapperConverter() {
+        MessagingMessageConverter messagingMessageConverter = new MessagingMessageConverter();
+        messagingMessageConverter.setHeaderMapper(new SimpleKafkaHeaderMapper());
+        return messagingMessageConverter;
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>@KafkaListener</code> infrastructure echoes the correlation ID and determines the reply topic.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="receiving-messages/annotation-send-to.html" class="xref page">Forwarding Listener Results using <code>@SendTo</code></a> for more information about sending replies.
+The template uses the default header <code>KafKaHeaders.REPLY_TOPIC</code> to indicate the topic to which the reply goes.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.2, the template tries to detect the reply topic or partition from the configured reply container.
+If the container is configured to listen to a single topic or a single <code>TopicPartitionOffset</code>, it is used to set the reply headers.
+If the container is configured otherwise, the user must set up the reply headers.
+In this case, an <code>INFO</code> log message is written during initialization.
+The following example uses <code>KafkaHeaders.REPLY_TOPIC</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">record.headers().add(new RecordHeader(KafkaHeaders.REPLY_TOPIC, "kReplies".getBytes()));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you configure with a single reply <code>TopicPartitionOffset</code>, you can use the same reply topic for multiple templates, as long as each instance listens on a different partition.
+When configuring with a single reply topic, each instance must use a different <code>group.id</code>.
+In this case, all instances receive each reply, but only the instance that sent the request finds the correlation ID.
+This may be useful for auto-scaling, but with the overhead of additional network traffic and the small cost of discarding each unwanted reply.
+When you use this setting, we recommend that you set the template&#8217;s <code>sharedReplyTopic</code> to <code>true</code>, which reduces the logging level of unexpected replies to DEBUG instead of the default ERROR.</p>
+</div>
+<div class="paragraph">
+<p>The following is an example of configuring the reply container to use the same shared reply topic:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+public ConcurrentMessageListenerContainer&lt;String, String&gt; replyContainer(
+        ConcurrentKafkaListenerContainerFactory&lt;String, String&gt; containerFactory) {
+
+    ConcurrentMessageListenerContainer&lt;String, String&gt; container = containerFactory.createContainer("topic2");
+    container.getContainerProperties().setGroupId(UUID.randomUUID().toString()); // unique
+    Properties props = new Properties();
+    props.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest"); // so the new group doesn't get old replies
+    container.getContainerProperties().setKafkaConsumerProperties(props);
+    return container;
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If you have multiple client instances and you do not configure them as discussed in the preceding paragraph, each instance needs a dedicated reply topic.
+An alternative is to set the <code>KafkaHeaders.REPLY_PARTITION</code> and use a dedicated partition for each instance.
+The <code>Header</code> contains a four-byte int (big-endian).
+The server must use this header to route the reply to the correct partition (<code>@KafkaListener</code> does this).
+In this case, though, the reply container must not use Kafka&#8217;s group management feature and must be configured to listen on a fixed partition (by using a <code>TopicPartitionOffset</code> in its <code>ContainerProperties</code> constructor).
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>DefaultKafkaHeaderMapper</code> requires Jackson to be on the classpath (for the <code>@KafkaListener</code>).
+If it is not available, the message converter has no header mapper, so you must configure a <code>MessagingMessageConverter</code> with a <code>SimpleKafkaHeaderMapper</code>, as shown earlier.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>By default, 3 headers are used:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>KafkaHeaders.CORRELATION_ID</code> - used to correlate the reply to a request</p>
+</li>
+<li>
+<p><code>KafkaHeaders.REPLY_TOPIC</code> - used to tell the server where to reply</p>
+</li>
+<li>
+<p><code>KafkaHeaders.REPLY_PARTITION</code> - (optional) used to tell the server which partition to reply to</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These header names are used by the <code>@KafkaListener</code> infrastructure to route the reply.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.3, you can customize the header names - the template has 3 properties <code>correlationHeaderName</code>, <code>replyTopicHeaderName</code>, and <code>replyPartitionHeaderName</code>.
+This is useful if your server is not a Spring application (or does not use the <code>@KafkaListener</code>).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Conversely, if the requesting application is not a spring application and puts correlation information in a different header, starting with version 3.0, you can configure a custom <code>correlationHeaderName</code> on the listener container factory and that header will be echoed back.
+Previously, the listener had to echo custom correlation headers.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="exchanging-messages"><a class="anchor" href="#exchanging-messages"></a>Request/Reply with <code>Message&lt;?&gt;</code> s</h3>
+<div class="paragraph">
+<p>Version 2.7 added methods to the <code>ReplyingKafkaTemplate</code> to send and receive <code>spring-messaging</code> 's <code>Message&lt;?&gt;</code> abstraction:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">RequestReplyMessageFuture&lt;K, V&gt; sendAndReceive(Message&lt;?&gt; message);
+
+&lt;P&gt; RequestReplyTypedMessageFuture&lt;K, V, P&gt; sendAndReceive(Message&lt;?&gt; message,
+        ParameterizedTypeReference&lt;P&gt; returnType);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These will use the template&#8217;s default <code>replyTimeout</code>, there are also overloaded versions that can take a timeout in the method call.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+In version 3.0, the futures returned by these methods (and their <code>sendFuture</code> properties) have been changed to  <code>CompletableFuture</code> s instead of <code>ListenableFuture</code> s.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Use the first method if the consumer&#8217;s <code>Deserializer</code> or the template&#8217;s <code>MessageConverter</code> can convert the payload without any additional information, either via configuration or type metadata in the reply message.</p>
+</div>
+<div class="paragraph">
+<p>Use the second method if you need to provide type information for the return type, to assist the message converter.
+This also allows the same template to receive different types, even if there is no type metadata in the replies, such as when the server side is not a Spring application.
+The following is an example of the latter:</p>
+</div>
+<div id="_tabs_1" class="openblock tabs is-sync is-loading">
+<div class="title">Template Bean</div>
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_1_java" class="tab">
+<p>Java</p>
+</li>
+<li id="_tabs_1_kotlin" class="tab">
+<p>Kotlin</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_1_java--panel" class="tabpanel" aria-labelledby="_tabs_1_java">
+<div class="listingblock primary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Bean
+ReplyingKafkaTemplate&lt;String, String, String&gt; template(
+        ProducerFactory&lt;String, String&gt; pf,
+        ConcurrentKafkaListenerContainerFactory&lt;String, String&gt; factory) {
+
+    ConcurrentMessageListenerContainer&lt;String, String&gt; replyContainer =
+            factory.createContainer("replies");
+    replyContainer.getContainerProperties().setGroupId("request.replies");
+    ReplyingKafkaTemplate&lt;String, String, String&gt; template =
+            new ReplyingKafkaTemplate&lt;&gt;(pf, replyContainer);
+    template.setMessageConverter(new ByteArrayJsonMessageConverter());
+    template.setDefaultTopic("requests");
+    return template;
+}</code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_1_kotlin--panel" class="tabpanel" aria-labelledby="_tabs_1_kotlin">
+<div class="listingblock secondary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">@Bean
+fun template(
+    pf: ProducerFactory&lt;String?, String&gt;?,
+    factory: ConcurrentKafkaListenerContainerFactory&lt;String?, String?&gt;
+): ReplyingKafkaTemplate&lt;String?, String, String?&gt; {
+    val replyContainer = factory.createContainer("replies")
+    replyContainer.containerProperties.groupId = "request.replies"
+    val template = ReplyingKafkaTemplate(pf, replyContainer)
+    template.messageConverter = ByteArrayJsonMessageConverter()
+    template.defaultTopic = "requests"
+    return template
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="_tabs_2" class="openblock tabs is-sync is-loading">
+<div class="title">Using the template</div>
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_2_java" class="tab">
+<p>Java</p>
+</li>
+<li id="_tabs_2_kotlin" class="tab">
+<p>Kotlin</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_2_java--panel" class="tabpanel" aria-labelledby="_tabs_2_java">
+<div class="listingblock primary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">RequestReplyTypedMessageFuture&lt;String, String, Thing&gt; future1 =
+        template.sendAndReceive(MessageBuilder.withPayload("getAThing").build(),
+                new ParameterizedTypeReference&lt;Thing&gt;() { });
+log.info(future1.getSendFuture().get(10, TimeUnit.SECONDS).getRecordMetadata().toString());
+Thing thing = future1.get(10, TimeUnit.SECONDS).getPayload();
+log.info(thing.toString());
+
+RequestReplyTypedMessageFuture&lt;String, String, List&lt;Thing&gt;&gt; future2 =
+        template.sendAndReceive(MessageBuilder.withPayload("getThings").build(),
+                new ParameterizedTypeReference&lt;List&lt;Thing&gt;&gt;() { });
+log.info(future2.getSendFuture().get(10, TimeUnit.SECONDS).getRecordMetadata().toString());
+List&lt;Thing&gt; things = future2.get(10, TimeUnit.SECONDS).getPayload();
+things.forEach(thing1 -&gt; log.info(thing1.toString()));</code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_2_kotlin--panel" class="tabpanel" aria-labelledby="_tabs_2_kotlin">
+<div class="listingblock secondary">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">val future1: RequestReplyTypedMessageFuture&lt;String?, String?, Thing?&gt;? =
+    template.sendAndReceive(MessageBuilder.withPayload("getAThing").build(),
+        object : ParameterizedTypeReference&lt;Thing?&gt;() {})
+log.info(future1?.sendFuture?.get(10, TimeUnit.SECONDS)?.recordMetadata?.toString())
+val thing = future1?.get(10, TimeUnit.SECONDS)?.payload
+log.info(thing.toString())
+
+val future2: RequestReplyTypedMessageFuture&lt;String?, String?, List&lt;Thing?&gt;?&gt;? =
+    template.sendAndReceive(MessageBuilder.withPayload("getThings").build(),
+        object : ParameterizedTypeReference&lt;List&lt;Thing?&gt;?&gt;() {})
+log.info(future2?.sendFuture?.get(10, TimeUnit.SECONDS)?.recordMetadata.toString())
+val things = future2?.get(10, TimeUnit.SECONDS)?.payload
+things?.forEach(Consumer { thing1: Thing? -&gt; log.info(thing1.toString()) })</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="reply-message"><a class="anchor" href="#reply-message"></a>Reply Type Message&lt;?&gt;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When the <code>@KafkaListener</code> returns a <code>Message&lt;?&gt;</code>, with versions before 2.5, it was necessary to populate the reply topic and correlation id headers.
+In this example, we use the reply topic header from the request:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@KafkaListener(id = "requestor", topics = "request")
+@SendTo
+public Message&lt;?&gt; messageReturn(String in) {
+    return MessageBuilder.withPayload(in.toUpperCase())
+            .setHeader(KafkaHeaders.TOPIC, replyTo)
+            .setHeader(KafkaHeaders.KEY, 42)
+            .setHeader(KafkaHeaders.CORRELATION_ID, correlation)
+            .build();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This also shows how to set a key on the reply record.</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.5, the framework will detect if these headers are missing and populate them with the topic - either the topic determined from the <code>@SendTo</code> value or the incoming <code>KafkaHeaders.REPLY_TOPIC</code> header (if present).
+It will also echo the incoming <code>KafkaHeaders.CORRELATION_ID</code> and <code>KafkaHeaders.REPLY_PARTITION</code>, if present.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@KafkaListener(id = "requestor", topics = "request")
+@SendTo  // default REPLY_TOPIC header
+public Message&lt;?&gt; messageReturn(String in) {
+    return MessageBuilder.withPayload(in.toUpperCase())
+            .setHeader(KafkaHeaders.KEY, 42)
+            .build();
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="aggregating-request-reply"><a class="anchor" href="#aggregating-request-reply"></a>Aggregating Multiple Replies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The template in <a href="#replying-template">Using <code>ReplyingKafkaTemplate</code></a> is strictly for a single request/reply scenario.
+For cases where multiple receivers of a single message return a reply, you can use the <code>AggregatingReplyingKafkaTemplate</code>.
+This is an implementation of the client-side of the <a href="https://www.enterpriseintegrationpatterns.com/patterns/messaging/BroadcastAggregate.html">Scatter-Gather Enterprise Integration Pattern</a>.</p>
+</div>
+<div class="paragraph">
+<p>Like the <code>ReplyingKafkaTemplate</code>, the <code>AggregatingReplyingKafkaTemplate</code> constructor takes a producer factory and a listener container to receive the replies; it has a third parameter <code>BiPredicate&lt;List&lt;ConsumerRecord&lt;K, R&gt;&gt;, Boolean&gt; releaseStrategy</code> which is consulted each time a reply is received; when the predicate returns <code>true</code>, the collection of <code>ConsumerRecord</code> s is used to complete the <code>Future</code> returned by the <code>sendAndReceive</code> method.</p>
+</div>
+<div class="paragraph">
+<p>There is an additional property <code>returnPartialOnTimeout</code> (default false).
+When this is set to <code>true</code>, instead of completing the future with a <code>KafkaReplyTimeoutException</code>, a partial result completes the future normally (as long as at least one reply record has been received).</p>
+</div>
+<div class="paragraph">
+<p>Starting with version 2.3.5, the predicate is also called after a timeout (if <code>returnPartialOnTimeout</code> is <code>true</code>).
+The first argument is the current list of records; the second is <code>true</code> if this call is due to a timeout.
+The predicate can modify the list of records.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">AggregatingReplyingKafkaTemplate&lt;Integer, String, String&gt; template =
+        new AggregatingReplyingKafkaTemplate&lt;&gt;(producerFactory, container,
+                        coll -&gt; coll.size() == releaseSize);
+...
+RequestReplyFuture&lt;Integer, String, Collection&lt;ConsumerRecord&lt;Integer, String&gt;&gt;&gt; future =
+        template.sendAndReceive(record);
+future.getSendFuture().get(10, TimeUnit.SECONDS); // send ok
+ConsumerRecord&lt;Integer, Collection&lt;ConsumerRecord&lt;Integer, String&gt;&gt;&gt; consumerRecord =
+        future.get(30, TimeUnit.SECONDS);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice that the return type is a <code>ConsumerRecord</code> with a value that is a collection of <code>ConsumerRecord</code> s.
+The "outer" <code>ConsumerRecord</code> is not a "real" record, it is synthesized by the template, as a holder for the actual reply records received for the request.
+When a normal release occurs (release strategy returns true), the topic is set to <code>aggregatedResults</code>; if <code>returnPartialOnTimeout</code> is true, and timeout occurs (and at least one reply record has been received), the topic is set to <code>partialResultsAfterTimeout</code>.
+The template provides constant static variables for these "topic" names:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">/**
+ * Pseudo topic name for the "outer" {@link ConsumerRecords} that has the aggregated
+ * results in its value after a normal release by the release strategy.
+ */
+public static final String AGGREGATED_RESULTS_TOPIC = "aggregatedResults";
+
+/**
+ * Pseudo topic name for the "outer" {@link ConsumerRecords} that has the aggregated
+ * results in its value after a timeout.
+ */
+public static final String PARTIAL_RESULTS_AFTER_TIMEOUT_TOPIC = "partialResultsAfterTimeout";</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The real <code>ConsumerRecord</code> s in the <code>Collection</code> contain the actual topic(s) from which the replies are received.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The listener container for the replies MUST be configured with <code>AckMode.MANUAL</code> or <code>AckMode.MANUAL_IMMEDIATE</code>; the consumer property <code>enable.auto.commit</code> must be <code>false</code> (the default since version 2.3).
+To avoid any possibility of losing messages, the template only commits offsets when there are zero requests outstanding, i.e. when the last outstanding request is released by the release strategy.
+After a rebalance, it is possible for duplicate reply deliveries; these will be ignored for any in-flight requests; you may see error log messages when duplicate replies are received for already released replies.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you use an <a href="serdes.html#error-handling-deserializer" class="xref page"><code>ErrorHandlingDeserializer</code></a> with this aggregating template, the framework will not automatically detect <code>DeserializationException</code> s.
+Instead, the record (with a <code>null</code> value) will be returned intact, with the deserialization exception(s) in headers.
+It is recommended that applications call the utility method <code>ReplyingKafkaTemplate.checkDeserialization()</code> method to determine if a deserialization exception occurred.
+See its javadocs for more information.
+The <code>replyErrorChecker</code> is also not called for this aggregating template; you should perform the checks on each element of the reply.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="configuring-topics.html">Configuring Topics</a></span>
+  <span class="next"><a href="receiving-messages.html">Receiving Messages</a></span>
+</nav>
+</article>
+</div>  </div>
+</main>
+<div class="modal micromodal-slide" id="modal-versions" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true">
+            <main class="modal__content" id="modal-versions-content">
+              <button data-micromodal-close class="modal-versions-close">
+                <svg width="28px" height="28px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><style>.cls-1h{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1h" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1h" x1="7" x2="25" y1="25" y2="7"/></g></svg>
+              </button>
+              <div class="colset">
+                <div class="col-left">
+                  <ul class="nav-versions">
+                    <li class="component is-current">
+                      <a class="title" href="../index.html">Spring Kafka</a>
+                      <ul class="versions">
+                        <li class="version is-current is-latest">
+                          <a href="../index.html">
+                            3.1.0-SNAPSHOT<span class="current">current</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-right">
+                  <ul>
+                    <li>
+                      Related Spring Documentation
+                      <ul>
+                        <li><a href="https://docs.spring.io/spring-framework/reference/">Spring Framework</a></li>
+                        <li>
+                          Spring Data
+                          <ul>
+                            <li><a href="https://docs.spring.io/spring-data-commons/reference/">Spring Data Commons</a></li>
+                            <li><a href="https://docs.spring.io/spring-data-jpa/reference/">Spring Data JPA</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="https://docs.spring.io/spring-integration/reference/">Spring Integration</a></li>
+                        <li><a href="https://docs.spring.io/spring-batch/reference/">Spring Batch</a></li>
+                        <li>
+                          <a href="https://docs.spring.io/spring-security/reference/">Spring Security</a>
+                          <ul>
+                            <li><a href="https://docs.spring.io/spring-ldap/reference/">Spring LDAP</a></li>
+                            <li><a href="https://docs.spring.io/spring-session/reference/">Spring Session</a></li>
+                            <li><a href="https://docs.spring.io/spring-authorization-server/reference/">Spring Authorization Server</a></li>
+                            <li><a href="https://docs.spring.io/spring-vault/reference/">Spring Vault</a></li>
+                            <li><a href="https://docs.spring.io/spring-security-kerberos/reference/">Spring Security Kerberos</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="https://docs.spring.io/spring-ai/reference/">Spring AI</a></li>
+                        <li><a href="https://docs.spring.io/spring-cli/reference/">Spring CLI</a></li>
+                        <li><a href="https://docs.spring.io/spring-graphql/reference/">Spring GraphQL</a></li>
+                        <li><a href="https://docs.spring.io/spring-shell/reference/">Spring Shell</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+</div>
+<footer class="footer flex">
+    <div id="spring-links flex">
+        <img id="springlogo" src="../_/img/spring-logo.svg" alt="Spring">
+        <p class="smallest antialiased">© <script>var d = new Date();
+        document.write(d.getFullYear());</script> <a href="https://www.vmware.com/">VMware</a>, Inc. or its affiliates. <a href="https://www.vmware.com/help/legal.html">Terms of Use</a> • <a href="https://www.vmware.com/help/privacy.html" rel="noopener noreferrer">Privacy</a> • <a href="https://spring.io/trademarks">Trademark Guidelines</a> <span id="thank-you-mobile">• <a href="https://spring.io/thank-you">Thank you</a></span> • <a href="https://www.vmware.com/help/privacy/california-privacy-rights.html">Your California Privacy Rights</a> • <a class="ot-sdk-show-settings">Cookie Settings</a> <span id="teconsent"></span></p>
+        <p class="smallest antialiased has-gray-text">Apache®, Apache Tomcat®, Apache Kafka®, Apache Cassandra&trade;, and Apache Geode&trade; are trademarks or registered trademarks of the Apache Software Foundation in the United States and/or other countries. Java&trade;, Java&trade; SE, Java&trade; EE, and OpenJDK&trade; are trademarks of Oracle and/or its affiliates. Kubernetes® is a registered trademark of the Linux Foundation in the United States and other countries. Linux® is the registered trademark of Linus Torvalds in the United States and other countries. Windows® and Microsoft® Azure are registered trademarks of Microsoft Corporation. “AWS” and “Amazon Web Services” are trademarks or registered trademarks of Amazon.com Inc. or its affiliates. All other trademarks and copyrights are property of their respective owners and are only mentioned for informative purposes. Other names may be trademarks of their respective owners.</p>
+    </div>
+    <div id="social-icons" class="flex jc-between">
+        <a href="https://www.youtube.com/user/SpringSourceDev" title="Youtube"><svg id="youtube-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle class="cls-1" cx="20" cy="20" r="20"/><path class="cls-2" d="M30.91,14.53a2.89,2.89,0,0,0-2-2C27.12,12,20,12,20,12s-7.12,0-8.9.47a2.9,2.9,0,0,0-2,2A30.56,30.56,0,0,0,8.63,20a30.44,30.44,0,0,0,.46,5.47,2.89,2.89,0,0,0,2,2C12.9,28,20,28,20,28s7.12,0,8.9-.47a2.87,2.87,0,0,0,2-2A30.56,30.56,0,0,0,31.37,20,28.88,28.88,0,0,0,30.91,14.53ZM17.73,23.41V16.59L23.65,20Z"/></svg></a>
+        <a href="https://github.com/spring-projects" title="Github"><svg id="github-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><path class="cls-1" d="M38,0a38,38,0,1,0,38,38A38,38,0,0,0,38,0Z"/></g><path class="cls-2" d="M38,15.59A22.95,22.95,0,0,0,30.71,60.3c1.15.21,1.57-.5,1.57-1.11s0-2,0-3.9c-6.38,1.39-7.73-3.07-7.73-3.07A6.09,6.09,0,0,0,22,48.86c-2.09-1.42.15-1.39.15-1.39a4.81,4.81,0,0,1,3.52,2.36c2,3.5,5.37,2.49,6.67,1.91a4.87,4.87,0,0,1,1.46-3.07c-5.09-.58-10.45-2.55-10.45-11.34a8.84,8.84,0,0,1,2.36-6.15,8.29,8.29,0,0,1,.23-6.07s1.92-.62,6.3,2.35a21.82,21.82,0,0,1,11.49,0c4.38-3,6.3-2.35,6.3-2.35a8.29,8.29,0,0,1,.23,6.07,8.84,8.84,0,0,1,2.36,6.15c0,8.81-5.37,10.75-10.48,11.32a5.46,5.46,0,0,1,1.56,4.25c0,3.07,0,5.54,0,6.29s.42,1.33,1.58,1.1A22.94,22.94,0,0,0,38,15.59Z"/></svg></a>
+        <a href="https://twitter.com/springcentral" title="Twitter"><svg id="twitter-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75.93 75.93"><circle class="cls-1" cx="37.97" cy="37.97" r="37.97"/><path id="Twitter-2" data-name="Twitter" class="cls-2" d="M55.2,22.73a15.43,15.43,0,0,1-4.88,1.91,7.56,7.56,0,0,0-5.61-2.49A7.78,7.78,0,0,0,37,30a7.56,7.56,0,0,0,.2,1.79,21.63,21.63,0,0,1-15.84-8.23,8,8,0,0,0,2.37,10.52,7.66,7.66,0,0,1-3.48-1v.09A7.84,7.84,0,0,0,26.45,41a7.54,7.54,0,0,1-2,.28A7.64,7.64,0,0,1,23,41.09a7.71,7.71,0,0,0,7.18,5.47,15.21,15.21,0,0,1-9.55,3.37,15.78,15.78,0,0,1-1.83-.11,21.41,21.41,0,0,0,11.78,3.54c14.13,0,21.86-12,21.86-22.42,0-.34,0-.68,0-1a15.67,15.67,0,0,0,3.83-4.08,14.9,14.9,0,0,1-4.41,1.24A7.8,7.8,0,0,0,55.2,22.73Z"/></svg></a>
+    </div>
+</footer>
+<script src="../_/js/vendor/import.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+<script async src="../_/js/vendor/asciidoctor-tabs.js" data-sync-storage-key="docs:preferred-tab"></script>
+
+<div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+            <main class="modal__content" id="modal-1-content">
+                <div id="searchbox"></div>
+                <div id="counter"></div>
+                <div class="search-by">
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.algolia.com/" aria-label="Search by Algolia">
+                        <img class="light" width="140" src="../_/img/algolia-light.svg" />
+                        <img class="dark" width="140" src="../_/img/algolia-dark.svg" />
+                    </a>
+                </div>
+                <div id="hits"></div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.17.0/dist/algoliasearch-lite.umd.js" integrity="sha256-Lf9DrpGmcRip6OQzbcL6lnvNmoZNSKpyQX5pMlwatWE=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.54.1/dist/instantsearch.production.min.js" integrity="sha256-xYsZPDeNjYNTBWLvqD2Lxe98hOxcDgOHyMPfz4tVAbk=" crossorigin="anonymous"></script>
+<script async id="search-script" src="../_/js/vendor/search.js" data-app-id="WB1FQYI187" data-api-key="9d489079e5ec46dbb238909fee5c9c29" data-index-name="springkafka" data-stylesheet="../_/css/vendor/search.css" data-page-version="3.1.0"></script>
+
+  </body>
+</html>
